@@ -1,0 +1,14 @@
+# Sample questions for manual harness smoke tests (aligned with pilot themes).
+questions:
+  - id: direct
+    policy: simple
+    text: GB 39901—2025 适用于哪两类汽车？
+  - id: synthesis
+    policy: complex
+    text: 完整列出6.11规定的五类误响应场景，并说明所有场景共同的合格判据。
+  - id: table
+    policy: simple
+    text: N1 类试验车辆以 40 km/h 驶向静止车辆目标时，在最大设计总质量状态下允许的最大相对碰撞速度是多少？
+  - id: unanswerable
+    policy: unanswerable_guard
+    text: N1 类汽车以80 km/h驶向静止车辆目标、最大设计总质量状态时，表2规定的最大相对碰撞速度是多少？

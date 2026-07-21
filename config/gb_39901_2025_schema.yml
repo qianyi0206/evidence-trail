@@ -1,0 +1,899 @@
+schema_version: "2.1"
+schema_id: gb_39901_2025_aeb
+domain: light_duty_vehicle_aeb_regulation
+language: zh-CN
+title: GB 39901-2025 轻型汽车自动紧急制动系统专用知识图谱 Schema
+description: >-
+  面向 GB 39901-2025 全文的领域本体与抽取约束，覆盖法规结构、系统功能与状态、
+  性能要求、场地与仿真试验、误响应、同一型式判定、分阶段实施、功能安全及证据追溯。
+  本文件是定制抽取和后处理的规范，不表示 LightRAG 会自动执行强类型校验。
+
+source_scope:
+  standard_id: GB 39901-2025
+  title_zh: 轻型汽车自动紧急制动系统技术要求及试验方法
+  title_en: Technical requirements and testing methods for advanced emergency braking system of light-duty vehicles
+  source_file: GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md
+  publication_date: 2025-12-31
+  effective_date: 2028-01-01
+  replaces: GB/T 39901-2021
+  applicable_vehicle_categories:
+    - M1
+    - N1
+  covered_sections:
+    - "1 范围"
+    - "2 规范性引用文件"
+    - "3 术语和定义"
+    - "4 一般要求"
+    - "5 性能要求"
+    - "6 试验方法"
+    - "7 说明书"
+    - "8 同一型式判定"
+    - "9 标准的实施"
+    - "附录A 功能安全要求"
+    - "附录B 仿真试验要求"
+    - "附录C 系统功能安全描述要求"
+
+design_principles:
+  - 条款是法规追溯主轴；所有要求、试验和安全结论都必须能回到条款或表格。
+  - 第5章的性能要求与第6章的试验方法分开建模，通过 VERIFIED_BY 连接。
+  - 正常碰撞试验与误响应试验分开建模，避免把“应制动”和“不应响应”混为同一语义。
+  - 数值必须绑定指标、单位、比较符和适用条件，禁止产生没有上下文的孤立阈值。
+  - 表格和图片不是领域实体；表格行转换为带限定条件的 Requirement、Threshold 或 AcceptanceCriterion。
+  - 功能安全使用“故障模式—危害—ASIL—安全目标—安全措施—验证活动—接受准则”链路。
+  - 仿真试验使用“工具链—模型—有效域—可信度准则—KPI—验证/确认证据”链路。
+  - 实体归一化只合并同一概念的别名，不合并不同目标状态、不同载荷状态或不同试验场景。
+
+extraction_profiles:
+  phase_1_regulation_structure:
+    sections: ["1", "2", "3", "7", "8", "9"]
+    entity_types:
+      - Standard
+      - Clause
+      - Term
+      - Organization
+      - VehicleCategory
+      - Requirement
+      - DocumentationArtifact
+      - TypeEquivalenceCriterion
+      - ImplementationRule
+  phase_2_system_and_performance:
+    sections: ["4", "5", "6.1-6.13"]
+    entity_types:
+      - System
+      - SystemFunction
+      - SystemState
+      - SystemComponent
+      - Signal
+      - DriverAction
+      - Requirement
+      - TestScenario
+      - TestTarget
+      - LoadState
+      - Condition
+      - Parameter
+      - Metric
+      - Threshold
+      - AcceptanceCriterion
+  phase_3_functional_safety:
+    sections: ["4.5", "附录A", "附录C"]
+    entity_types:
+      - FailureMode
+      - Hazard
+      - ASILLevel
+      - SafetyGoal
+      - SafetyMeasure
+      - SafetyAnalysis
+      - VerificationActivity
+      - DocumentationArtifact
+  phase_4_simulation:
+    sections: ["6.14", "附录B"]
+    entity_types:
+      - SimulationToolchain
+      - SimulationModel
+      - ValidityDomain
+      - CredibilityCriterion
+      - VerificationActivity
+      - DocumentationArtifact
+      - Metric
+      - AcceptanceCriterion
+
+entity_types:
+  - Standard
+  - Clause
+  - Term
+  - Organization
+  - VehicleCategory
+  - System
+  - SystemFunction
+  - SystemState
+  - SystemComponent
+  - Signal
+  - DriverAction
+  - Requirement
+  - ImplementationRule
+  - TypeEquivalenceCriterion
+  - TestScenario
+  - TestTarget
+  - LoadState
+  - Condition
+  - Parameter
+  - Metric
+  - Threshold
+  - AcceptanceCriterion
+  - DocumentationArtifact
+  - FailureMode
+  - Hazard
+  - ASILLevel
+  - SafetyGoal
+  - SafetyMeasure
+  - SafetyAnalysis
+  - VerificationActivity
+  - SimulationToolchain
+  - SimulationModel
+  - ValidityDomain
+  - CredibilityCriterion
+
+entity_definitions:
+  Standard:
+    description: 国家标准、推荐性标准或 ISO 标准；GB 39901-2025 与其规范性引用使用同一类型。
+    identity: normalized_standard_id
+    required_properties: [canonical_id, name, standard_id]
+    optional_properties: [title_zh, title_en, publication_date, effective_date, reference_is_dated]
+  Clause:
+    description: 可精确引用的章、条或规范性附录条款，是证据追溯的结构节点。
+    identity: standard_id + clause_id
+    required_properties: [canonical_id, name, clause_id, source_file]
+    optional_properties: [title, parent_clause_id, normative, source_line_start, source_line_end]
+  Term:
+    description: 第3章定义或引用标准界定的领域术语。
+    identity: standard_id + canonical_name
+    required_properties: [canonical_id, name, definition]
+    optional_properties: [english_name, abbreviation, source_clause, source_standard]
+  Organization:
+    description: 标准发布、提出、归口、制造、检验检测等责任主体。
+    identity: canonical_name
+    required_properties: [canonical_id, name]
+    optional_properties: [role]
+  VehicleCategory:
+    description: 法规适用的车辆类别或进一步限定的车辆群体。
+    identity: category_code + subtype
+    required_properties: [canonical_id, name, category_code]
+    optional_properties: [subtype, approval_status]
+  System:
+    description: 自动紧急制动系统 AEBS 及法规明确涉及的外部车辆系统。
+    identity: canonical_name
+    required_properties: [canonical_id, name]
+    optional_properties: [abbreviation, manufacturer, model, software_version]
+  SystemFunction:
+    description: AEBS 的可验证功能，如碰撞预警、紧急制动、自检和初始化。
+    identity: system + function_code
+    required_properties: [canonical_id, name, function_code]
+    optional_properties: [description, operating_speed_range]
+  SystemState:
+    description: 激活、待机、不可用、初始化中、关闭或部分关闭等运行状态。
+    identity: system + state_code
+    required_properties: [canonical_id, name, state_code]
+    optional_properties: [definition]
+  SystemComponent:
+    description: 传感器、控制器、执行器、电源模块、接口、传输链等系统要素。
+    identity: system + component_kind + canonical_name
+    required_properties: [canonical_id, name, component_kind]
+    optional_properties: [model, manufacturer, hardware_id, software_version]
+  Signal:
+    description: 碰撞预警、故障、关闭或状态提示使用的光学、声学、触觉或文字信号。
+    identity: signal_purpose + modality + appearance
+    required_properties: [canonical_id, name, purpose, modality]
+    optional_properties: [color, behavior, duration, distinguishability]
+  DriverAction:
+    description: 驾驶员关闭、开启或中断系统功能的有目的操作。
+    identity: action_code
+    required_properties: [canonical_id, name, action_code]
+    optional_properties: [precondition, effect]
+  Requirement:
+    description: 一般、性能、鲁棒性、误响应、功能安全、文档或仿真合规要求。
+    identity: source_clause + requirement_code
+    required_properties: [canonical_id, name, requirement_category, modality]
+    optional_properties: [statement, applicability, source_table, needs_review]
+  ImplementationRule:
+    description: 第9章按车辆类别、型式批准状态和功能范围规定的实施时间规则。
+    identity: source_clause + vehicle_scope + approval_status + feature_scope
+    required_properties: [canonical_id, name, approval_status, start_offset_months]
+    optional_properties: [vehicle_scope, feature_scope, absolute_start_date]
+  TypeEquivalenceCriterion:
+    description: 第8章用于判断系统、车辆或功能安全描述是否可视为同一型式的条件。
+    identity: source_clause + criterion_group + criterion_name
+    required_properties: [canonical_id, name, criterion_group]
+    optional_properties: [change_direction, allowed_difference, functional_safety_related]
+  TestScenario:
+    description: 第6章场地、误响应、部分关闭、故障注入或仿真试验场景。
+    identity: standard_id + source_clause
+    required_properties: [canonical_id, name, scenario_code, scenario_family]
+    optional_properties: [execution_mode, start_event, end_event, collision_definition]
+  TestTarget:
+    description: 车辆、行人、自行车、踏板式两轮摩托车或铁板等试验对象。
+    identity: target_class + target_variant
+    required_properties: [canonical_id, name, target_class]
+    optional_properties: [target_variant, conformity_standard, motion_state, orientation]
+  LoadState:
+    description: 行车质量或最大设计总质量等试验车辆载荷状态。
+    identity: load_state_code
+    required_properties: [canonical_id, name, load_state_code]
+    optional_properties: [definition, tolerance]
+  Condition:
+    description: 系统运行、试验环境、场景几何、速度范围、故障状态或工具链使用边界等条件。
+    identity: source_clause + condition_code
+    required_properties: [canonical_id, name, condition_category]
+    optional_properties: [expression, raw_expression]
+  Parameter:
+    description: 试验输入或配置量，如车辆速度、目标速度、TTC、距离、横向偏差、温度和照度。
+    identity: canonical_parameter_code
+    required_properties: [canonical_id, name, parameter_code]
+    optional_properties: [quantity_kind, canonical_unit]
+  Metric:
+    description: 用于评价性能、安全或仿真可信度的观测量或 KPI。
+    identity: canonical_metric_code
+    required_properties: [canonical_id, name, metric_code]
+    optional_properties: [quantity_kind, canonical_unit, calculation]
+  Threshold:
+    description: 与指标和完整限定条件绑定的数值、区间、比例或定性边界。
+    identity: source_clause + metric + operator + value + unit + qualifier_hash
+    required_properties: [canonical_id, name, operator, raw_value]
+    optional_properties: [value, lower_bound, upper_bound, unit, tolerance_lower, tolerance_upper, qualifiers_json]
+  AcceptanceCriterion:
+    description: 单次试验、重复试验、功能安全验证或仿真确认的判定准则。
+    identity: source_clause + criterion_code
+    required_properties: [canonical_id, name, criterion_code]
+    optional_properties: [statement, pass_logic]
+  DocumentationArtifact:
+    description: 说明书、系统描述、分析总结、详细备查文档、验证计划、试验报告或仿真文件。
+    identity: source_clause + artifact_kind + artifact_name
+    required_properties: [canonical_id, name, artifact_kind]
+    optional_properties: [submission_status, required_contents, traceability_required]
+  FailureMode:
+    description: 功能异常、部件故障、接口故障或环境影响导致的失效模式。
+    identity: affected_element + failure_code
+    required_properties: [canonical_id, name, failure_category]
+    optional_properties: [affected_element, fault_timing, detectable]
+  Hazard:
+    description: 附录A中整车层面的潜在危害。
+    identity: canonical_hazard_code
+    required_properties: [canonical_id, name, hazard_code]
+    optional_properties: [description]
+  ASILLevel:
+    description: 汽车安全完整性等级或质量管理等级。
+    identity: asil_code
+    required_properties: [canonical_id, name, asil_code]
+    optional_properties: [notes]
+  SafetyGoal:
+    description: 对应整车危害、为降低风险而定义的安全目标。
+    identity: source_table_row + normalized_statement
+    required_properties: [canonical_id, name, statement]
+    optional_properties: [source_table_row]
+  SafetyMeasure:
+    description: 部分维持、独立备用、进入安全状态、警告驾驶员或外部措施等安全机制。
+    identity: source_clause + measure_code
+    required_properties: [canonical_id, name, measure_category]
+    optional_properties: [statement, external_measure]
+  SafetyAnalysis:
+    description: HARA、FMEA、FTA、整车层面、系统层面或误响应安全分析。
+    identity: analysis_level + analysis_method + source_clause
+    required_properties: [canonical_id, name, analysis_level]
+    optional_properties: [analysis_method, summary_or_detailed]
+  VerificationActivity:
+    description: 功能概念、功能安全概念、系统/整车验证确认、故障注入或仿真确认活动。
+    identity: source_clause + activity_code
+    required_properties: [canonical_id, name, activity_code]
+    optional_properties: [level, method, object, purpose, environment]
+  SimulationToolchain:
+    description: 用于替代部分场地试验且需经过可信度评估、验证和确认的仿真工具链。
+    identity: manufacturer + toolchain_id + version
+    required_properties: [canonical_id, name]
+    optional_properties: [toolchain_id, version, owner, release_status]
+  SimulationModel:
+    description: 工具链中的车辆动力学、传感器、系统控制、环境、场景或目标模型。
+    identity: toolchain + model_kind + model_id + version
+    required_properties: [canonical_id, name, model_kind]
+    optional_properties: [model_id, version, fidelity_level]
+  ValidityDomain:
+    description: 工具链或模型的适用范围、参数范围、假设、限制和阈值。
+    identity: toolchain_or_model + domain_code
+    required_properties: [canonical_id, name, domain_code]
+    optional_properties: [scope, assumptions, limitations, parameter_ranges]
+  CredibilityCriterion:
+    description: 工具链可信度的能力、准确性、正确性、适用性、可用性及相关性要求。
+    identity: criterion_code
+    required_properties: [canonical_id, name, criterion_code]
+    optional_properties: [description, rationale]
+
+relations_of_interest:
+  - CONTAINS
+  - DEFINES
+  - NORMATIVELY_REFERENCES
+  - SUPERSEDES
+  - PUBLISHED_BY
+  - PROPOSED_BY
+  - MANAGED_BY
+  - APPLIES_TO
+  - SPECIFIES
+  - HAS_FUNCTION
+  - HAS_STATE
+  - HAS_COMPONENT
+  - HAS_SIGNAL
+  - INTERRUPTED_BY
+  - TRANSITIONS_TO
+  - VERIFIED_BY
+  - USES_TARGET
+  - HAS_LOAD_STATE
+  - HAS_CONDITION
+  - HAS_PARAMETER
+  - MEASURED_BY
+  - HAS_THRESHOLD
+  - HAS_ACCEPTANCE_CRITERION
+  - HAS_IMPLEMENTATION_RULE
+  - HAS_EQUIVALENCE_CRITERION
+  - REQUIRES_DOCUMENT
+  - DOCUMENTS
+  - HAS_FAILURE_MODE
+  - CAUSES
+  - ASSIGNED_ASIL
+  - HAS_SAFETY_GOAL
+  - IMPLEMENTED_BY
+  - MITIGATES
+  - ANALYZED_BY
+  - INJECTS_FAULT
+  - VALIDATES
+  - PRODUCES
+  - USES_TOOLCHAIN
+  - COMPOSED_OF
+  - HAS_VALIDITY_DOMAIN
+  - EVALUATED_BY
+  - USES_KPI
+
+relation_definitions:
+  CONTAINS:
+    source: [Standard, Clause, DocumentationArtifact]
+    target: [Clause, Requirement, TestScenario, DocumentationArtifact, AcceptanceCriterion, TypeEquivalenceCriterion, ImplementationRule]
+  DEFINES:
+    source: [Standard, Clause]
+    target: [Term, System, SystemFunction, SystemState, TestScenario, Metric, Parameter, TestTarget]
+  NORMATIVELY_REFERENCES:
+    source: [Standard, Clause, Requirement, TestTarget]
+    target: [Standard]
+  SUPERSEDES:
+    source: [Standard]
+    target: [Standard]
+  PUBLISHED_BY:
+    source: [Standard]
+    target: [Organization]
+  PROPOSED_BY:
+    source: [Standard]
+    target: [Organization]
+  MANAGED_BY:
+    source: [Standard]
+    target: [Organization]
+  APPLIES_TO:
+    source: [Standard, Clause, Requirement, TestScenario, ImplementationRule, Threshold, AcceptanceCriterion]
+    target: [VehicleCategory, System, SystemFunction, SimulationToolchain, LoadState]
+  SPECIFIES:
+    source: [Clause]
+    target: [Requirement, TypeEquivalenceCriterion, ImplementationRule, Threshold, TestScenario, Condition, VerificationActivity, DocumentationArtifact, AcceptanceCriterion, TestTarget, Hazard, SafetyMeasure, SystemComponent, SimulationToolchain]
+  HAS_FUNCTION:
+    source: [System]
+    target: [SystemFunction]
+  HAS_STATE:
+    source: [System, Requirement]
+    target: [SystemState]
+  HAS_COMPONENT:
+    source: [System]
+    target: [SystemComponent]
+  HAS_SIGNAL:
+    source: [SystemFunction, SystemState, FailureMode, Requirement]
+    target: [Signal]
+  INTERRUPTED_BY:
+    source: [SystemFunction]
+    target: [DriverAction]
+  TRANSITIONS_TO:
+    source: [SystemState]
+    target: [SystemState]
+  VERIFIED_BY:
+    source: [Requirement, SafetyGoal, SafetyMeasure, CredibilityCriterion]
+    target: [TestScenario, VerificationActivity]
+  USES_TARGET:
+    source: [TestScenario]
+    target: [TestTarget]
+  HAS_LOAD_STATE:
+    source: [Requirement, TestScenario, VerificationActivity, Threshold, AcceptanceCriterion, ImplementationRule]
+    target: [LoadState]
+  HAS_CONDITION:
+    source: [SystemFunction, SystemState, Requirement, TestScenario, ImplementationRule, TypeEquivalenceCriterion, SimulationToolchain, VerificationActivity]
+    target: [Condition]
+  HAS_PARAMETER:
+    source: [Condition, TestScenario, SimulationModel, VerificationActivity, TypeEquivalenceCriterion, DocumentationArtifact]
+    target: [Parameter]
+  MEASURED_BY:
+    source: [Requirement, TestScenario, AcceptanceCriterion, Hazard, CredibilityCriterion, Threshold, Condition]
+    target: [Metric]
+  HAS_THRESHOLD:
+    source: [Requirement, Metric, AcceptanceCriterion, CredibilityCriterion, Condition, TestScenario]
+    target: [Threshold]
+  HAS_ACCEPTANCE_CRITERION:
+    source: [TestScenario, VerificationActivity, CredibilityCriterion, Requirement]
+    target: [AcceptanceCriterion]
+  HAS_IMPLEMENTATION_RULE:
+    source: [Standard, Requirement, TestScenario]
+    target: [ImplementationRule]
+  HAS_EQUIVALENCE_CRITERION:
+    source: [Standard, TypeEquivalenceCriterion]
+    target: [TypeEquivalenceCriterion, Requirement]
+  REQUIRES_DOCUMENT:
+    source: [Standard, Clause, Requirement, SimulationToolchain, ImplementationRule]
+    target: [DocumentationArtifact]
+  DOCUMENTS:
+    source: [DocumentationArtifact]
+    target: [System, SystemFunction, SystemComponent, FailureMode, Hazard, SafetyGoal, SafetyMeasure, VerificationActivity, SimulationToolchain, SimulationModel, DocumentationArtifact, AcceptanceCriterion, SafetyAnalysis, Requirement, TypeEquivalenceCriterion]
+  HAS_FAILURE_MODE:
+    source: [System, SystemFunction, SystemComponent]
+    target: [FailureMode]
+  CAUSES:
+    source: [FailureMode, SystemFunction]
+    target: [Hazard]
+  ASSIGNED_ASIL:
+    source: [Hazard]
+    target: [ASILLevel]
+  HAS_SAFETY_GOAL:
+    source: [Hazard]
+    target: [SafetyGoal]
+  IMPLEMENTED_BY:
+    source: [SafetyGoal]
+    target: [SafetyMeasure]
+  MITIGATES:
+    source: [SafetyMeasure]
+    target: [FailureMode, Hazard]
+  ANALYZED_BY:
+    source: [FailureMode, Hazard, SafetyAnalysis]
+    target: [SafetyAnalysis, DocumentationArtifact]
+  INJECTS_FAULT:
+    source: [VerificationActivity]
+    target: [FailureMode]
+  VALIDATES:
+    source: [VerificationActivity]
+    target: [SystemFunction, SafetyGoal, SafetyMeasure, SimulationToolchain, SimulationModel]
+  PRODUCES:
+    source: [TestScenario, VerificationActivity, SimulationToolchain, Organization]
+    target: [DocumentationArtifact]
+  USES_TOOLCHAIN:
+    source: [TestScenario, VerificationActivity]
+    target: [SimulationToolchain]
+  COMPOSED_OF:
+    source: [SimulationToolchain, DocumentationArtifact]
+    target: [SimulationModel, DocumentationArtifact]
+  HAS_VALIDITY_DOMAIN:
+    source: [SimulationToolchain, SimulationModel]
+    target: [ValidityDomain]
+  EVALUATED_BY:
+    source: [SimulationToolchain, SimulationModel]
+    target: [CredibilityCriterion, VerificationActivity, Requirement]
+  USES_KPI:
+    source: [CredibilityCriterion, VerificationActivity]
+    target: [Metric]
+
+common_entity_properties:
+  canonical_id:
+    type: string
+    required: true
+    pattern: "^GB39901-2025::[A-Za-z]+::.+$"
+  name:
+    type: string
+    required: true
+  aliases:
+    type: list[string]
+    required: false
+  description:
+    type: string
+    required: false
+  source_file:
+    type: string
+    required: true
+  source_standard:
+    type: string
+    required: true
+    fixed_value: GB 39901-2025
+  source_clause:
+    type: string
+    required: true_except_for_seed_entities
+  source_table:
+    type: string
+    required: false
+  evidence_text:
+    type: string
+    required: true_except_for_seed_entities
+  extraction_confidence:
+    type: number
+    range: [0.0, 1.0]
+  needs_review:
+    type: boolean
+    default: false
+
+common_relation_properties:
+  relation_type:
+    type: string
+    required: true
+    allowed_values_ref: relations_of_interest
+  source_clause:
+    type: string
+    required: true
+  source_table:
+    type: string
+    required: false
+  evidence_text:
+    type: string
+    required: true
+  qualifiers_json:
+    type: string
+    required: false
+    description: JSON 字符串；保存车辆类别、载荷、速度、目标状态、执行模式等边限定条件。
+  extraction_confidence:
+    type: number
+    range: [0.0, 1.0]
+
+controlled_vocabularies:
+  vehicle_categories:
+    M1: 载客汽车类别 M1
+    N1: 最大设计总质量不超过 3.5 t 的载货汽车类别 N1
+    multipurpose_truck: 多用途货车
+  system_functions:
+    - collision_warning
+    - emergency_braking
+    - self_check
+    - initialization
+    - automatic_on
+    - active_off
+    - fault_warning
+    - driver_intervention
+  system_states:
+    - active
+    - standby
+    - unavailable
+    - initializing
+    - off
+    - collision_warning_disabled
+    - emergency_braking_disabled
+  signal_modalities:
+    - optical
+    - acoustic
+    - haptic
+    - text
+  requirement_categories:
+    - applicability
+    - installation
+    - general_function
+    - system_state
+    - warning_signal
+    - driver_intervention
+    - performance
+    - robustness
+    - false_response
+    - functional_safety
+    - electromagnetic_compatibility
+    - documentation
+    - type_equivalence
+    - implementation
+    - simulation_credibility
+  modalities:
+    - SHALL
+    - SHALL_NOT
+    - MAY
+    - DEFINITION
+  load_states:
+    driving_mass:
+      label: 行车质量
+      definition: 整备质量加 200 kg
+    maximum_design_total_mass:
+      label: 最大设计总质量
+  scenario_families:
+    - positive_collision
+    - false_response
+    - partial_function_disabled
+    - functional_safety_fault_injection
+    - simulation_substitution
+  test_scenarios:
+    c2c_stationary: 静止车辆目标碰撞预警和紧急制动试验
+    c2c_moving: 匀速车辆目标碰撞预警和紧急制动试验
+    c2c_braking: 制动车辆目标碰撞预警和紧急制动试验
+    child_pedestrian_crossing: 儿童行人目标横穿试验
+    bicycle_crossing: 自行车目标横穿试验
+    moped_crossing: 踏板式两轮摩托车目标横穿试验
+    false_response_lead_vehicle_turning_right: 跟车时前车右转误响应试验
+    false_response_adjacent_stationary_vehicles: 相邻车道静止车辆目标误响应试验
+    false_response_steel_plate: 车道内铁板误响应试验
+    false_response_same_direction_adult_pedestrian: 经过同向成年行人目标误响应试验
+    false_response_oncoming_stationary_bicycle: 经过对向静止自行车目标误响应试验
+    emergency_braking_with_warning_disabled: 关闭碰撞预警后的紧急制动试验
+    collision_warning_with_braking_disabled: 关闭紧急制动后的碰撞预警试验
+    functional_safety_fault_injection: 功能安全故障注入验证确认试验
+  target_classes:
+    - passenger_vehicle_target
+    - production_passenger_vehicle
+    - child_pedestrian_target
+    - adult_pedestrian_target
+    - bicycle_target
+    - moped_target
+    - steel_plate
+  execution_modes:
+    - proving_ground
+    - simulation
+    - HIL
+    - vehicle_test
+    - document_review
+  asil_levels:
+    - QM
+    - A
+    - B
+    - C
+    - D
+  safety_analysis_methods:
+    - HARA
+    - FMEA
+    - FTA
+    - equivalent_method
+  safety_measure_categories:
+    - degraded_operation
+    - independent_backup
+    - safe_state_by_function_shutdown
+    - driver_warning
+    - external_measure
+  simulation_model_kinds:
+    - vehicle_dynamics
+    - sensor
+    - system_control
+    - environment
+    - scenario
+    - target
+  simulation_credibility_dimensions:
+    capability: 能力及能力不足
+    accuracy: 复现场地试验目标数据的准确性
+    correctness: 数据和算法的鲁棒性与正确性
+    applicability: 有效域内的适用性
+    usability: 人员培训经验与管理流程质量
+  approval_statuses:
+    - new_type_approval
+    - existing_type_approval
+
+normalization_rules:
+  standard_ids:
+    canonical_examples:
+      - GB 39901-2025
+      - GB/T 39901-2021
+      - GB/T 34590
+      - GB 34660
+      - ISO 19206-2
+    rule: 统一空格和连接号；保留 GB 与 GB/T 的性质差异；不为未注明年份的引用擅自补年份。
+  aliases:
+    AEBS: 自动紧急制动系统
+    AEB系统: 自动紧急制动系统
+    系统: 自动紧急制动系统
+    碰撞预警: collision_warning
+    紧急制动: emergency_braking
+    预计碰撞时间: TTC
+    检验检测机构: testing_and_inspection_body
+    车辆制造商: vehicle_manufacturer
+  units:
+    canonical:
+      speed: km/h
+      acceleration: m/s^2
+      time: s
+      distance: m
+      temperature: degC
+      illuminance: lx
+      percentage: "%"
+      angle: deg
+    rule: 保留原始表达 raw_value，同时写入 canonical unit；不得丢失单边或双边公差。
+  numeric_expressions:
+    - "10 km/h～80 km/h -> lower_bound: 10, upper_bound: 80, unit: km/h"
+    - "不小于4 s -> operator: GTE, value: 4, unit: s"
+    - "(4±0.5) m/s² -> value: 4, tolerance_lower: 0.5, tolerance_upper: 0.5, unit: m/s^2"
+    - "40_{-2}^{0} km/h -> value: 40, tolerance_lower: 2, tolerance_upper: 0, unit: km/h"
+  condition_identity:
+    rule: >-
+      速度、载荷、车辆类别、目标运动状态、场地/仿真方式任一不同，都视为不同的限定条件；
+      不得只因指标名称相同而合并 Threshold。
+  target_identity:
+    rule: >-
+      目标类别与目标运动状态分开：车辆目标是实体，静止/匀速/制动是场景或条件；
+      儿童行人和成年行人不可合并，自行车横穿与对向静止自行车不可合并为同一场景。
+  clause_identity:
+    rule: 使用原始编号，例如 5.2.1、6.11.4、A.2.3.1、B.2.5.3；附录标识不可丢失。
+
+extraction_rules:
+  - 先建立 Standard 与 Clause 层级，再抽取条款内的领域实体和关系。
+  - 每个 Requirement 只表达一个可独立判断的 SHALL 或 SHALL_NOT 语义；并列条件应拆分后共享限定条件。
+  - 第5章产生 Requirement、Metric、Threshold；第6章产生 TestScenario、Condition、Parameter 和 AcceptanceCriterion。
+  - 使用 VERIFIED_BY 把第5章要求连接到第6章场景，不允许仅因编号相邻而推断连接。
+  - 表1至表12的每个数据单元都必须保留车辆类别、场景、试验车辆速度、目标速度和载荷状态限定。
+  - 表13至表20描述试验输入速度和公差，不能误标成性能通过阈值。
+  - 6.11 的接受语义是“不发出碰撞预警且不进行紧急制动”，必须标为 false_response。
+  - 5.3 的重复试验逻辑建为 AcceptanceCriterion，保留首次两次、必要时第三次及 90%/80% 通过率。
+  - 系统关闭、部分关闭、不可用和故障是不同 SystemState；警告关闭与制动关闭不可合并。
+  - 驾驶员踩制动踏板只有在规定减速度关系下才能中断紧急制动，该关系应作为 Condition。
+  - 功能安全的“功能异常表现”用 FailureMode，“整车危害”用 Hazard，禁止把两者合并。
+  - ASIL 属于 Hazard 与 SafetyGoal 链路；QM 仍建 ASILLevel，不当作缺失值。
+  - 附录A的提交文档与备查文档均建 DocumentationArtifact，并记录 submission_status。
+  - 仿真仅可覆盖 6.5～6.10；工具链先经过 B.2 可信度评估和确认，再由试验场景 USES_TOOLCHAIN。
+  - 仿真与场地结果不一致导致第三次试验必须为场地试验，应建 AcceptanceCriterion 而非一般描述。
+  - 第9章的实施时间是相对本文件实施日的月偏移；同时可计算 absolute_start_date，但保留原始偏移。
+  - 只从原文建立关系；若只能根据领域常识推断，跳过该边并记录待人工补充。
+
+threshold_rules:
+  operators: [EQ, NEQ, GT, GTE, LT, LTE, BETWEEN, APPROX, NO_EVENT]
+  required_context_fields:
+    - source_clause
+    - metric
+    - operator
+    - raw_value
+  qualifier_fields:
+    - vehicle_category
+    - vehicle_load_state
+    - test_scenario
+    - ego_speed
+    - target_speed
+    - target_motion_state
+    - system_function_state
+    - execution_mode
+  forbidden_patterns:
+    - 无指标关联的纯数字节点
+    - 将表号或图号当作 Threshold 名称
+    - 合并来自不同条款但数值相同的阈值
+
+evidence_policy:
+  minimum_locator: [source_file, source_clause, evidence_text]
+  preferred_locator: [source_file, source_clause, source_table, source_line_start, source_line_end]
+  page_policy: >-
+    当前 OCR Markdown 没有可靠的 page:N 标记，因此不得伪造页码；现阶段以条款、表号和行号追溯，
+    后续若补充 PDF 页映射，再增加 source_page。
+  quote_policy: evidence_text 保留足以证明实体或关系的最短原文，不复制整段无关内容。
+
+source_quality_notes:
+  - OCR 中上下公差存在多种 LaTeX 形式，抽取时必须同时保存 raw_value。
+  - 6.3.1 标题出现在 6.3 总标题之前属于 OCR 标题顺序问题，应按语义恢复为 6.3 下级条款。
+  - A.2.5.6 的列表字母在 OCR 中出现 b、a、c、d 顺序，不据此改变原要求语义。
+  - 表 A.2 存在 rowspan/空列造成的行列错位，故障类型、试验工况和接受准则需人工抽样复核。
+  - 规范性引用未注明年份时不得根据外部知识补齐版本。
+
+manual_review_triggers:
+  - 任何包含上下标公差但无法可靠解析为数值的表达式
+  - 表1至表20任一行缺少车辆类别、载荷或速度限定
+  - 表A.2中故障类型、危害、试验工况与接受准则无法一一对齐
+  - 同一 canonical_id 出现互相冲突的定义或阈值
+  - evidence_text 不含关系两端任一实体的明确语义证据
+  - 模型尝试补充标准原文未出现的 ASIL、阈值或试验条件
+
+lightrag_integration:
+  entity_types_csv: >-
+    Standard,Clause,Term,Organization,VehicleCategory,System,SystemFunction,SystemState,
+    SystemComponent,Signal,DriverAction,Requirement,ImplementationRule,TypeEquivalenceCriterion,
+    TestScenario,TestTarget,LoadState,Condition,Parameter,Metric,Threshold,AcceptanceCriterion,
+    DocumentationArtifact,FailureMode,Hazard,ASILLevel,SafetyGoal,SafetyMeasure,SafetyAnalysis,
+    VerificationActivity,SimulationToolchain,SimulationModel,ValidityDomain,CredibilityCriterion
+  current_storage_behavior:
+    neo4j_node_label: workspace label
+    neo4j_edge_type: DIRECTED
+    note: >-
+      LightRAG 原生 Neo4j 存储不会按本 Schema 自动创建不同的 Neo4j relationship type；
+      定制后处理应把 relation_type 写入边属性，并校验 source/target 类型。
+  recommended_pipeline:
+    - 按 extraction_profiles 分段抽取，避免一次提示包含全部 34 种实体造成类型漂移。
+    - 实体写入前执行 canonical_id 与 alias 归一化。
+    - 关系写入前校验 relation_definitions 的 source/target 白名单。
+    - 数值写入前执行 unit、公差和 qualifiers 完整性检查。
+    - 对 needs_review=true 的记录只进入待审区，不直接作为问答中的确定事实。
+
+grounded_examples:
+  - id: applicability_m1
+    source: GB39901-2025::Standard::GB_39901-2025
+    relation: APPLIES_TO
+    target: GB39901-2025::VehicleCategory::M1
+    evidence:
+      source_clause: "1"
+      text: 本文件适用于 M1 和 N1 类汽车。
+  - id: supersedes_previous_version
+    source: GB39901-2025::Standard::GB_39901-2025
+    relation: SUPERSEDES
+    target: GB39901-2025::Standard::GB_T_39901-2021
+    evidence:
+      source_clause: 前言
+      text: 本文件代替 GB/T 39901—2021。
+  - id: aeb_has_active_state
+    source: GB39901-2025::System::AEBS
+    relation: HAS_STATE
+    target: GB39901-2025::SystemState::active
+    evidence:
+      source_clause: "3.4"
+      text: 系统执行碰撞预警和/或紧急制动的状态。
+  - id: collision_warning_timing
+    semantic_path:
+      - "Clause 5.1.1 SPECIFIES Requirement 车辆目标碰撞预警提前量"
+      - "Requirement MEASURED_BY Metric warning_lead_time"
+      - "Requirement HAS_THRESHOLD Threshold GTE 0.8 s"
+      - "Requirement VERIFIED_BY TestScenario 6.5/6.6/6.7"
+  - id: maximum_deceleration
+    semantic_path:
+      - "Clause 5.2.1 SPECIFIES Requirement 车辆目标紧急制动最大减速度"
+      - "Requirement MEASURED_BY Metric maximum_deceleration_magnitude"
+      - "Requirement HAS_THRESHOLD Threshold GTE 5.0 m/s^2"
+    evidence:
+      source_clause: "5.2.1"
+      text: 试验过程中最大减速度绝对值应不小于 5.0 m/s²。
+  - id: stationary_vehicle_test
+    semantic_path:
+      - "TestScenario 6.5 USES_TARGET passenger_vehicle_target"
+      - "TestScenario 6.5 HAS_CONDITION TTC GTE 4 s"
+      - "TestScenario 6.5 HAS_CONDITION centerline_offset LTE 0.2 m"
+      - "TestScenario 6.5 HAS_LOAD_STATE driving_mass/maximum_design_total_mass"
+  - id: false_response_no_event
+    semantic_path:
+      - "Clause 5.4 SPECIFIES Requirement 误响应禁止"
+      - "Requirement VERIFIED_BY TestScenario 6.11.1-6.11.5"
+      - "TestScenario HAS_ACCEPTANCE_CRITERION no_collision_warning_and_no_emergency_braking"
+  - id: hazard_asil_goal
+    semantic_path:
+      - "FailureMode 非预期激活 CAUSES Hazard 非预期的减速"
+      - "Hazard 非预期的减速 ASSIGNED_ASIL ASILLevel C"
+      - "Hazard 非预期的减速 HAS_SAFETY_GOAL 避免非预期激活导致过大制动力"
+      - "SafetyGoal IMPLEMENTED_BY SafetyMeasure"
+    evidence:
+      source_clause: A.2.3.1
+      source_table: 表 A.1
+  - id: simulation_credibility
+    semantic_path:
+      - "SimulationToolchain EVALUATED_BY CredibilityCriterion capability/accuracy/correctness/applicability/usability"
+      - "SimulationToolchain HAS_VALIDITY_DOMAIN ValidityDomain"
+      - "SimulationToolchain COMPOSED_OF SimulationModel vehicle_dynamics/sensor/system_control/environment/scenario/target"
+      - "CredibilityCriterion USES_KPI Metric TTC/relative_collision_speed"
+    evidence:
+      source_clause: B.2
+  - id: implementation_offset
+    semantic_path:
+      - "Standard HAS_IMPLEMENTATION_RULE ImplementationRule 9.1"
+      - "ImplementationRule APPLIES_TO VehicleCategory M1/multipurpose_truck"
+      - "ImplementationRule feature_scope=moped_related_requirements, start_offset_months=25"
+
+competency_questions:
+  - question: GB 39901-2025 适用于哪些车辆类别，并替代了哪个标准？
+    expected_path: Standard -> APPLIES_TO/SUPERSEDES
+  - question: M1 与 N1 面向车辆目标的系统工作速度范围有何不同？
+    expected_path: VehicleCategory <- APPLIES_TO - Requirement -> HAS_CONDITION -> Threshold
+  - question: 静止、匀速和制动车辆目标分别由哪些试验条款验证？
+    expected_path: Requirement -> VERIFIED_BY -> TestScenario -> USES_TARGET
+  - question: 某一碰撞场景在不同车辆类别、速度和载荷下允许的最大相对碰撞速度是多少？
+    expected_path: TestScenario <- VERIFIED_BY - Requirement -> MEASURED_BY/HAS_THRESHOLD with qualifiers
+  - question: 误响应试验有哪些，合格时系统应出现什么行为？
+    expected_path: Requirement -> VERIFIED_BY -> TestScenario -> HAS_ACCEPTANCE_CRITERION
+  - question: 关闭碰撞预警后，紧急制动功能还需满足什么要求？
+    expected_path: SystemState <- HAS_CONDITION - Requirement -> VERIFIED_BY -> TestScenario 6.12
+  - question: 附录A中“非预期的减速”对应什么 ASIL、安全目标和安全度量？
+    expected_path: Hazard -> ASSIGNED_ASIL/HAS_SAFETY_GOAL/MEASURED_BY
+  - question: 摄像头遮挡或通信接口故障如何验证，接受准则是什么？
+    expected_path: SystemComponent -> HAS_FAILURE_MODE -> FailureMode <- INJECTS_FAULT - VerificationActivity -> HAS_ACCEPTANCE_CRITERION
+  - question: 哪些场地试验可被仿真替代，工具链需要满足哪些可信度要求？
+    expected_path: TestScenario -> USES_TOOLCHAIN -> SimulationToolchain -> EVALUATED_BY
+  - question: 同一型式判定分别关注系统、车辆、制动系统和功能安全描述的哪些变化？
+    expected_path: Standard -> HAS_EQUIVALENCE_CRITERION -> TypeEquivalenceCriterion
+  - question: 不同车辆类别和型式批准状态从何时开始执行踏板式两轮摩托车相关要求？
+    expected_path: Standard -> HAS_IMPLEMENTATION_RULE -> ImplementationRule -> APPLIES_TO
+  - question: 产品使用说明书和功能安全资料分别必须包含哪些内容？
+    expected_path: Clause -> REQUIRES_DOCUMENT -> DocumentationArtifact
+
+acceptance_checks:
+  schema:
+    - entity_types 与 relation_definitions 中出现的类型完全一致。
+    - relations_of_interest 与 relation_definitions 的键完全一致。
+    - 所有实体都有 canonical_id、name、source_file、source_clause 和 evidence_text；种子实体例外。
+  graph:
+    - 不存在 Table、Figure、Other 等兜底实体类型。
+    - 不存在无 Metric 或 Condition 上下文的 Threshold。
+    - 第5章每个性能 Requirement 至少有一个 VERIFIED_BY 关系。
+    - 第6.5至6.10场景同时具备 TestTarget、Condition、LoadState 和 AcceptanceCriterion。
+    - 第6.11的五个误响应场景均标为 false_response。
+    - 表A.1每个 Hazard 均连接 ASILLevel 与 SafetyGoal。
+    - 仿真工具链同时连接 ValidityDomain、CredibilityCriterion 和 DocumentationArtifact。
+    - 每条边都含 relation_type、source_clause 和 evidence_text。

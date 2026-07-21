@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/gb39901-graphrag-benchmark.schema.json",
+  "title": "GB 39901 GraphRAG benchmark JSONL record schemas",
+  "$defs": {
+    "evidence": {
+      "type": "object",
+      "required": ["id", "source_id", "source_file", "source_sha256", "locator", "title", "source_excerpt", "normalized_facts"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "source_id": {"type": "string", "minLength": 1},
+        "source_file": {"type": "string", "minLength": 1},
+        "source_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "locator": {"type": "object", "minProperties": 1},
+        "title": {"type": "string", "minLength": 1},
+        "source_excerpt": {"type": "string", "minLength": 8},
+        "normalized_facts": {"type": ["object", "array"]}
+      },
+      "additionalProperties": true
+    },
+    "atomic_claim": {
+      "type": "object",
+      "required": ["id", "text", "evidence_ids"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "text": {"type": "string", "minLength": 1},
+        "evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    },
+    "question": {
+      "type": "object",
+      "required": ["id", "question", "task_type", "answerable", "gold_answer", "atomic_claims", "gold_evidence_ids", "gold_nodes", "gold_edges", "gold_path", "expected_hops", "graph_dependency_reason", "scoring_method", "review_status", "split", "self_review"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^(gb|cross)_[a-z0-9_]+$"},
+        "question": {"type": "string", "minLength": 8},
+        "task_type": {"enum": ["direct_fact", "conditional_table", "multi_hop_relation", "comparison_exception", "cross_section_synthesis", "unanswerable_adversarial", "cross_document_alignment", "cross_document_comparison", "cross_document_synthesis", "cross_document_unanswerable"]},
+        "answerable": {"type": "boolean"},
+        "gold_answer": {"type": "object"},
+        "atomic_claims": {"type": "array", "items": {"$ref": "#/$defs/atomic_claim"}},
+        "gold_evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "gold_nodes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "gold_edges": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "gold_path": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "expected_hops": {"type": "integer", "minimum": 0},
+        "graph_dependency_reason": {"type": "string", "minLength": 4},
+        "scoring_method": {"enum": ["structured_exact_match", "set_f1", "claim_f1", "unanswerable"]},
+        "review_status": {"enum": ["self_checked", "user_reviewed", "frozen"]},
+        "split": {"enum": ["dev", "test"]},
+        "self_review": {
+          "type": "object",
+          "required": ["source_context_read", "answer_rederived", "conditions_complete", "counterexample_checked", "single_chunk_sufficiency_checked", "mechanical_validation_passed"],
+          "additionalProperties": false,
+          "properties": {
+            "source_context_read": {"const": true},
+            "answer_rederived": {"const": true},
+            "conditions_complete": {"const": true},
+            "counterexample_checked": {"const": true},
+            "single_chunk_sufficiency_checked": {"const": true},
+            "mechanical_validation_passed": {"const": true}
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "node": {
+      "type": "object",
+      "required": ["kind", "id", "type", "name", "evidence_ids"],
+      "properties": {
+        "kind": {"const": "node"},
+        "id": {"type": "string", "minLength": 1},
+        "type": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "aliases": {"type": "array", "items": {"type": "string"}},
+        "properties": {"type": "object"},
+        "evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true}
+      },
+      "additionalProperties": true
+    },
+    "edge": {
+      "type": "object",
+      "required": ["kind", "id", "source", "target", "relation", "evidence_ids"],
+      "properties": {
+        "kind": {"const": "edge"},
+        "id": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1},
+        "target": {"type": "string", "minLength": 1},
+        "relation": {"type": "string", "minLength": 1},
+        "properties": {"type": "object"},
+        "evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true}
+      },
+      "additionalProperties": true
+    },
+    "audit_unit": {
+      "type": "object",
+      "required": ["id", "kind", "title", "evidence_id", "gold_nodes", "gold_edges", "gold_numeric_condition_tuples", "gold_aliases", "review_status"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^audit_(narrative|table)_[0-9]{3}$"},
+        "kind": {"enum": ["narrative", "table"]},
+        "title": {"type": "string", "minLength": 1},
+        "evidence_id": {"type": "string", "minLength": 1},
+        "gold_nodes": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "gold_edges": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "gold_numeric_condition_tuples": {"type": "array", "items": {"type": "object"}},
+        "gold_aliases": {"type": "object"},
+        "review_status": {"enum": ["self_checked", "user_reviewed", "frozen"]}
+      },
+      "additionalProperties": true
+    }
+  }
+}

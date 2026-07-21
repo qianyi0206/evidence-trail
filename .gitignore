@@ -1,0 +1,56 @@
+# --- Secrets & local env (never commit real keys) ---
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Keep templates and non-secret workspace overlays
+!.env.example
+!.env.gb39901
+!.env.gb39901_v3
+!.env.gb39901_v4
+
+# --- Runtime / heavy artifacts ---
+data/
+results/
+state/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+.DS_Store
+**/.DS_Store
+
+# --- Corpus: regenerate or place locally; do not ship OCR dumps by default ---
+corpus/raw/*
+!corpus/raw/.gitkeep
+corpus/prepared/*
+!corpus/prepared/.gitkeep
+corpus/index_ready/*
+!corpus/index_ready/.gitkeep
+corpus/index_ready_v3/*
+!corpus/index_ready_v3/.gitkeep
+corpus/manifest.json
+
+# --- Benchmark: keep gold data, drop bulky run dumps ---
+!benchmark/data/
+!benchmark/data/**
+benchmark/results/**
+!benchmark/results/.gitkeep
+!benchmark/results/benchmark_report.md
+!benchmark/results/pilot_6q_report.md
+!benchmark/results/benchmark_smoke_report.md
+
+# Local review exports / generated inspect dumps
+benchmark/review/**
+!benchmark/review/.gitkeep
+
+# --- Logs & traces ---
+*.log
+/tmp/
+**/trace*.json

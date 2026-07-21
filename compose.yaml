@@ -1,0 +1,94 @@
+name: aeb-graphrag-demo
+
+services:
+  neo4j:
+    image: ${NEO4J_IMAGE:-neo4j:5.26}
+    environment:
+      NEO4J_AUTH: ${NEO4J_USERNAME:-neo4j}/${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env}
+      NEO4J_server_memory_heap_initial__size: 512m
+      NEO4J_server_memory_heap_max__size: 1G
+      NEO4J_server_memory_pagecache_size: 512m
+    ports:
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
+    volumes:
+      - ./data/neo4j:/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - cypher-shell -u neo4j -p "$${NEO4J_AUTH#*/}" 'RETURN 1' >/dev/null 2>&1
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 20s
+    restart: unless-stopped
+
+  lightrag:
+    image: ${LIGHTRAG_IMAGE:-ghcr.io/hkuds/lightrag:v1.4.16}
+    env_file:
+      - .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 9621
+      WORKSPACE: ${WORKSPACE:-aeb_demo}
+      SUMMARY_LANGUAGE: ${SUMMARY_LANGUAGE:-English}
+      ENTITY_TYPES: '${ENTITY_TYPES:-["Person","Creature","Organization","Location","Event","Concept","Method","Content","Data","Artifact","NaturalObject"]}'
+      PYTHONPATH: ${GB39901_PYTHONPATH:-}
+      GB39901_PROMPT_ENABLED: ${GB39901_PROMPT_ENABLED:-false}
+      GB39901_RELATION_PROMPT_V4: ${GB39901_RELATION_PROMPT_V4:-false}
+      GB39901_SCHEMA_GUARD_ENABLED: ${GB39901_SCHEMA_GUARD_ENABLED:-false}
+      CHUNK_SIZE: ${CHUNK_SIZE:-1200}
+      CHUNK_OVERLAP_SIZE: ${CHUNK_OVERLAP_SIZE:-100}
+      EMBEDDING_TIMEOUT: ${EMBEDDING_TIMEOUT:-30}
+      LLM_TIMEOUT: ${LLM_TIMEOUT:-180}
+      WORKING_DIR: /app/data/rag_storage
+      INPUT_DIR: /app/data/inputs
+      LIGHTRAG_KV_STORAGE: JsonKVStorage
+      LIGHTRAG_DOC_STATUS_STORAGE: JsonDocStatusStorage
+      LIGHTRAG_GRAPH_STORAGE: Neo4JStorage
+      LIGHTRAG_VECTOR_STORAGE: NanoVectorDBStorage
+      NEO4J_URI: neo4j://neo4j:7687
+      NEO4J_DATABASE: ${NEO4J_DATABASE:-neo4j}
+      NEO4J_USERNAME: ${NEO4J_USERNAME:-neo4j}
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env}
+      # Optional rerank (Aliyun/Bailian). Key falls back to LLM_BINDING_API_KEY when unset.
+      RERANK_BINDING: ${RERANK_BINDING:-null}
+      RERANK_MODEL: ${RERANK_MODEL:-}
+      RERANK_BINDING_HOST: ${RERANK_BINDING_HOST:-}
+      RERANK_BINDING_API_KEY: ${RERANK_BINDING_API_KEY:-${LLM_BINDING_API_KEY:-}}
+      RERANK_BY_DEFAULT: ${RERANK_BY_DEFAULT:-true}
+      MIN_RERANK_SCORE: ${MIN_RERANK_SCORE:-0.0}
+    ports:
+      - "127.0.0.1:9621:9621"
+    volumes:
+      - ./data/rag_storage:/app/data/rag_storage
+      - ./data/inputs:/app/data/inputs
+      - ./lightrag_custom:/app/custom:ro
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:9621/health', timeout=5)"
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+    restart: unless-stopped
+
+  tools:
+    build:
+      context: ./tools
+    profiles:
+      - tools
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace
+    environment:
+      PYTHONUNBUFFERED: "1"
+      AEB_PROFILE_ENV: ${AEB_PROFILE_ENV:-}
+    networks:
+      - default

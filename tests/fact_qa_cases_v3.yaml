@@ -1,0 +1,43 @@
+version: 1
+description: GB 39901-2025 表1至表4的单元格级数值回归测试
+cases:
+  - id: m1_static_60_kerb
+    question: GB 39901-2025 表1中，M1类汽车静止车辆目标场景，试验车辆速度60 km/h、目标速度0 km/h、行车质量条件下，最大相对碰撞速度要求是多少？
+    expected_value: 35
+    expected_unit: km/h
+    expected_file_source: GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_1.md
+  - id: m1_static_60_gross
+    question: GB 39901-2025 表1中，M1类汽车静止车辆目标场景，试验车辆速度60 km/h、目标速度0 km/h、最大设计总质量条件下，最大相对碰撞速度要求是多少？
+    expected_value: 35
+    expected_unit: km/h
+    expected_file_source: GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_1.md
+  - id: n1_static_60_kerb
+    question: GB 39901-2025 表2中，N1类汽车静止车辆目标场景，试验车辆速度60 km/h、目标速度0 km/h、行车质量条件下，最大相对碰撞速度要求是多少？
+    expected_value: 35
+    expected_unit: km/h
+    expected_file_source: GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_2.md
+  - id: n1_static_60_gross
+    question: GB 39901-2025 表2中，N1类汽车静止车辆目标场景，试验车辆速度60 km/h、目标速度0 km/h、最大设计总质量条件下，最大相对碰撞速度要求是多少？
+    expected_value: 40
+    expected_unit: km/h
+    expected_file_source: GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_2.md
+  - id: n1_static_40_gross
+    question: GB 39901-2025 表2中，N1类汽车静止车辆目标场景，试验车辆速度40 km/h、目标速度0 km/h、最大设计总质量条件下，最大相对碰撞速度要求是多少？
+    expected_value: 10
+    expected_unit: km/h
+    expected_file_source: GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_2.md
+  - id: m1_static_80_kerb
+    question: GB 39901-2025 表1中，M1类汽车静止车辆目标场景，试验车辆速度80 km/h、目标速度0 km/h、行车质量条件下，最大相对碰撞速度要求是多少？
+    expected_value: 50
+    expected_unit: km/h
+    expected_file_source: GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_1.md
+  - id: m1_uniform_80_kerb
+    question: GB 39901-2025 表3中，M1类汽车匀速车辆目标场景，试验车辆速度80 km/h、目标速度20 km/h、行车质量条件下，最大相对碰撞速度要求是多少？
+    expected_value: 35
+    expected_unit: km/h
+    expected_file_source: GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_3.md
+  - id: n1_uniform_60_gross
+    question: GB 39901-2025 表4中，N1类汽车匀速车辆目标场景，试验车辆速度60 km/h、目标速度20 km/h、最大设计总质量条件下，最大相对碰撞速度要求是多少？
+    expected_value: 10
+    expected_unit: km/h
+    expected_file_source: GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_4.md

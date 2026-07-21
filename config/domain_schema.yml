@@ -1,0 +1,46 @@
+schema_version: 1
+domain: passenger_vehicle_active_safety
+description: >-
+  Lightweight guidance for automatic extraction from UNECE and Euro NCAP AEB
+  documents. LightRAG keeps relation descriptions flexible in this baseline.
+
+entity_types:
+  - Regulation
+  - Protocol
+  - Version
+  - Region
+  - VehicleCategory
+  - System
+  - TestScenario
+  - TestTarget
+  - Requirement
+  - Condition
+  - Parameter
+  - Metric
+  - Threshold
+  - Actor
+
+relations_of_interest:
+  - APPLIES_TO
+  - DEFINES
+  - CONTAINS
+  - TESTS
+  - HAS_CONDITION
+  - USES_TARGET
+  - MEASURED_BY
+  - HAS_THRESHOLD
+  - REQUIRES
+  - ASSESSED_BY
+  - SUPERSEDES
+
+examples:
+  - source: UN Regulation No. 152 Rev.2
+    relation: APPLIES_TO
+    target: Vehicle Category M1
+  - source: AEB Car-to-Car Test Protocol v4.3.1
+    relation: CONTAINS
+    target: Car-to-Car Rear Stationary
+  - source: Car-to-Car Rear Stationary
+    relation: MEASURED_BY
+    target: Impact Speed
+
