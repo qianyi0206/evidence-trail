@@ -1,44 +1,45 @@
 # EvidenceTrail
 
-[中文](README.md) | [English](README.en.md)
+**English** | [中文](README.zh-CN.md)
 
-基于知识图谱增强检索的文档取证 Agent。
+Graph-enhanced document evidence agent.
 
-面向法规、试验规范等确定性知识：回答须可回溯至原文；证据不足时拒答。
+Built for closed-set, checkable knowledge (regulations, test procedures, manuals): answers must be grounded in indexed text; refuse when evidence is insufficient.
 
 ---
 
-## 0. 系统概览
+## 0. Overview
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
 │                         EvidenceTrail                           │
 │                                                                 │
-│   PDF ──► OCR ──► Markdown ──► 结构切分 / 入库                   │
+│   PDF ──► OCR ──► Markdown ──► structural chunk / ingest         │
 │            │                      │                             │
 │            │ MinerU               ▼                             │
 │            │              ┌──────────────┐  ┌────────────────┐  │
-│            │              │ 知识图谱+向量 │◄─│ 领域 schema    │  │
-│            │              │ LightRAG     │  │ 关系约束       │  │
+│            │              │ KG + vectors │◄─│ domain schema  │  │
+│            │              │ LightRAG     │  │ relation rules │  │
 │            │              └──────┬───────┘  └────────────────┘  │
-│                                  │ 检索                         │
+│                                  │ retrieve                     │
 │                                  ▼                              │
 │                           ┌──────────────┐                      │
-│                           │ Harness Agent│ 规划→检索→反思→门控  │
+│                           │ Harness Agent│ plan→retrieve→       │
+│                           │              │ reflect→gate         │
 │                           └──────┬───────┘                      │
 │                                  ▼                              │
-│                           有据回答 / 拒答                        │
+│                           grounded answer / refuse              │
 │                                  │                              │
 │                                  ▼                              │
 │                           ┌──────────────┐                      │
-│                           │  Benchmark   │ 离线评测              │
+│                           │  Benchmark   │ offline eval         │
 │                           └──────────────┘                      │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-架构图：[docs/architecture.svg](docs/architecture.svg)
+Architecture: [docs/architecture.svg](docs/architecture.svg)
 
-CLI 交互录屏：
+CLI session (GIF):
 
 ![CLI](docs/demo/cli-pipeline-demo.gif)
 
@@ -47,12 +48,12 @@ cd harness
 PYTHONPATH=. python3 -m reg_harness.cli --profile-env ../.env.gb39901_v4 chat
 ```
 
-v4 知识图谱（Neo4j，`aeb_gb39901_v4_relation_guard`）：
+v4 knowledge graph (Neo4j workspace `aeb_gb39901_v4_relation_guard`):
 
 | | |
 |--|--|
-| [总览](docs/screenshots/neo4j-v4-overview.png) | 条款 / 要求 / 阈值 / 试验等类型子图 |
-| [6.11 邻域](docs/screenshots/neo4j-v4-focus-6.11.png) | 误响应相关局部关联 |
+| [Overview](docs/screenshots/neo4j-v4-overview.png) | Subgraph over clauses, requirements, thresholds, tests, … |
+| [6.11 neighborhood](docs/screenshots/neo4j-v4-focus-6.11.png) | Local structure around false-response tests |
 
 ![v4 overview](docs/screenshots/neo4j-v4-overview.png)
 
@@ -60,282 +61,282 @@ v4 知识图谱（Neo4j，`aeb_gb39901_v4_relation_guard`）：
 
 ---
 
-## 1. 问题背景
+## 1. Problem
 
-智能驾驶、车载知识问答及试验规范、标定、诊断等场景中，常见问题包括：工况速度阈值、误触发判定、试验要求差异等。答案通常已写在标准或手册中，属于闭集、可核对知识。若仅依赖模型参数记忆，可能出现条款虚构、数值偏移。
+In intelligent driving Q&A, test specs, calibration, and diagnostics, questions often look like: speed thresholds under a scenario, false-trigger criteria, differences between test requirements. Answers usually already exist in standards or manuals—closed-set, verifiable facts. Relying only on model parameters risks fabricated clauses and wrong numbers.
 
-目标：回答严格依据已入库文档；证据不足时明确拒答。
+Goal: answer strictly from the indexed corpus; refuse explicitly when evidence is missing.
 
 ---
 
-## 2. 方案
+## 2. Approach
 
 ### 2.1 RAG
 
-从知识库检索相关片段，再据此生成回答。
+Retrieve relevant passages, then generate from them.
 
 ```text
-问题 ──► 检索 ──► 生成
+question ──► retrieve ──► generate
 ```
 
-常见实现是单次「问题 → 检索 → 生成」。对长文档与表格密集文本，一轮检索易漏检；切分不当会导致阈值错读；上下文噪声可能诱发无依据生成。
+Typical pipelines are single-shot. On long documents and dense tables, one pass often misses context; bad chunking breaks numeric conditions; noisy context can still induce unsupported answers.
 
-### 2.2 Agent 控制环
+### 2.2 Agent control loop
 
-在检索底座之上增加 Harness Agent，将单次问答改为多步取证：
+A Harness agent turns single-shot RAG into multi-step evidence gathering:
 
 ```text
-传统 RAG:   问题 ──► 检索 ──► 回答
+Classic RAG:   question ──► retrieve ──► answer
 
 EvidenceTrail:
-  问题 ──► Harness（规划 → 检索 → 反思 → 再决策）──► 有据回答 / 拒答
-                    │
-                    └──► 图 + 向量检索底座
+  question ──► Harness (plan → retrieve → reflect → decide) ──► grounded / refuse
+                      │
+                      └──► graph + vector backend
 ```
 
-| | 传统 RAG | EvidenceTrail |
-|--|----------|----------------|
-| 流程 | 单次检索与生成 | 多轮规划、检索与反思 |
-| 查询构造 | 多以整句问题检索 | Agent 拆分子问题并选择检索方式 |
-| 证据不足 | 易给出确定回答 | 继续取证，或明确拒答 |
-| 职责划分 | 检索 + 一次生成 | 检索底座 + 控制层 |
+| | Classic RAG | EvidenceTrail |
+|--|-------------|---------------|
+| Flow | One retrieve + generate | Multi-step plan / retrieve / reflect |
+| Querying | Often the full question once | Agent writes sub-queries and picks tools |
+| Weak evidence | Often still answers | Keep gathering or refuse |
+| Split | Retrieve + generate | Retrieval stack + control layer |
 
-### 2.3 知识图谱、GraphRAG 与 LightRAG
+### 2.3 Knowledge graph, GraphRAG, LightRAG
 
-知识图谱以实体为节点、关系为边，便于表达「要求—试验—条件—阈值」等结构。GraphRAG 在向量相似之外用图做关联扩展，再回到原文片段生成。
+A knowledge graph links requirements, tests, conditions, and thresholds. GraphRAG extends vector search with graph expansion, then returns to source text for generation.
 
 ```text
-文档 ──► 切分 / 抽取 ──► 知识图谱 + 向量索引
+docs ──► chunk / extract ──► KG + vector index
                               │
-                   查询：图扩展关联 ──► 原文片段 ──► 生成
+                   query: expand on graph ──► source text ──► generate
 ```
 
-底座采用开源 [LightRAG](https://github.com/HKUDS/LightRAG)。领域实体类型、关系合法性及表格切分在应用侧约束。本仓库不修改 LightRAG 核心源码。
+Backend: open-source [LightRAG](https://github.com/HKUDS/LightRAG). Domain entity types, relation legality, and table-aware chunking are applied on the application side. This repo does not fork LightRAG core.
 
-### 2.4 PDF 与 OCR
+### 2.4 PDF and OCR
 
-原始材料多为 PDF，需 OCR / 版面解析为 Markdown 后再切分与构图。工具使用 [MinerU](https://github.com/opendatalab/MinerU)：
+Sources are often PDFs; OCR / layout parsing to Markdown comes before chunking and indexing. We use [MinerU](https://github.com/opendatalab/MinerU):
 
-| 方式 | 链接 |
+| Mode | Link |
 |------|------|
-| 在线 | [https://mineru.net/](https://mineru.net/) |
-| 本地 | [https://github.com/opendatalab/MinerU](https://github.com/opendatalab/MinerU) |
+| Online | [https://mineru.net/](https://mineru.net/) |
+| Local | [https://github.com/opendatalab/MinerU](https://github.com/opendatalab/MinerU) |
 
 ```text
-PDF ──► MinerU ──► Markdown ──► 结构切分 / 入库
+PDF ──► MinerU ──► Markdown ──► structural chunk / ingest
 ```
 
-样例语料在 `corpus/prepared/`、`corpus/index_ready/`（历史导出文件名可能含 `PaddleOCR-VL` 标记；新文档可用 MinerU）。
+Sample corpus lives under `corpus/prepared/` and `corpus/index_ready/` (historical export names may include `PaddleOCR-VL`; new docs can use MinerU).
 
-### 2.5 构图：默认流程与应用侧改进
+### 2.5 Indexing: defaults vs application-side work
 
-LightRAG 默认：按长度切块 → 宽类型抽取 → 图 + 向量。用于法规文档时，常见问题是表被切散、类型过泛、关系噪声、数值与条件分离。
+LightRAG default: length-based chunks → broad entity types → graph + vectors. On regulatory text this often breaks tables, over-generalizes types, adds noisy edges, and severs numbers from conditions.
 
-应用侧改进（不改核心源码）：
+Application-side improvements (no core fork):
 
-| 改进 | 做法 | 目的 |
-|------|------|------|
-| 结构切分 | 表整表入库；叙述按条款/单元切分（`prepare_gb39901_v3.py`） | 阈值与条件对齐 |
-| 领域 schema | 条款、试验、阈值等类型与提示（`config/gb_39901_2025_schema.yml`） | 抽取业务对象 |
-| 关系校验 | 白名单；keep / reverse / drop，禁止 invent（`schema_guard.py`） | 减少非法边 |
-| 图检索 + 原文回源 | 图定位后回填完整 text unit | 作答依据为原文 |
+| Change | What | Why |
+|--------|------|-----|
+| Structural chunking | Keep tables whole; split narrative by clause/unit (`prepare_gb39901_v3.py`) | Align thresholds with conditions |
+| Domain schema | Clause / test / threshold types and prompts (`config/gb_39901_2025_schema.yml`) | Extract domain objects |
+| Relation guard | Allow-list; keep / reverse / drop; no invent (`schema_guard.py`) | Fewer illegal edges |
+| Graph locate + full-text backfill | Expand graph hits via `source_id` to full text units | Answer from source text |
 
 ```text
-PDF ──► OCR ──► 结构切分 ──► schema 抽取 ──► 关系校验 ──► 图 + 向量
-查询：图扩展 ──► 回源原文 ──► Agent 取证 / 门控
+PDF ──► OCR ──► structural chunk ──► schema extract ──► relation guard ──► graph + vectors
+query: graph expand ──► source text ──► agent gather / gate
 ```
 
-换领域时主要改 schema 与切分；控制层可复用。v4 构图结果见上文截图。
+New domains mainly need a new schema and chunk policy; the control layer can stay. v4 graph screenshots are above.
 
-### 2.6 控制层与评测隔离
+### 2.6 Control layer and eval isolation
 
-控制层定义角色、工具、拒答条件与步数上限，不把具体题解写入在线规则。换语料时换索引与 schema，不换贴题脚本。约定见 [harness/PROTOCOL.md](harness/PROTOCOL.md)。
+The control layer sets roles, tools, refusal rules, and step limits—not per-question answer keys. Changing corpora means new indexes/schemas, not new “quiz scripts.” See [harness/PROTOCOL.md](harness/PROTOCOL.md).
 
 ```text
-在线：Agent 只读索引与原文 ──► 作答
-离线：标准答案 / 参考证据 ──► 事后打分
+online:  agent reads only index + source text ──► answer
+offline: gold answers / evidence ──► score after the fact
 ```
 
-| 项 | 默认 |
-|----|------|
-| 决策路径 | skill（`HARNESS_PILOT_HEURISTICS=0`） |
-| 证据 catalog | `none`（不加载金标） |
-| 条款/表格精查 | 关闭（`HARNESS_ENABLE_PRECISE_LOOKUP=0`） |
+| Item | Default |
+|------|---------|
+| Decision path | skill (`HARNESS_PILOT_HEURISTICS=0`) |
+| Evidence catalog | `none` (no gold load) |
+| Clause/table precise tools | off (`HARNESS_ENABLE_PRECISE_LOOKUP=0`) |
 
-报告档位：P0 裸检索基线；**P1** 协议 Agent（主结论）；P2 贴题/gold catalog（仅附录）。
+Reporting tiers: P0 bare retrieval baseline; **P1** protocol agent (primary results); P2 quiz-tuned / gold catalog (appendix only).
 
 ---
 
 ## 3. Benchmark
 
-目录：`benchmark/`。评测分两阶段，职责不同。
+Under `benchmark/`. Two stages with different roles.
 
-### 3.1 两阶段
+### 3.1 Stages
 
 ```text
-阶段一：金标小批量 → score_kg / retrieval / answers → 迭代构图或 Agent
-阶段二：题量扩大 → RAGAS 等 reference-free 指标（规划中，脚本未入库）
+Stage 1: small gold set → score_kg / retrieval / answers → iterate index or agent
+Stage 2: larger set → RAGAS-style reference-free metrics (planned; not in repo yet)
 ```
 
-| 阶段 | 数据 | 工具 | 目的 |
-|------|------|------|------|
-| 一 | 金标题目与证据 | 自建分层评分 | 诊断与定型 |
-| 二 | 大规模题目 | [RAGAS](https://docs.ragas.io/) 类指标 | 回归与趋势 |
+| Stage | Data | Tools | Purpose |
+|-------|------|-------|---------|
+| 1 | Gold questions & evidence | Built-in layered scorers | Diagnose and freeze design |
+| 2 | Large question set | [RAGAS](https://docs.ragas.io/)-style metrics | Regression / trends |
 
-阶段二不替代阶段一；扩集后仍保留金标抽检。RAGAS 衡量相对上下文的忠实度/切题程度，不等于法规判定正确。评分均在事后进行。
+Stage 2 does not replace stage 1; keep gold spot-checks after scale-up. RAGAS-style scores measure faithfulness/relevance to retrieved context, not legal correctness. Scoring is always offline.
 
-### 3.2 检索模式与纪律
+### 3.2 Retrieval modes
 
-| 模式 | 作用 |
+| Mode | Role |
 |------|------|
-| `closed_book` | 无检索地板 |
-| `naive` | 纯向量 |
-| `hybrid` / `mix` | 图增强 |
-| `oracle` | 金证据上限 |
+| `closed_book` | No-retrieval floor |
+| `naive` | Vector only |
+| `hybrid` / `mix` | Graph-enhanced |
+| `oracle` | Gold-evidence ceiling |
 
-主张图增益时，应同时看证据召回、路径完整与最终答案。`KG 分高 ≠ 检索好 ≠ 答对`。
+Claims of graph gains should report evidence recall, path completeness, and final answers together. High KG score ≠ high retrieval ≠ correct answer.
 
-当前以 pilot 小集与分层脚本为主，`self_checked`，未冻结 formal v1。详见 [benchmark/README.md](benchmark/README.md)、[pilot_6q_report.md](benchmark/results/pilot_6q_report.md)。
+Current evidence is mainly a pilot set and layered scripts (`self_checked`), not a frozen formal v1. See [benchmark/README.md](benchmark/README.md) and [pilot_6q_report.md](benchmark/results/pilot_6q_report.md).
 
-### 3.3 数据与脚本
+### 3.3 Data and scripts
 
-| 路径 | 说明 |
+| Path | Role |
 |------|------|
-| [benchmark/data/questions.jsonl](benchmark/data/questions.jsonl) | 题目与参考答案 |
-| [benchmark/data/evidence.jsonl](benchmark/data/evidence.jsonl) | 参考证据 |
-| [benchmark/scripts/score_kg.py](benchmark/scripts/score_kg.py) | 图谱评分 |
-| [benchmark/scripts/score_retrieval.py](benchmark/scripts/score_retrieval.py) | 检索评分 |
-| [benchmark/scripts/score_answers.py](benchmark/scripts/score_answers.py) | 问答评分 |
-| [benchmark/scripts/run_harness_benchmark.py](benchmark/scripts/run_harness_benchmark.py) | Agent 跑题 |
-| [benchmark/scripts/run_graphrag_benchmark.py](benchmark/scripts/run_graphrag_benchmark.py) | 多 mode 管线 |
+| [benchmark/data/questions.jsonl](benchmark/data/questions.jsonl) | Questions and references |
+| [benchmark/data/evidence.jsonl](benchmark/data/evidence.jsonl) | Gold evidence |
+| [benchmark/scripts/score_kg.py](benchmark/scripts/score_kg.py) | Graph scores |
+| [benchmark/scripts/score_retrieval.py](benchmark/scripts/score_retrieval.py) | Retrieval scores |
+| [benchmark/scripts/score_answers.py](benchmark/scripts/score_answers.py) | Answer scores |
+| [benchmark/scripts/run_harness_benchmark.py](benchmark/scripts/run_harness_benchmark.py) | Agent runs |
+| [benchmark/scripts/run_graphrag_benchmark.py](benchmark/scripts/run_graphrag_benchmark.py) | Multi-mode pipeline |
 
-### 3.4 题型示例
+### 3.4 Example question types
 
-| 题型 | 题号 | 题目 |
-|------|------|------|
-| 直接事实 | `gb_direct_001` | GB 39901—2025 适用于哪两类汽车？ |
-| 条件表格 | `gb_table_001` | M1、60 km/h、静止目标、最大设计总质量下最大相对碰撞速度？ |
-| 多跳 | `gb_multi_hop_001` | 车辆目标碰撞预警的验证试验、相对紧急制动的最迟时机及例外？ |
-| 比较 | `gb_compare_001` | M1 与 N1 前方车辆目标最低激活速度范围差异？VRU 目标是否相同？ |
-| 综合 | `gb_synthesis_001` / `gb_multi_hop_006` | 6.11 与 5.4 关系、子场景与共同判据 |
-| 不可回答 | `gb_unanswerable_001` | 能否用仿真完全替代 6.11 五项误响应试验？ |
+| Type | ID | Question (sample domain: GB 39901) |
+|------|-----|-------------------------------------|
+| Direct fact | `gb_direct_001` | Which two vehicle categories does GB 39901—2025 apply to? |
+| Conditional table | `gb_table_001` | Max relative collision speed for M1 at 60 km/h, stationary target, GVW? |
+| Multi-hop | `gb_multi_hop_001` | Vehicle-target CW tests, latest timing vs emergency braking, and exception? |
+| Compare | `gb_compare_001` | M1 vs N1 min activation speed range for vehicle targets; same for VRU? |
+| Synthesis | `gb_synthesis_001` / `gb_multi_hop_006` | Link of 5.4 to 6.11, scenario count, shared pass behavior |
+| Unanswerable | `gb_unanswerable_001` | Can simulation fully replace the five 6.11 false-response tests? |
 
-不可回答类用于检验拒答。高召回不保证会拒答。
+Unanswerable items check refusal. High recall does not guarantee safe refusal.
 
-### 3.5 Pilot 观察
+### 3.5 Pilot notes
 
-图检索可提高证据覆盖，也可能引入噪声；结构切分与关系约束改善读表与图合法性，不自动提高问答正确率。效果依赖重排序、原文优先、充分性收网、门控与多步 Agent。详见 [pilot_6q_report.md](benchmark/results/pilot_6q_report.md)。
+Graph retrieval often raises evidence coverage and noise. Structural chunking and relation guards improve table stability and graph legality but do not automatically improve QA accuracy. Outcomes still depend on rerank, source-text priority, sufficiency stop rules, gates, and multi-step control. See [pilot_6q_report.md](benchmark/results/pilot_6q_report.md).
 
 ---
 
-## 4. 运行时
+## 4. Runtime
 
-控制环：模型决策工具；代码负责入袋、配额、充分性与门控。标准答案不进入在线路径。
+The model chooses tools; code owns bag merge, budgets, sufficiency, and hard gates. Gold answers never enter the online path.
 
-检索上图定位、扩关联；作答时数字与表行以 `kind=chunk` 原文为准，entity / relationship 仅作辅证。
+Graph search locates and expands; numbers and table rows must come from `kind=chunk` source text. Entities/relations are navigation only.
 
-### 4.1 控制环
+### 4.1 Control loop
 
-| 工具 | 默认 | 说明 |
-|------|------|------|
-| `graph_search` | 开，mode=`mix` | 图增强检索 |
-| `vector_search` | 开，mode=`naive` | 纯向量 |
-| `evidence_check` | 开 | 袋内检查 |
-| `compose_answer` | 开 | 基于证据袋作答 |
-| `finalize` | 开 | 拒答等终局 |
-| `clause_lookup` / `table_lookup` | 关 | 需显式开启精查 |
-
-```text
-问题 → 决策 → graph/vector 检索 → source_id 回源 chunk
-     → compact（去重 / 重排 / text-primary）
-     → 充分性 / 收网 → compose → 门控 → 答案
-     未充分则换 query 再检
-```
-
-### 4.2 证据袋
-
-| kind | 用途 |
-|------|------|
-| `relationship` / `entity` | 导航与辅证 |
-| `chunk` | 事实与数值主依据（含回源全文） |
-
-图模式常出现「有实体关系、无 text unit」，故默认 `mix` 并做 `source_id` 回源。实现：`lightrag_retrieve.py`、`compact.py`、`types.evidence_text`、`compose_answer.py`。
-
-### 4.3 充分性与收网
-
-代码审袋（`sufficiency.py`、`bag_gaps.py`）：硬缺口示例为题干条款未入袋、「见表 N」无表体。充分性是防空转启发式，不保证语义正确。
-
-| 条件（有袋） | 行为 |
-|--------------|------|
-| 停滞 ≥ 2 | 软提示收网 |
-| 重复检索 ≥ 2 或停滞 ≥ 3 | 强制 compose |
-| 已充分且仍停滞 / 本轮无新增 | 强制 compose |
-
-空袋不强制 compose；步数耗尽则拒答或强制 compose（有袋时）。
-
-### 4.4 硬门控
-
-| 规则 | 行为 |
-|------|------|
-| 空袋 compose | 拒绝 |
-| 答案数字 ≥ 5 | 须在袋全文出现（含千分位归一） |
-| 未接地 | 可继续取证，不静默放过 |
-| `finalize` | 不得绕过 compose 硬答 |
-
-### 4.5 示例：误响应相关
+| Tool | Default | Role |
+|------|---------|------|
+| `graph_search` | on, `mix` | Graph-enhanced retrieve |
+| `vector_search` | on, `naive` | Vector only |
+| `evidence_check` | on | Bag consistency |
+| `compose_answer` | on | Answer from bag |
+| `finalize` | on | Refuse / terminal |
+| `clause_lookup` / `table_lookup` | off | Precise tools (opt-in) |
 
 ```text
-问题（5.4 与 6.11 关系 / 子场景 / 共同判据）
-  → graph_search → 回源 → 充分性 → compose → 门控
+question → plan → graph/vector retrieve → source_id chunk backfill
+         → compact (dedupe / rerank / text-primary)
+         → sufficiency / force-compose → compose → gates → answer
+         if incomplete, new query and continue
 ```
 
-轨迹可写文件：`--dump-trace path.json`。
+### 4.2 Evidence bag
+
+| kind | Role |
+|------|------|
+| `relationship` / `entity` | Navigation / support |
+| `chunk` | Primary facts and numbers (incl. backfilled full text) |
+
+Graph-only modes often return entities/relations with no text units; default `mix` plus `source_id` backfill. Code: `lightrag_retrieve.py`, `compact.py`, `types.evidence_text`, `compose_answer.py`.
+
+### 4.3 Sufficiency and stop rules
+
+Code audits the bag (`sufficiency.py`, `bag_gaps.py`): e.g. missing clause from the question, “see Table N” without table body. Sufficiency is an anti-spin heuristic, not semantic correctness.
+
+| Condition (non-empty bag) | Action |
+|---------------------------|--------|
+| Stagnant ≥ 2 | Soft prompt to compose |
+| Duplicate retrieve ≥ 2 or stagnant ≥ 3 | Force compose |
+| Sufficient and still stagnant / zero added | Force compose |
+
+Empty bags never force compose; max steps end in refuse or force compose if the bag is non-empty.
+
+### 4.4 Hard gates
+
+| Rule | Behavior |
+|------|----------|
+| Compose with empty bag | Reject |
+| Answer numbers ≥ 5 | Must appear in bag text (incl. spaced thousands) |
+| Ungrounded | May continue gather; no silent pass |
+| `finalize` | Must not bypass compose for a “yes” answer |
+
+### 4.5 Example: false-response thread
+
+```text
+question (5.4 ↔ 6.11, scenarios, shared pass behavior)
+  → graph_search → backfill → sufficiency → compose → gates
+```
+
+Full trace: `--dump-trace path.json`.
 
 ---
 
-## 5. 仓库结构
+## 5. Repository layout
 
 ```text
 harness/           # Agent
-lightrag_custom/   # 抽取提示、关系校验
-config/            # 领域 schema
-scripts/           # 切分、入库、后处理
-benchmark/         # 评测
-corpus/            # 样例语料
-data/rag_storage/  # v4 向量/KV 快照（无 LLM cache）
-docs/              # 架构图、截图、CLI 录屏
-docker/            # 可选薄镜像
+lightrag_custom/   # extraction prompts, relation guard
+config/            # domain schema
+scripts/           # prepare / ingest / postprocess
+benchmark/         # evaluation
+corpus/            # sample corpus
+data/rag_storage/  # v4 vector/KV snapshot (no LLM cache)
+docs/              # architecture, screenshots, CLI GIF
+docker/            # optional thin image
 compose.yaml
 Makefile
 ```
 
-| 仓内 | 不含 |
-|------|------|
-| 应用代码、schema、prepared 语料、v4 快照、benchmark 数据与报告 | LightRAG 源码、Neo4j 卷、`.env`、raw PDF、非 v4 workspace、LLM cache |
+| In git | Not in git |
+|--------|------------|
+| App code, schema, prepared corpus, v4 snapshot, benchmark data & reports | LightRAG sources, Neo4j volumes, `.env`, raw PDFs, non-v4 workspaces, LLM cache |
 
-见 [NOTICE.md](NOTICE.md)、[CONTRIBUTING.md](CONTRIBUTING.md)。
+See [NOTICE.md](NOTICE.md), [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
-## 6. 运行
+## 6. Run
 
-### 6.1 拓扑
+### 6.1 Topology
 
 ```text
-Docker: Neo4j :7474/:7687 · LightRAG :9621（挂载 rag_storage、lightrag_custom）
+Docker: Neo4j :7474/:7687 · LightRAG :9621 (mounts rag_storage, lightrag_custom)
 Python: reg_harness ──HTTP──► LightRAG
 ```
 
-| 方式 | 命令 |
-|------|------|
-| 默认 | `make v4-up`（官方 LightRAG 镜像） |
-| 薄应用镜像 | `make lightrag-image` && `make v4-up-app` |
+| Mode | Command |
+|------|---------|
+| Default | `make v4-up` (official LightRAG image) |
+| Thin app image | `make lightrag-image` && `make v4-up-app` |
 
-说明：[docker/README.md](docker/README.md)。本地 Neo4j Browser：`http://127.0.0.1:7474`。
+Details: [docker/README.md](docker/README.md). Neo4j Browser: `http://127.0.0.1:7474`.
 
-### 6.2 配置
+### 6.2 Config
 
-依赖：Docker、Python 3.10+、对话与向量 API。
+Needs: Docker, Python 3.10+, chat + embedding APIs.
 
 ```bash
 git clone https://github.com/qianyi0206/evidence-trail.git
@@ -345,51 +346,51 @@ pip install -r requirements.txt
 cd harness && pip install -e . && cd ..
 
 cp .env.example .env
-# NEO4J_PASSWORD、LLM_*、EMBEDDING_*；可选 RERANK_*
+# set NEO4J_PASSWORD, LLM_*, EMBEDDING_*; optional RERANK_*
 ```
 
-无密钥叠加配置：`.env.gb39901_v4`。
+Secret-free overlay: `.env.gb39901_v4`.
 
-### 6.3 步骤
+### 6.3 Steps
 
 ```text
 1. cd harness && python3 -m unittest discover -s tests -v
-2. （可选）MinerU 转 Markdown → corpus/prepared/
+2. (optional) MinerU PDF → Markdown → corpus/prepared/
 3. make v4-up
-4. 图为空：make v4-prepare && make v4-ingest …
+4. if graph empty: make v4-prepare && make v4-ingest …
 5. cd harness && PYTHONPATH=. python3 -m reg_harness.cli \
      --profile-env ../.env.gb39901_v4 chat
-6. （可选）benchmark/scripts/ …
+6. (optional) benchmark/scripts/ …
 ```
 
-单次提问（默认输出取证过程；规划阶段可流式打印模型 token，`--no-live` 关闭）：
+One-shot ask (default: live process log; planning may stream model tokens; `--no-live` disables):
 
 ```bash
 cd harness
 PYTHONPATH=. python3 -m reg_harness.cli --profile-env ../.env.gb39901_v4 \
-  ask "系统无误响应要求与6.11试验是什么关系？6.11包含多少类子场景，共同通过行为是什么？" \
+  ask "What is the link between the no false-response requirement and section 6.11 tests? How many 6.11 sub-scenarios are there, and what is the shared pass behavior?" \
   --max-steps 8
 
 PYTHONPATH=. python3 -m reg_harness.cli --profile-env ../.env.gb39901_v4 \
-  ask "GB 39901—2025 适用于哪两类汽车？" --max-steps 6
+  ask "Which two vehicle categories does GB 39901—2025 apply to?" --max-steps 6
 ```
 
 ```python
 from reg_harness import build_stack
 
 stack = build_stack(profile_env=".env.gb39901_v4")
-state = stack.ask("GB 39901 适用于哪两类汽车？", max_steps=6)
+state = stack.ask("Which two vehicle categories does GB 39901 apply to?", max_steps=6)
 print(state.final_answer)
 ```
 
-使用仓内向量快照时，嵌入模型与维度须与入库一致（`state/embedding_fingerprint*.json`）。
+When using the shipped vector snapshot, embedding model and dimension must match ingest (`state/embedding_fingerprint*.json`).
 
 ---
 
-## 7. 范围
+## 7. Scope
 
-- 工程演示，非量产知识中台或认证工具。
-- 门控降低无依据生成风险，不保证零错误。
-- 未冻结 formal 总正确率，见 [benchmark/results/pilot_6q_report.md](benchmark/results/pilot_6q_report.md)。
-- 样例语料仅供学习研究：[NOTICE.md](NOTICE.md)。
+- Engineering demo, not a production knowledge platform or type-approval tool.
+- Gates reduce unsupported generation; they do not guarantee zero error.
+- No frozen formal overall accuracy; see [pilot_6q_report.md](benchmark/results/pilot_6q_report.md).
+- Sample corpus is for study only: [NOTICE.md](NOTICE.md).
 - [CONTRIBUTING.md](CONTRIBUTING.md) · [MIT](LICENSE) · [harness/PROTOCOL.md](harness/PROTOCOL.md)
