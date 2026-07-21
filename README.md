@@ -1,5 +1,7 @@
 # EvidenceTrail
 
+[中文](README.md) | [English](README.en.md)
+
 基于知识图谱增强检索的文档取证 Agent。
 
 面向法规、试验规范等确定性知识：回答须可回溯至原文；证据不足时拒答。
