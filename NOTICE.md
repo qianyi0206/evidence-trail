@@ -9,6 +9,7 @@ It **does not vendor** the [LightRAG](https://github.com/HKUDS/LightRAG) source 
 - **How we use it:** Docker image `ghcr.io/hkuds/lightrag` (pinned in `compose.yaml` / `.env.example`), plus optional local API at `http://127.0.0.1:9621`.
 - **Our customisation (this repo):**
   - `lightrag_custom/` — prompt profiles and relation `schema_guard` (loaded via container `PYTHONPATH` / `sitecustomize`)
+  - optional thin image: `docker/lightrag/Dockerfile` builds `FROM` official LightRAG and only bakes those hooks (no secrets, no index data); see `docker/README.md`
   - `scripts/` — prepare / ingest / probe helpers
   - `harness/` — **EvidenceTrail** agent (`reg_harness`: tools, guards, sufficiency audit, traces)
   - `benchmark/` — offline eval data and scorers (case study: GB 39901 AEBS)

@@ -1,0 +1,26 @@
+# Optional overlay: run LightRAG from a thin local image that bakes lightrag_custom.
+# Official path remains compose.yaml (pull ghcr.io/hkuds/lightrag + bind-mount custom).
+#
+#   make lightrag-image
+#   docker compose --env-file .env --env-file .env.gb39901_v4 \
+#     -f compose.yaml -f compose.lightrag-app.yaml up -d neo4j lightrag
+#
+# Or: make v4-up-app
+
+services:
+  lightrag:
+    image: ${LIGHTRAG_APP_IMAGE:-evidencetrail-lightrag:v1.4.16-app}
+    build:
+      context: .
+      dockerfile: docker/lightrag/Dockerfile
+      args:
+        BASE_IMAGE: ${LIGHTRAG_BASE_IMAGE:-ghcr.io/hkuds/lightrag:v1.4.16}
+    environment:
+      # Ensure profile imports resolve even if host env leaves PYTHONPATH empty.
+      PYTHONPATH: ${GB39901_PYTHONPATH:-/app/custom}
+    volumes:
+      - ./data/rag_storage:/app/data/rag_storage
+      - ./data/inputs:/app/data/inputs
+      # Live-edit hooks during development (overrides baked /app/custom when present).
+      # For a pure image path (no bind-mount of custom), comment out the next line.
+      - ./lightrag_custom:/app/custom:ro

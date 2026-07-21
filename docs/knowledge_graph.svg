@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">EvidenceTrail 领域知识图谱示意（GB 39901 AEBS）</title>
+  <desc id="desc">示意法规图上的核心节点与关系；非完整 Neo4j 导出。查询时图上扩展，作答回源原文 chunk。</desc>
+  <defs>
+    <style>
+      .bg { fill: #0f1419; }
+      .title { fill: #edf2f4; font: 700 16px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      .sub { fill: #94a3b8; font: 11px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      .n { stroke-width: 1.6; }
+      .n-std { fill: #1b3a4b; stroke: #48cae4; }
+      .n-clause { fill: #1a2f3d; stroke: #90e0ef; }
+      .n-req { fill: #1b3a2f; stroke: #2a9d8f; }
+      .n-thr { fill: #3d2c29; stroke: #e76f51; }
+      .n-test { fill: #2b2d42; stroke: #b8c0ff; }
+      .n-veh { fill: #2a2438; stroke: #c77dff; }
+      .n-cond { fill: #2a2818; stroke: #e9c46a; }
+      .lbl { fill: #edf2f4; font: 600 12px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      .small { fill: #cbd5e1; font: 10.5px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      .edge { stroke: #64748b; stroke-width: 1.4; fill: none; marker-end: url(#m); }
+      .el { fill: #94a3b8; font: 10px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      .box { fill: #1a2332; stroke: #3d5a80; stroke-width: 1; }
+    </style>
+    <marker id="m" markerWidth="7" markerHeight="7" refX="5.5" refY="2.5" orient="auto">
+      <path d="M0,0 L5.5,2.5 L0,5 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="540"/>
+  <text class="title" x="28" y="32">领域知识图谱示意 · GB 39901 AEBS（样例）</text>
+  <text class="sub" x="28" y="50">图用于定位与扩关联；作答以回源 Text unit（chunk）为准 · 完整图在 Neo4j，本图为示意</text>
+
+  <!-- nodes -->
+  <rect class="n n-std" x="380" y="70" width="200" height="48" rx="10"/>
+  <text class="lbl" x="420" y="92">Standard</text>
+  <text class="small" x="405" y="108">GB 39901—2025</text>
+
+  <rect class="n n-clause" x="120" y="180" width="150" height="48" rx="10"/>
+  <text class="lbl" x="155" y="202">Clause 5.x</text>
+  <text class="small" x="145" y="218">性能要求</text>
+
+  <rect class="n n-clause" x="400" y="180" width="160" height="48" rx="10"/>
+  <text class="lbl" x="435" y="202">Clause 6.11</text>
+  <text class="small" x="430" y="218">误响应试验</text>
+
+  <rect class="n n-clause" x="700" y="180" width="150" height="48" rx="10"/>
+  <text class="lbl" x="735" y="202">Clause 6.5</text>
+  <text class="small" x="725" y="218">试验方法</text>
+
+  <rect class="n n-req" x="80" y="300" width="170" height="48" rx="10"/>
+  <text class="lbl" x="105" y="322">Requirement</text>
+  <text class="small" x="100" y="338">碰撞预警能力</text>
+
+  <rect class="n n-test" x="380" y="300" width="200" height="48" rx="10"/>
+  <text class="lbl" x="420" y="322">TestScenario</text>
+  <text class="small" x="405" y="338">五类误响应场景…</text>
+
+  <rect class="n n-thr" x="700" y="300" width="170" height="48" rx="10"/>
+  <text class="lbl" x="735" y="322">Threshold</text>
+  <text class="small" x="720" y="338">速度 / TTC / …</text>
+
+  <rect class="n n-veh" x="80" y="420" width="160" height="48" rx="10"/>
+  <text class="lbl" x="105" y="442">VehicleCategory</text>
+  <text class="small" x="125" y="458">M1 / N1</text>
+
+  <rect class="n n-cond" x="380" y="420" width="200" height="48" rx="10"/>
+  <text class="lbl" x="430" y="442">Condition</text>
+  <text class="small" x="400" y="458">载荷 · 目标 · 工况</text>
+
+  <rect class="n n-thr" x="700" y="420" width="170" height="48" rx="10"/>
+  <text class="lbl" x="745" y="442">Metric</text>
+  <text class="small" x="730" y="458">相对碰撞速度等</text>
+
+  <!-- edges Standard -> clauses -->
+  <path class="edge" d="M420 118 L195 180"/>
+  <text class="el" x="250" y="145">CONTAINS</text>
+  <path class="edge" d="M480 118 L480 180"/>
+  <text class="el" x="490" y="155">CONTAINS</text>
+  <path class="edge" d="M540 118 L760 180"/>
+  <text class="el" x="640" y="145">CONTAINS</text>
+
+  <!-- clause to req/test/thr -->
+  <path class="edge" d="M195 228 L165 300"/>
+  <text class="el" x="100" y="270">SPECIFIES</text>
+  <path class="edge" d="M480 228 L480 300"/>
+  <text class="el" x="490" y="270">SPECIFIES</text>
+  <path class="edge" d="M775 228 L785 300"/>
+  <text class="el" x="800" y="270">HAS_…</text>
+
+  <!-- req to vehicle / thr -->
+  <path class="edge" d="M165 348 L160 420"/>
+  <text class="el" x="80" y="390">APPLIES_TO</text>
+  <path class="edge" d="M250 324 L700 324"/>
+  <text class="el" x="430" y="340">HAS_THRESHOLD</text>
+
+  <!-- test to condition -->
+  <path class="edge" d="M480 348 L480 420"/>
+  <text class="el" x="490" y="390">HAS_CONDITION</text>
+
+  <!-- thr to metric -->
+  <path class="edge" d="M785 348 L785 420"/>
+  <text class="el" x="800" y="390">MEASURED_BY</text>
+
+  <!-- req verified by test -->
+  <path class="edge" d="M250 320 L380 320"/>
+  <text class="el" x="280" y="312">VERIFIED_BY</text>
+
+  <!-- legend -->
+  <rect class="box" x="28" y="480" width="904" height="44" rx="6"/>
+  <text class="sub" x="44" y="500">查询：graph_search 在图上扩展（图求广）→ source_id 回源 chunk（文答题）→ 证据袋 compose / 门控</text>
+  <text class="sub" x="44" y="516">真实图规模与类型以 schema 与 Neo4j 为准 · 浏览器：http://127.0.0.1:7474（本地，不进 git）</text>
+</svg>

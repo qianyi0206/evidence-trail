@@ -66,6 +66,8 @@ class AgentState:
     refuse_reason: str | None = None
     draft_answer: dict[str, Any] | None = None
     meta: dict[str, Any] = field(default_factory=dict)
+    # Optional live UI hook: callable(event_dict) after each add_trace (not serialized).
+    event_hook: Any = field(default=None, repr=False, compare=False)
 
     def _format_evidence_item(
         self,
@@ -203,7 +205,14 @@ class AgentState:
         return "\n".join(lines)
 
     def add_trace(self, event: str, **payload: Any) -> None:
-        self.trace.append({"step": self.step, "event": event, **payload})
+        item = {"step": self.step, "event": event, **payload}
+        self.trace.append(item)
+        hook = self.event_hook
+        if callable(hook):
+            try:
+                hook(item, self)
+            except Exception:  # noqa: BLE001 — live UI must not break the loop
+                pass
 
     def register_call(self, signature: str) -> bool:
         """Return True if this call looks like a duplicate of a recent one."""

@@ -1,0 +1,31 @@
+# Used when building docker/lightrag (context = demo/aeb).
+# tools/ build uses context ./tools and is unaffected by most of these paths.
+
+.git
+.venv
+venv
+**/__pycache__
+**/*.pyc
+.env
+.env.*
+!.env.example
+!.env.gb39901
+!.env.gb39901_v3
+!.env.gb39901_v4
+
+data/neo4j
+data/rag_storage
+data/inputs
+corpus/raw
+results
+benchmark/results
+harness
+benchmark
+scripts
+config
+docs
+state
+*.md
+!docker/**/*.md
+!NOTICE.md
+!LICENSE

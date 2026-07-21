@@ -1,24 +1,22 @@
-# Screenshots
+# Screenshots & demo media
 
-Primary portfolio diagram (checked in):
+## 已入库（README 使用）
 
-- [`../architecture.svg`](../architecture.svg) — system layers and agent loop
+| 文件 | 内容 |
+|------|------|
+| [neo4j-v4-overview.png](neo4j-v4-overview.png) | v4 图谱总览（类型过滤后的子图） |
+| [neo4j-v4-focus-6.11.png](neo4j-v4-focus-6.11.png) | 6.11 误响应试验邻域（与 CLI 演示题对应） |
+| [../demo/cli-pipeline-demo.mp4](../demo/cli-pipeline-demo.mp4) | CLI `chat` 取证全流程录屏 |
 
-Optional live captures (add after you run the stack; do **not** include API keys or private hosts in the image):
+Workspace：`aeb_gb39901_v4_relation_guard`。
 
-| Suggested file | Content |
-|----------------|---------|
-| `webui-query.png` | LightRAG WebUI answering a GB 39901 question |
-| `cli-ask.png` | Terminal: `python -m reg_harness.cli ask "..."` with JSON answer |
-| `neo4j-browser.png` | Optional graph browser view (no credentials in frame) |
+## 放置约定
 
-How to capture:
+- 图谱 / UI 截图 → `docs/screenshots/`
+- 演示视频 → `docs/demo/`
+- 勿包含 Neo4j 密码、API Key、内网 host
 
-```bash
-make v4-up
-# WebUI http://127.0.0.1:9621
-cd harness && python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
-  ask "GB 39901—2025 适用于哪两类汽车？"
-```
+## 架构矢量图
 
-Then drop PNGs into this folder and link them from the root README if desired.
+- [../architecture.svg](../architecture.svg)
+- [../knowledge_graph.svg](../knowledge_graph.svg)（概念示意；真库以 PNG 为准）

@@ -95,6 +95,7 @@ class RegulationHarness:
         policy: str = "auto",
         max_steps: int | None = None,
         bootstrap: bool = False,
+        event_hook: Any = None,
     ) -> AgentState:
         pilot = bool(getattr(self.settings, "pilot_heuristics", False))
         steps = max_steps or max(self.settings.default_max_steps, 6)
@@ -127,6 +128,7 @@ class RegulationHarness:
             max_steps=steps,
             slots=slots,
             phase="gather",
+            event_hook=event_hook,
             meta={
                 "intent": intent_dict,
                 "preferred_modes": preferred_retrieve_modes(resolved_policy),  # type: ignore[arg-type]
@@ -224,7 +226,9 @@ class RegulationHarness:
             if hasattr(self.registry, "prompt_catalog"):
                 system = SYSTEM_PROMPT + "\n\n" + self.registry.prompt_catalog()
             try:
+                state.add_trace("llm_start", role="decision")
                 decision = self.chat.complete_json(system, user)
+                state.add_trace("llm_end", role="decision")
             except Exception as error:  # noqa: BLE001
                 state.add_trace("llm_error", error=str(error))
                 self.registry.run(

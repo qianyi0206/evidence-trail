@@ -1,76 +1,122 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="title desc">
-  <title id="title">EvidenceTrail architecture</title>
-  <desc id="desc">EvidenceTrail agent over LightRAG, Neo4j, and vector storage</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="720" viewBox="0 0 1000 720" role="img" aria-labelledby="title desc">
+  <title id="title">EvidenceTrail 系统架构</title>
+  <desc id="desc">离线构图、在线取证 Agent、LightRAG 依赖与离线评测边界</desc>
   <defs>
     <style>
       .bg { fill: #0f1419; }
-      .card { fill: #1a2332; stroke: #3d5a80; stroke-width: 2; rx: 10; }
-      .card-app { fill: #1b3a2f; stroke: #2a9d8f; }
-      .card-dep { fill: #2b2d42; stroke: #8d99ae; }
-      .card-data { fill: #3d2c29; stroke: #e76f51; }
-      .title { fill: #edf2f4; font: 700 18px 'Segoe UI', system-ui, sans-serif; }
-      .h { fill: #edf2f4; font: 600 14px 'Segoe UI', system-ui, sans-serif; }
-      .t { fill: #cbd5e1; font: 12px 'Segoe UI', system-ui, sans-serif; }
-      .small { fill: #94a3b8; font: 11px 'Segoe UI', system-ui, sans-serif; }
-      .arrow { stroke: #90e0ef; stroke-width: 2; fill: none; marker-end: url(#m); }
-      .lbl { fill: #90e0ef; font: 11px 'Segoe UI', system-ui, sans-serif; }
+      .card { fill: #1a2332; stroke: #3d5a80; stroke-width: 1.5; }
+      .card-app { fill: #142a24; stroke: #2a9d8f; stroke-width: 1.5; }
+      .card-dep { fill: #222536; stroke: #8d99ae; stroke-width: 1.5; }
+      .card-data { fill: #2a221f; stroke: #e76f51; stroke-width: 1.5; }
+      .card-eval { fill: #1a2438; stroke: #6c8cff; stroke-width: 1.5; }
+      .card-pipe { fill: #1e2430; stroke: #5c6b7a; stroke-width: 1.5; }
+      .title { fill: #edf2f4; font: 700 17px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      .sec { fill: #94a3b8; font: 600 11px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      .h { fill: #edf2f4; font: 600 13px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      .t { fill: #cbd5e1; font: 11.5px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      .small { fill: #94a3b8; font: 10.5px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      .arrow { stroke: #90e0ef; stroke-width: 1.6; fill: none; marker-end: url(#m); }
+      .arrow-dim { stroke: #64748b; stroke-width: 1.4; fill: none; marker-end: url(#md); stroke-dasharray: 4 3; }
+      .lbl { fill: #90e0ef; font: 10.5px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
+      .lbl-dim { fill: #94a3b8; font: 10.5px 'Segoe UI', 'PingFang SC', system-ui, sans-serif; }
     </style>
-    <marker id="m" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#90e0ef"/>
+    <marker id="m" markerWidth="7" markerHeight="7" refX="5.5" refY="2.5" orient="auto">
+      <path d="M0,0 L5.5,2.5 L0,5 Z" fill="#90e0ef"/>
+    </marker>
+    <marker id="md" markerWidth="7" markerHeight="7" refX="5.5" refY="2.5" orient="auto">
+      <path d="M0,0 L5.5,2.5 L0,5 Z" fill="#64748b"/>
     </marker>
   </defs>
-  <rect class="bg" width="960" height="560"/>
-  <text class="title" x="32" y="36">EvidenceTrail · Agentic RAG on GraphRAG</text>
-  <text class="small" x="32" y="56">This repo: harness / custom / benchmark · LightRAG is a Docker dependency</text>
+
+  <rect class="bg" width="1000" height="720"/>
+  <text class="title" x="28" y="32">EvidenceTrail · 系统架构</text>
+  <text class="small" x="28" y="50">本仓库：应用层（构图定制 + Harness + Benchmark）· LightRAG 为 Docker 依赖，不 vendor 源码</text>
+
+  <!-- ========== Offline ingest ========== -->
+  <text class="sec" x="28" y="78">离线 · 文档入图</text>
+
+  <rect class="card-pipe" x="28" y="88" width="944" height="88" rx="8"/>
+  <text class="h" x="44" y="112">PDF</text>
+  <text class="t" x="78" y="112">──►</text>
+  <text class="h" x="108" y="112">OCR / 版面</text>
+  <text class="small" x="108" y="128">MinerU（推荐）</text>
+  <text class="t" x="210" y="112">──►</text>
+  <text class="h" x="240" y="112">结构切分</text>
+  <text class="small" x="240" y="128">表整表 · 条款单元</text>
+  <text class="t" x="360" y="112">──►</text>
+  <text class="h" x="390" y="112">领域 schema 抽取</text>
+  <text class="small" x="390" y="128">config/*.yml + profile</text>
+  <text class="t" x="530" y="112">──►</text>
+  <text class="h" x="560" y="112">关系守卫</text>
+  <text class="small" x="560" y="128">keep/reverse/drop · 不 invent</text>
+  <text class="t" x="700" y="112">──►</text>
+  <text class="h" x="730" y="112">图 + 向量索引</text>
+  <text class="small" x="730" y="128">Neo4j · v4 rag_storage</text>
+  <text class="small" x="44" y="158">scripts/ · lightrag_custom/sitecustomize · 换领域主要改切分与 schema</text>
+
+  <!-- ========== Online row ========== -->
+  <text class="sec" x="28" y="206">在线 · 取证问答（金标默认不进入）</text>
 
   <!-- User -->
-  <rect class="card" x="380" y="80" width="200" height="56"/>
-  <text class="h" x="420" y="105">User / CLI / WebUI</text>
-  <text class="t" x="430" y="124">questions · traces</text>
+  <rect class="card" x="28" y="218" width="150" height="70" rx="8"/>
+  <text class="h" x="48" y="248">用户 / CLI</text>
+  <text class="small" x="48" y="268">WebUI 可选</text>
 
-  <path class="arrow" d="M430 136 L280 180"/>
-  <path class="arrow" d="M530 136 L680 180"/>
-  <text class="lbl" x="300" y="165">ask</text>
-  <text class="lbl" x="620" y="165">/query</text>
+  <path class="arrow" d="M178 253 L220 253"/>
+  <text class="lbl" x="185" y="245">ask</text>
 
   <!-- Harness -->
-  <rect class="card-app" x="40" y="190" width="320" height="200"/>
-  <text class="h" x="56" y="216">EvidenceTrail Agent (this repo)</text>
-  <text class="t" x="56" y="242">1. plan (decision LLM → JSON action)</text>
-  <text class="t" x="56" y="262">2. execute tools (graph / vector / check)</text>
-  <text class="t" x="56" y="282">3. sufficiency audit (code)</text>
-  <text class="t" x="56" y="302">4. force compose if enough / spin</text>
-  <text class="t" x="56" y="322">5. numeric grounding guards</text>
-  <text class="small" x="56" y="350">harness/ · lightrag_custom/ · benchmark/</text>
-  <text class="small" x="56" y="368">gold catalog default OFF</text>
+  <rect class="card-app" x="220" y="218" width="360" height="280" rx="8"/>
+  <text class="h" x="236" y="242">EvidenceTrail Agent · harness/</text>
+  <text class="t" x="236" y="266">1. 决策模型 → action（skill 默认）</text>
+  <text class="t" x="236" y="286">2. graph_search(mix) / vector_search(naive)</text>
+  <text class="t" x="236" y="306">3. 证据袋：entity · relation · chunk</text>
+  <text class="t" x="236" y="326">   · source_id 回源全文（图求广、文答题）</text>
+  <text class="t" x="236" y="346">   · text-primary 配额 · 双重重排</text>
+  <text class="t" x="236" y="366">4. 充分性审核 + 收网阶梯（代码）</text>
+  <text class="t" x="236" y="386">5. compose_answer / finalize 拒答</text>
+  <text class="t" x="236" y="406">6. 硬门控：空袋 · 数值接地（≥5）</text>
+  <text class="small" x="236" y="432">默认：pilot off · catalog=none · 精查 off</text>
+  <text class="small" x="236" y="450">协议：harness/PROTOCOL.md · 可 dump-trace</text>
+  <text class="small" x="236" y="478">正答必须 compose；finalize 主路径=拒答</text>
+
+  <path class="arrow" d="M580 300 L640 300"/>
+  <text class="lbl" x="590" y="290">/query/data</text>
 
   <!-- LightRAG -->
-  <rect class="card-dep" x="560" y="190" width="360" height="120"/>
-  <text class="h" x="576" y="216">LightRAG (not vendored)</text>
-  <text class="t" x="576" y="242">Docker image v1.4.16 · /query · /query/data</text>
-  <text class="t" x="576" y="262">Extract + index · sitecustomize schema_guard</text>
-  <text class="small" x="576" y="290">https://github.com/HKUDS/LightRAG</text>
+  <rect class="card-dep" x="640" y="218" width="332" height="120" rx="8"/>
+  <text class="h" x="656" y="244">LightRAG（不 vendor）</text>
+  <text class="t" x="656" y="268">Docker 镜像 · 切分/抽取/索引/查询</text>
+  <text class="t" x="656" y="288">应用侧：schema_guard · profile 提示</text>
+  <text class="small" x="656" y="316">github.com/HKUDS/LightRAG</text>
 
-  <path class="arrow" d="M360 290 L560 250"/>
-  <text class="lbl" x="420" y="255">retrieve</text>
-
-  <path class="arrow" d="M740 310 L740 360"/>
+  <path class="arrow" d="M760 338 L760 368"/>
 
   <!-- Storage -->
-  <rect class="card-data" x="560" y="360" width="170" height="100"/>
-  <text class="h" x="576" y="388">Neo4j</text>
-  <text class="t" x="576" y="410">graph edges</text>
-  <text class="small" x="576" y="432">local only</text>
-  <text class="small" x="576" y="448">not in git</text>
+  <rect class="card-data" x="640" y="368" width="156" height="100" rx="8"/>
+  <text class="h" x="656" y="396">Neo4j</text>
+  <text class="t" x="656" y="418">图结构</text>
+  <text class="small" x="656" y="440">本地卷 · 不进 git</text>
 
-  <rect class="card-data" x="750" y="360" width="170" height="100"/>
-  <text class="h" x="766" y="388">v4 rag_storage</text>
-  <text class="t" x="766" y="410">vectors + KV</text>
-  <text class="small" x="766" y="432">in git (~31MB)</text>
-  <text class="small" x="766" y="448">no LLM cache</text>
+  <rect class="card-data" x="816" y="368" width="156" height="100" rx="8"/>
+  <text class="h" x="832" y="396">v4 rag_storage</text>
+  <text class="t" x="832" y="418">向量 + KV</text>
+  <text class="small" x="832" y="440">可进 git · 无 cache</text>
 
-  <path class="arrow" d="M200 390 L200 430 L560 430"/>
-  <text class="lbl" x="280" y="420">chunk backfill (optional FS)</text>
+  <path class="arrow" d="M400 498 L400 520 L720 520 L720 468"/>
+  <text class="lbl" x="430" y="512">chunk 回源读 text_chunks</text>
 
-  <text class="small" x="32" y="530">Educational demo · MIT for this repo · verify answers against official standards</text>
+  <!-- ========== Offline eval ========== -->
+  <text class="sec" x="28" y="548">离线 · 评测（事后打分）</text>
+
+  <rect class="card-eval" x="28" y="558" width="944" height="100" rx="8"/>
+  <text class="h" x="44" y="584">Benchmark · 与在线隔离</text>
+  <text class="t" x="44" y="608">阶段一：金标小批量 · score_kg / score_retrieval / score_answers · pilot 诊断定型</text>
+  <text class="t" x="44" y="628">阶段二（规划）：扩集 + RAGAS 类 reference-free 指标 · 不取代金标抽检 · ≠ 法规正确性</text>
+  <text class="small" x="44" y="648">报告口径：P1 协议 Agent 为主结论 · 金标/catalog 默认不进在线工具链</text>
+
+  <path class="arrow-dim" d="M400 498 L400 558"/>
+  <text class="lbl-dim" x="408" y="540">跑题结果事后评分</text>
+
+  <text class="small" x="28" y="688">工程演示 · MIT（本仓库）· 回答须以官方标准原文为准 · 详见 README §2–§5</text>
 </svg>

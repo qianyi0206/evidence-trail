@@ -1,0 +1,28 @@
+# Build context is the demo/aeb repo root when using -f docker/lightrag/Dockerfile.
+# Keep context small and free of secrets / bulky runtime data.
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.gb39901
+!**/.env.gb39901_v3
+!**/.env.gb39901_v4
+**/__pycache__
+**/*.pyc
+**/.git
+**/.venv
+**/venv
+data/neo4j
+data/rag_storage
+data/inputs
+corpus/raw
+results
+benchmark/results
+harness
+benchmark
+scripts
+config
+docs
+state
+tools
+*.md
+!docker/**/*.md

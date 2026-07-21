@@ -75,12 +75,14 @@ class HarnessStack:
         policy: str = "auto",
         max_steps: int | None = None,
         bootstrap: bool = False,
+        event_hook=None,
     ):
         return self.harness.run(
             question,
             policy=policy,
             max_steps=max_steps,
             bootstrap=bootstrap,
+            event_hook=event_hook,
         )
 
 

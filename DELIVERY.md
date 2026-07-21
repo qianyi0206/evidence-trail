@@ -60,11 +60,13 @@ make doctor && make download && make prepare && make up && make ingest
 # GB 专用：make gb-demo / v3-demo / v4-demo
 ```
 
-## 安全
+## 安全与开源边界
 
-- **禁止提交** `.env`（含 API Key、Neo4j 密码）  
-- 本地忽略：`data/`、`results/`、大体量 `corpus/raw` 等（见 `.gitignore`）  
-- 配置模板：`.env.example`  
+- **禁止提交** `.env`（含 API Key、Neo4j 密码）及任意真实密钥  
+- **可提交**：`data/rag_storage/aeb_gb39901_v4_relation_guard/` 向量/KV 快照（**不含** LLM cache）；prepared / index 语料  
+- **勿提交**：Neo4j 数据卷（`data/neo4j/`）、非 v4 workspace、`corpus/raw` 大体量 PDF、LLM response cache、本地 `results/` 中含密钥的产物  
+- 配置模板：`.env.example`；细节见根 README §5.1 与 `.gitignore`  
+
 
 ## 诚实结论（可写进简历）
 

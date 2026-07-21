@@ -1,0 +1,7 @@
+# Optional UI demo (Gradio). Core agent deps remain in requirements.txt + harness/.
+# Prefer Python 3.10+ (harness declares >=3.10). On 3.9 you can still run with:
+#   PYTHONPATH=harness python apps/gradio_pipeline.py
+-r requirements.txt
+gradio>=4.44,<5
+# Gradio 4.x needs HfFolder (removed in newer huggingface_hub)
+huggingface_hub>=0.23.0,<0.26.0

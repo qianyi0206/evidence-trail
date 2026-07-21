@@ -13,10 +13,15 @@ V4_COMPOSE := docker compose --env-file .env --env-file $(V4_PROFILE) -f compose
 V4_TOOLS := $(V4_COMPOSE) run --rm --build tools
 BENCHMARK_PYTHON ?= python3
 
+LIGHTRAG_BASE_IMAGE ?= ghcr.io/hkuds/lightrag:v1.4.16
+LIGHTRAG_APP_IMAGE ?= evidencetrail-lightrag:v1.4.16-app
+V4_APP_COMPOSE := docker compose --env-file .env --env-file $(V4_PROFILE) -f compose.yaml -f compose.lightrag-app.yaml
+
 .PHONY: configure doctor up download prepare ingest test demo down reset-index \
 	gb-doctor gb-prepare gb-up gb-ingest gb-postprocess gb-test gb-qa gb-demo gb-down \
 	v3-doctor v3-prepare v3-up v3-ingest v3-postprocess v3-test v3-fact-qa v3-qa v3-demo v3-down \
-	v4-doctor v4-prepare v4-up v4-ingest v4-postprocess v4-test v4-fact-qa v4-qa v4-demo v4-down \
+	v4-doctor v4-prepare v4-up v4-up-app v4-ingest v4-postprocess v4-test v4-fact-qa v4-qa v4-demo v4-down \
+	lightrag-image \
 	benchmark-build benchmark-validate benchmark-kg-offline benchmark-kg-live benchmark-run-a0 benchmark-run-v2 \
 	benchmark-run-v3 benchmark-run-v4 benchmark-score-a0 benchmark-score-v2 benchmark-score-v3 \
 	benchmark-score-v4 benchmark-test benchmark-report
@@ -160,6 +165,22 @@ v4-prepare: configure
 v4-up: configure
 	@docker info >/dev/null 2>&1 || { echo "Docker daemon is unavailable. Start Docker Desktop first."; exit 1; }
 	@$(V4_COMPOSE) up -d neo4j lightrag
+	@$(V4_TOOLS) scripts/wait_services.py
+
+# Thin app image: official LightRAG + baked lightrag_custom (no secrets / no index data).
+lightrag-image:
+	@docker info >/dev/null 2>&1 || { echo "Docker daemon is unavailable. Start Docker Desktop first."; exit 1; }
+	@docker build -f docker/lightrag/Dockerfile \
+		--build-arg BASE_IMAGE=$(LIGHTRAG_BASE_IMAGE) \
+		-t $(LIGHTRAG_APP_IMAGE) .
+	@echo "Built $(LIGHTRAG_APP_IMAGE) from $(LIGHTRAG_BASE_IMAGE)"
+
+# v4 stack using compose.lightrag-app.yaml (build/use evidencetrail-lightrag app image).
+v4-up-app: configure lightrag-image
+	@test -f $(V4_PROFILE) || { echo "Missing $(V4_PROFILE)."; exit 1; }
+	@docker info >/dev/null 2>&1 || { echo "Docker daemon is unavailable. Start Docker Desktop first."; exit 1; }
+	@$(V4_APP_COMPOSE) pull neo4j
+	@$(V4_APP_COMPOSE) up -d neo4j lightrag
 	@$(V4_TOOLS) scripts/wait_services.py
 
 v4-ingest: configure

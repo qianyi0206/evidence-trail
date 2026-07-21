@@ -31,6 +31,7 @@
 **/.mypy_cache/
 **/.ruff_cache/
 .venv/
+.venv-ui/
 venv/
 *.egg-info/
 .DS_Store

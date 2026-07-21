@@ -118,7 +118,9 @@ class ComposeAnswerTool(Tool):
             f"{bag}\n"
         )
         try:
+            state.add_trace("llm_start", role="compose")
             draft = self.chat.complete_json(COMPOSE_SYSTEM, user)
+            state.add_trace("llm_end", role="compose")
         except Exception as error:  # noqa: BLE001
             return ToolResult(
                 name=self.name,
