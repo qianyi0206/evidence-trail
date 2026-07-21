@@ -11,8 +11,12 @@
 !.env.gb39901_v3
 !.env.gb39901_v4
 
-# --- Runtime / heavy artifacts ---
+# --- Runtime / heavy artifacts (do NOT upload Neo4j or full indexes) ---
 data/
+# Explicit: graph DB and vector workspaces stay local / rebuild via scripts
+data/neo4j/
+data/rag_storage/
+data/inputs/
 results/
 state/
 **/__pycache__/
@@ -26,18 +30,13 @@ venv/
 .DS_Store
 **/.DS_Store
 
-# --- Corpus: regenerate or place locally; do not ship OCR dumps by default ---
+# --- Corpus ---
+# Track prepared + index-ready units for rebuild demos.
+# Keep raw OCR/PDF dumps local only (size + redistribution caution).
 corpus/raw/*
 !corpus/raw/.gitkeep
-corpus/prepared/*
-!corpus/prepared/.gitkeep
-corpus/index_ready/*
-!corpus/index_ready/.gitkeep
-corpus/index_ready_v3/*
-!corpus/index_ready_v3/.gitkeep
-corpus/manifest.json
 
-# --- Benchmark: keep gold data, drop bulky run dumps ---
+# --- Benchmark: keep gold data + small human reports; drop bulky run dumps ---
 !benchmark/data/
 !benchmark/data/**
 benchmark/results/**
@@ -52,5 +51,4 @@ benchmark/review/**
 
 # --- Logs & traces ---
 *.log
-/tmp/
 **/trace*.json

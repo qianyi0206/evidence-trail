@@ -17,6 +17,7 @@ If you distribute a modified LightRAG binary or fork, follow **their** LICENSE, 
 
 ## Regulation text
 
-GB 39901 and related standards are **not** redistributed as official PDFs in this repository.  
-Place OCR / prepared markdown under `corpus/` locally for educational use only.  
+This repository may include **prepared / index-ready markdown** under `corpus/` for educational GraphRAG demos.  
+It does **not** claim to be an official distribution of GB 39901 or other standards.  
+Raw OCR/PDF dumps (`corpus/raw`) and Neo4j database volumes stay local and are gitignored.  
 Do not treat demo answers as homologation advice; always verify against the official publication.

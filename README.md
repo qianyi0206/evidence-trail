@@ -161,12 +161,18 @@ Details: later sections below and `PROJECT_STATUS.md`.
 
 ---
 
-## Security & what is not in git
+## Security & what is / is not in git
 
-- Copy `.env.example` → `.env`; **never commit secrets**.  
-- Ignored by default: `.env`, `data/` (indexes), `results/`, `state/`, bulky `corpus/*`, most `benchmark/results` run dumps.  
-- Safe to share: source, `config/`, non-secret profiles (`.env.gb39901*`), `benchmark/data/` gold JSONL, small report markdowns.  
-- Third-party: [`NOTICE.md`](NOTICE.md) · License: [`LICENSE`](LICENSE) (MIT for **this** repo only).
+| In git | Not in git (local only) |
+|--------|-------------------------|
+| Source, `config/`, compose, non-secret `.env.gb39901*` | **`.env` with API keys** |
+| `corpus/prepared`, `corpus/index_ready*`, `manifest` | **`data/neo4j`** (~500MB graph DB) |
+| `benchmark/data` gold + small `*report*.md` | **`data/rag_storage`** full workspaces |
+| | `corpus/raw` OCR dumps, bulky run `results/` |
+
+Rebuild graph locally: `make v4-up` then ingest (see Makefile). Do **not** commit Neo4j volumes.  
+Third-party: [`NOTICE.md`](NOTICE.md) · License: [`LICENSE`](LICENSE) (MIT for **this** repo only).  
+Regulation text is for educational study; verify against official publications.
 
 ---
 
