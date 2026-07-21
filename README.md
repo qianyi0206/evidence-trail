@@ -213,11 +213,14 @@ EvidenceTrail（多步 Agent）:
 - 门控：没证据就拒答；关键数字必须在原文里出现  
 - 轨迹：步骤可导出，方便对照评测和排错  
 
-### 5.2 文档入库与图谱（`scripts/`、`lightrag_custom/`）
+### 5.2 文档入库与图谱（`scripts/`、`lightrag_custom/`、`config/`）
 
-- 表格尽量整表入库，减少切碎  
-- 限制图谱上允许的关系类型，减少脏边  
-- 通过容器和定制接入 LightRAG，不改它的核心源码  
+对应前面 §2.4–2.5：
+
+- 领域 schema：`config/gb_39901_2025_schema.yml`  
+- 结构切分与入库脚本：`scripts/`  
+- 抽取提示与关系校验：`lightrag_custom/`  
+- 通过 Docker 使用 LightRAG，不改其核心源码  
 
 ### 5.3 离线 Benchmark（`benchmark/`）
 
