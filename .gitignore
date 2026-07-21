@@ -22,7 +22,9 @@
 # Regenerable LLM call cache — skip noise / bloat
 /data/rag_storage/aeb_gb39901_v4_relation_guard/kv_store_llm_response_cache.json
 /results/
-/state/
+# Local ingest reports stay private; ship only the final v4 embedding fingerprint.
+/state/*
+!/state/embedding_fingerprint.aeb_gb39901_v4_relation_guard.json
 **/__pycache__/
 **/*.py[cod]
 **/.pytest_cache/

@@ -13,7 +13,8 @@ We **do not ship the LightRAG source tree**. Runtime uses the published Docker i
 
 **Release scope (v0.1):** GB 39901 graph ablations (A0–v4), pilot benchmark, evidence harness. Multi-document production routing and frozen 60-question formal eval are out of scope.
 
-Chinese notes: [`DELIVERY.md`](DELIVERY.md) · status: [`PROJECT_STATUS.md`](PROJECT_STATUS.md) · agent: [`harness/`](harness/).
+Chinese notes: [`DELIVERY.md`](DELIVERY.md) · status: [`PROJECT_STATUS.md`](PROJECT_STATUS.md) · agent: [`harness/`](harness/).  
+Architecture diagram: [`docs/architecture.md`](docs/architecture.md) · Contributing: [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ---
 
@@ -32,24 +33,27 @@ Internship / portfolio framing: this is an **applied agent + eval** project on t
 
 ## Architecture (v0.1)
 
+![Architecture](docs/architecture.svg)
+
+Full write-up: [`docs/architecture.md`](docs/architecture.md).
+
 ```text
 GB 39901 OCR Markdown
   -> prepare / structural units (v3)
-  -> LightRAG extract (workspace A0|v2|v3|v4)
-  -> Neo4j + NanoVectorDB
+  -> LightRAG extract (workspace v4 final)
+  -> Neo4j (local) + NanoVectorDB (v4 snapshot in git)
         |
         +--> WebUI /query  (classic modes: naive|hybrid|mix)
         |
         +--> harness/ Agent loop
-               intent -> tools (vector|graph|clause|table)
-               -> slots/guards -> compose_answer
+               plan -> tools -> sufficiency audit -> compose + guards
 ```
 
 | Layer | Role |
 |-------|------|
-| LightRAG | Graph **build** + retrieval backend |
-| `harness/` | Online **evidence agent** (routing, precise lookup, guards) |
-| `benchmark/` | Candidate eval suite + **pilot results** (not frozen v1) |
+| LightRAG | Graph **build** + retrieval backend (Docker, not vendored) |
+| `harness/` | Online **evidence agent** (tools, audit, force compose, guards) |
+| `benchmark/` | Offline gold + scorers (not loaded online by default) |
 
 Multi-KB / Librarian / merge APIs exist as **stubs and docs only** (`harness/ARCHITECTURE.md`).
 
@@ -97,8 +101,9 @@ Clone **this** repository (application layer only). You need Docker for Neo4j + 
 
 ```bash
 # from repository root (this directory)
-cd harness
-python3 -m unittest discover -s tests -v
+pip install -r requirements.txt
+cd harness && pip install -e . && cd ..
+cd harness && python3 -m unittest discover -s tests -v
 python3 -m reg_harness.cli describe
 ```
 
@@ -168,6 +173,7 @@ Details: later sections below and `PROJECT_STATUS.md`.
 | Source, `config/`, compose, non-secret `.env.gb39901*` | **`.env` with API keys** |
 | `corpus/prepared`, `corpus/index_ready*`, `manifest` | **`data/neo4j`** (~500MB graph DB) |
 | **Final workspace** `data/rag_storage/aeb_gb39901_v4_relation_guard/` (~32MB, no LLM cache) | Other workspaces (a0/v2/v3), `rag_storage` caches |
+| v4 embedding fingerprint `state/embedding_fingerprint.aeb_gb39901_v4_relation_guard.json` | Other `state/*` ingest reports |
 | `benchmark/data` gold + small `*report*.md` | `corpus/raw`, bulky run dumps |
 
 **v4** is the intended demo workspace (`WORKSPACE=aeb_gb39901_v4_relation_guard`).  

@@ -1,0 +1,15 @@
+# Application-layer dependencies for local harness / scripts (Python 3.10+).
+# LightRAG server itself runs via Docker (see compose.yaml) — not installed from this file.
+
+# Agent harness (reg_harness)
+httpx>=0.27
+PyYAML>=6.0
+
+# Optional: tools container helpers (PDF / download path)
+# PyMuPDF==1.26.3
+
+# Install harness in editable mode (recommended):
+#   cd harness && pip install -e .
+# Or from repo root:
+#   pip install -r requirements.txt
+#   cd harness && pip install -e .

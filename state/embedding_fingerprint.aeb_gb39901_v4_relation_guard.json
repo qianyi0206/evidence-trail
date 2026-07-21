@@ -1,0 +1,13 @@
+{
+  "sha256": "0b695323b45201034a6431c29457549e1eb7b3853a88c8f9d5ef80ee500a0cb2",
+  "config": {
+    "binding": "openai",
+    "host": "<openai-compatible-embedding-endpoint>",
+    "model": "qwen3.7-text-embedding",
+    "dimension": 2560,
+    "token_limit": 128000
+  },
+  "recorded_at": "2026-07-18T10:53:10.788277+00:00",
+  "workspace": "aeb_gb39901_v4_relation_guard",
+  "note": "Host redacted for open source. Re-record after ingest with scripts that write state/embedding_fingerprint.*.json. Vectors in data/rag_storage/aeb_gb39901_v4_relation_guard require the same embedding model and dimension."
+}
