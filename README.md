@@ -388,6 +388,6 @@ print(state.final_answer)
 
 - 工程演示，非量产知识中台或认证工具。
 - 门控降低无依据生成风险，不保证零错误。
-- 未冻结 formal 总正确率，见 [DELIVERY.md](DELIVERY.md)、[PROJECT_STATUS.md](PROJECT_STATUS.md)。
+- 未冻结 formal 总正确率，见 [benchmark/results/pilot_6q_report.md](benchmark/results/pilot_6q_report.md)。
 - 样例语料仅供学习研究：[NOTICE.md](NOTICE.md)。
 - [CONTRIBUTING.md](CONTRIBUTING.md) · [MIT](LICENSE) · [harness/PROTOCOL.md](harness/PROTOCOL.md)
