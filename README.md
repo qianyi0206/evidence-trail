@@ -167,12 +167,12 @@ Details: later sections below and `PROJECT_STATUS.md`.
 |--------|-------------------------|
 | Source, `config/`, compose, non-secret `.env.gb39901*` | **`.env` with API keys** |
 | `corpus/prepared`, `corpus/index_ready*`, `manifest` | **`data/neo4j`** (~500MB graph DB) |
-| `benchmark/data` gold + small `*report*.md` | **`data/rag_storage`** full workspaces |
-| | `corpus/raw` OCR dumps, bulky run `results/` |
+| **Final workspace** `data/rag_storage/aeb_gb39901_v4_relation_guard/` (~32MB, no LLM cache) | Other workspaces (a0/v2/v3), `rag_storage` caches |
+| `benchmark/data` gold + small `*report*.md` | `corpus/raw`, bulky run dumps |
 
-Rebuild graph locally: `make v4-up` then ingest (see Makefile). Do **not** commit Neo4j volumes.  
-Third-party: [`NOTICE.md`](NOTICE.md) · License: [`LICENSE`](LICENSE) (MIT for **this** repo only).  
-Regulation text is for educational study; verify against official publications.
+**v4** is the intended demo workspace (`WORKSPACE=aeb_gb39901_v4_relation_guard`).  
+Neo4j is still **local-only**: `make v4-up` starts an empty graph DB; re-ingest or restore graph as needed — vector/KV files in git do not replace Neo4j.  
+Third-party: [`NOTICE.md`](NOTICE.md) · License: [`LICENSE`](LICENSE) (MIT for **this** repo only).
 
 ---
 

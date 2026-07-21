@@ -11,9 +11,16 @@
 !.env.gb39901_v3
 !.env.gb39901_v4
 
-# --- Runtime / heavy artifacts (do NOT upload Neo4j or full indexes) ---
-# Root-only: use leading slash so paths like benchmark/results are not swallowed.
-/data/
+# --- Runtime / heavy artifacts ---
+# Root-only leading slash so benchmark/results is not swallowed.
+# Ship only the final v4 vector/KV workspace; rebuild Neo4j locally.
+/data/*
+!/data/rag_storage/
+/data/rag_storage/*
+!/data/rag_storage/aeb_gb39901_v4_relation_guard/
+!/data/rag_storage/aeb_gb39901_v4_relation_guard/**
+# Regenerable LLM call cache — skip noise / bloat
+/data/rag_storage/aeb_gb39901_v4_relation_guard/kv_store_llm_response_cache.json
 /results/
 /state/
 **/__pycache__/

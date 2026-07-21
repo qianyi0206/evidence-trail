@@ -1,0 +1,6143 @@
+{
+  "GB 39901-2025第5.2.1.1条": {
+    "chunk_ids": [
+      "chunk-56dd5cd8b85cd4c2bb305d6552edcd4c",
+      "chunk-eb67eff5a8977cc5a09a8744534095af",
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f",
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 4,
+    "update_time": 1784369521,
+    "_id": "GB 39901-2025第5.2.1.1条"
+  },
+  "[5.2.1.1] M1类制动车辆目标最大相对碰撞速度要求(行车质量，50km/h)": {
+    "chunk_ids": [
+      "chunk-56dd5cd8b85cd4c2bb305d6552edcd4c"
+    ],
+    "count": 1,
+    "create_time": 1784365103,
+    "update_time": 1784365103,
+    "_id": "[5.2.1.1] M1类制动车辆目标最大相对碰撞速度要求(行车质量，50km/h)"
+  },
+  "[5.2.1.1] M1类制动车辆目标最大相对碰撞速度要求(最大设计总质量，50km/h)": {
+    "chunk_ids": [
+      "chunk-56dd5cd8b85cd4c2bb305d6552edcd4c"
+    ],
+    "count": 1,
+    "create_time": 1784365103,
+    "update_time": 1784365103,
+    "_id": "[5.2.1.1] M1类制动车辆目标最大相对碰撞速度要求(最大设计总质量，50km/h)"
+  },
+  "[5.2.1.1]最大相对碰撞速度≤0 km/h(M1，最大设计总质量，50km/h)": {
+    "chunk_ids": [
+      "chunk-56dd5cd8b85cd4c2bb305d6552edcd4c"
+    ],
+    "count": 1,
+    "create_time": 1784365103,
+    "update_time": 1784365103,
+    "_id": "[5.2.1.1]最大相对碰撞速度≤0 km/h(M1，最大设计总质量，50km/h)"
+  },
+  "[5.2.1.1]最大相对碰撞速度≤0 km/h(M1，行车质量，50km/h)": {
+    "chunk_ids": [
+      "chunk-56dd5cd8b85cd4c2bb305d6552edcd4c"
+    ],
+    "count": 1,
+    "create_time": 1784365103,
+    "update_time": 1784365103,
+    "_id": "[5.2.1.1]最大相对碰撞速度≤0 km/h(M1，行车质量，50km/h)"
+  },
+  "行车质量": {
+    "chunk_ids": [
+      "chunk-56dd5cd8b85cd4c2bb305d6552edcd4c",
+      "chunk-71165746d4df86800ee92508320508c7",
+      "chunk-087ada5cc95e07960680f5dd1a65d70a",
+      "chunk-eb67eff5a8977cc5a09a8744534095af",
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9",
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f",
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8",
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa",
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9",
+      "chunk-cf3fd3822fe82724ab22a94b116052e3",
+      "chunk-54b48db7b2439594c007841fa262f5b3",
+      "chunk-efc62955fc933269125fcfbf2fb96db6",
+      "chunk-f7566db12038453c94ed213356549e26",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 14,
+    "update_time": 1784370959,
+    "_id": "行车质量"
+  },
+  "最大相对碰撞速度": {
+    "chunk_ids": [
+      "chunk-56dd5cd8b85cd4c2bb305d6552edcd4c",
+      "chunk-71165746d4df86800ee92508320508c7",
+      "chunk-087ada5cc95e07960680f5dd1a65d70a",
+      "chunk-eb67eff5a8977cc5a09a8744534095af",
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9",
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f",
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa",
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9",
+      "chunk-cf3fd3822fe82724ab22a94b116052e3",
+      "chunk-54b48db7b2439594c007841fa262f5b3",
+      "chunk-efc62955fc933269125fcfbf2fb96db6",
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "count": 12,
+    "update_time": 1784370275,
+    "_id": "最大相对碰撞速度"
+  },
+  "M1类汽车": {
+    "chunk_ids": [
+      "chunk-56dd5cd8b85cd4c2bb305d6552edcd4c",
+      "chunk-6bff51ab3420cb15a18e37e295538ef2",
+      "chunk-f013f6e6327c0917352ff13bd8dcc28e",
+      "chunk-dff410273edcd81cebb68f9ca99984e1",
+      "chunk-99e4292609495232274ab68a927137bd",
+      "chunk-eb67eff5a8977cc5a09a8744534095af",
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9",
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f",
+      "chunk-47bb5da0a82739ec14b68608fcb9fc1a",
+      "chunk-5baadf043c73d680b7aa3c3fbe947fcb",
+      "chunk-499ba11b24238f1a778004c772b5e75f",
+      "chunk-cf3fd3822fe82724ab22a94b116052e3",
+      "chunk-18d27793ba6fda13dfaa727852254d7c",
+      "chunk-758175ddac6ea86a30d83aefa15459a8",
+      "chunk-433189dcfb42867b88848152c9787cf2",
+      "chunk-5d77c409f4ae42c28b31bf7dbd1d35b7",
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75",
+      "chunk-850fd63fa763c1140213e57f81a2731b",
+      "chunk-6ea136825168445d14914b5eb62664a8",
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "count": 20,
+    "update_time": 1784370275,
+    "_id": "M1类汽车"
+  },
+  "最大设计总质量": {
+    "chunk_ids": [
+      "chunk-56dd5cd8b85cd4c2bb305d6552edcd4c",
+      "chunk-71165746d4df86800ee92508320508c7",
+      "chunk-087ada5cc95e07960680f5dd1a65d70a",
+      "chunk-eb67eff5a8977cc5a09a8744534095af",
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9",
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f",
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa",
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9",
+      "chunk-cf3fd3822fe82724ab22a94b116052e3",
+      "chunk-54b48db7b2439594c007841fa262f5b3",
+      "chunk-efc62955fc933269125fcfbf2fb96db6",
+      "chunk-f7566db12038453c94ed213356549e26",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 13,
+    "update_time": 1784370960,
+    "_id": "最大设计总质量"
+  },
+  "GB 39901-2025第6.10条": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438",
+      "chunk-99e4292609495232274ab68a927137bd",
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba"
+    ],
+    "count": 3,
+    "update_time": 1784369209,
+    "_id": "GB 39901-2025第6.10条"
+  },
+  "GB 39901-2025第6.11条": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365244,
+    "update_time": 1784365244,
+    "_id": "GB 39901-2025第6.11条"
+  },
+  "GB 39901-2025第6.11.1条": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365244,
+    "update_time": 1784365244,
+    "_id": "GB 39901-2025第6.11.1条"
+  },
+  "[6.11.1]车辆跟车过程中车辆目标右转误响应试验": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365244,
+    "update_time": 1784365244,
+    "_id": "[6.11.1]车辆跟车过程中车辆目标右转误响应试验"
+  },
+  "车辆目标": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 2,
+    "update_time": 1784370963,
+    "_id": "车辆目标"
+  },
+  "[6.11.1]车辆目标制动减速至10 km/h(0/-2)": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365244,
+    "update_time": 1784365244,
+    "_id": "[6.11.1]车辆目标制动减速至10 km/h(0/-2)"
+  },
+  "[6.11.1]初始行驶速度40 km/h(0/-2)": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365244,
+    "update_time": 1784365244,
+    "_id": "[6.11.1]初始行驶速度40 km/h(0/-2)"
+  },
+  "[6.11.1]右转开始时试验车辆速度≥26 km/h": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365244,
+    "update_time": 1784365244,
+    "_id": "[6.11.1]右转开始时试验车辆速度≥26 km/h"
+  },
+  "[6.11.1]右转开始时TTC≤4.7 s": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365246,
+    "update_time": 1784365246,
+    "_id": "[6.11.1]右转开始时TTC≤4.7 s"
+  },
+  "[6.11.1]无交集时TTC≤2.5 s": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365246,
+    "update_time": 1784365246,
+    "_id": "[6.11.1]无交集时TTC≤2.5 s"
+  },
+  "GB 39901-2025第6.11.2条": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365246,
+    "update_time": 1784365246,
+    "_id": "GB 39901-2025第6.11.2条"
+  },
+  "[6.11.2]相邻车道静止车辆目标误响应试验": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365246,
+    "update_time": 1784365246,
+    "_id": "[6.11.2]相邻车道静止车辆目标误响应试验"
+  },
+  "[6.11.2]两车辆目标内侧间距(4.5±0.1) m": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365246,
+    "update_time": 1784365246,
+    "_id": "[6.11.2]两车辆目标内侧间距(4.5±0.1) m"
+  },
+  "[6.11.2]试验车速(60±2) km/h": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365246,
+    "update_time": 1784365246,
+    "_id": "[6.11.2]试验车速(60±2) km/h"
+  },
+  "[6.11.2]横向偏差≤0.2 m": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365246,
+    "update_time": 1784365246,
+    "_id": "[6.11.2]横向偏差≤0.2 m"
+  },
+  "GB 39901-2025第6.11.3条": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365246,
+    "update_time": 1784365246,
+    "_id": "GB 39901-2025第6.11.3条"
+  },
+  "[6.11.3]车道内铁板误响应试验": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365247,
+    "update_time": 1784365247,
+    "_id": "[6.11.3]车道内铁板误响应试验"
+  },
+  "[6.11.3]铁板尺寸2.4 m×3.7 m×0.01 m": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365247,
+    "update_time": 1784365247,
+    "_id": "[6.11.3]铁板尺寸2.4 m×3.7 m×0.01 m"
+  },
+  "[6.11.3]试验车速(60±2) km/h": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365247,
+    "update_time": 1784365247,
+    "_id": "[6.11.3]试验车速(60±2) km/h"
+  },
+  "[6.11.3]横向偏差≤0.2 m": {
+    "chunk_ids": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "count": 1,
+    "create_time": 1784365247,
+    "update_time": 1784365247,
+    "_id": "[6.11.3]横向偏差≤0.2 m"
+  },
+  "GB 39901-2025第6.8条": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188",
+      "chunk-47bb5da0a82739ec14b68608fcb9fc1a",
+      "chunk-6ecb743db9a7b66f7d3484124657ccf7"
+    ],
+    "count": 3,
+    "update_time": 1784369255,
+    "_id": "GB 39901-2025第6.8条"
+  },
+  "GB 39901-2025第6.9条": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188",
+      "chunk-5baadf043c73d680b7aa3c3fbe947fcb",
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba"
+    ],
+    "count": 3,
+    "update_time": 1784369209,
+    "_id": "GB 39901-2025第6.9条"
+  },
+  "[6.9]自行车目标横穿的碰撞预警和紧急制动试验": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188"
+    ],
+    "count": 1,
+    "create_time": 1784365298,
+    "update_time": 1784365298,
+    "_id": "[6.9]自行车目标横穿的碰撞预警和紧急制动试验"
+  },
+  "自行车目标": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188",
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 3,
+    "update_time": 1784370964,
+    "_id": "自行车目标"
+  },
+  "试验开始TTC条件": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188"
+    ],
+    "count": 1,
+    "create_time": 1784365298,
+    "update_time": 1784365298,
+    "_id": "试验开始TTC条件"
+  },
+  "试验车辆直线行驶对准条件": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188"
+    ],
+    "count": 1,
+    "create_time": 1784365298,
+    "update_time": 1784365298,
+    "_id": "试验车辆直线行驶对准条件"
+  },
+  "自行车目标速度条件": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188"
+    ],
+    "count": 1,
+    "create_time": 1784365298,
+    "update_time": 1784365298,
+    "_id": "自行车目标速度条件"
+  },
+  "试验结束条件": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188"
+    ],
+    "count": 1,
+    "create_time": 1784365298,
+    "update_time": 1784365298,
+    "_id": "试验结束条件"
+  },
+  "试验过程无调整条件": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188"
+    ],
+    "count": 1,
+    "create_time": 1784365300,
+    "update_time": 1784365300,
+    "_id": "试验过程无调整条件"
+  },
+  "碰撞判定准则": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188"
+    ],
+    "count": 1,
+    "create_time": 1784365300,
+    "update_time": 1784365300,
+    "_id": "碰撞判定准则"
+  },
+  "预计碰撞点横向距离≤0.1 m": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188"
+    ],
+    "count": 1,
+    "create_time": 1784365300,
+    "update_time": 1784365300,
+    "_id": "预计碰撞点横向距离≤0.1 m"
+  },
+  "试验开始TTC≥4 s": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188"
+    ],
+    "count": 1,
+    "create_time": 1784365300,
+    "update_time": 1784365300,
+    "_id": "试验开始TTC≥4 s"
+  },
+  "自行车目标速度15(-1/0) km/h": {
+    "chunk_ids": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188"
+    ],
+    "count": 1,
+    "create_time": 1784365300,
+    "update_time": 1784365300,
+    "_id": "自行车目标速度15(-1/0) km/h"
+  },
+  "[5.2.3]自行车目标相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-6bff51ab3420cb15a18e37e295538ef2"
+    ],
+    "count": 1,
+    "create_time": 1784365351,
+    "update_time": 1784365351,
+    "_id": "[5.2.3]自行车目标相对碰撞速度要求"
+  },
+  "[5.2.3]自行车目标紧急制动最大减速度要求": {
+    "chunk_ids": [
+      "chunk-6bff51ab3420cb15a18e37e295538ef2"
+    ],
+    "count": 1,
+    "create_time": 1784365351,
+    "update_time": 1784365351,
+    "_id": "[5.2.3]自行车目标紧急制动最大减速度要求"
+  },
+  "GB 39901-2025第5.2.3条": {
+    "chunk_ids": [
+      "chunk-6bff51ab3420cb15a18e37e295538ef2",
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9",
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9"
+    ],
+    "count": 3,
+    "update_time": 1784368322,
+    "_id": "GB 39901-2025第5.2.3条"
+  },
+  "车辆减速度绝对值的最大值": {
+    "chunk_ids": [
+      "chunk-6bff51ab3420cb15a18e37e295538ef2",
+      "chunk-758175ddac6ea86a30d83aefa15459a8",
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 3,
+    "update_time": 1784369524,
+    "_id": "车辆减速度绝对值的最大值"
+  },
+  "相对碰撞速度": {
+    "chunk_ids": [
+      "chunk-6bff51ab3420cb15a18e37e295538ef2",
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a",
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-758175ddac6ea86a30d83aefa15459a8",
+      "chunk-433189dcfb42867b88848152c9787cf2",
+      "chunk-5d77c409f4ae42c28b31bf7dbd1d35b7",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 7,
+    "update_time": 1784370957,
+    "_id": "相对碰撞速度"
+  },
+  "[6.9]自行车目标紧急制动试验": {
+    "chunk_ids": [
+      "chunk-6bff51ab3420cb15a18e37e295538ef2"
+    ],
+    "count": 1,
+    "create_time": 1784365351,
+    "update_time": 1784365351,
+    "_id": "[6.9]自行车目标紧急制动试验"
+  },
+  "[5.2.3]车辆减速度绝对值最大值≥5.0 m/s²(自行车目标)": {
+    "chunk_ids": [
+      "chunk-6bff51ab3420cb15a18e37e295538ef2"
+    ],
+    "count": 1,
+    "create_time": 1784365351,
+    "update_time": 1784365351,
+    "_id": "[5.2.3]车辆减速度绝对值最大值≥5.0 m/s²(自行车目标)"
+  },
+  "N1类汽车": {
+    "chunk_ids": [
+      "chunk-6bff51ab3420cb15a18e37e295538ef2",
+      "chunk-606fa22623abb87bedd32b53ab8d91cf",
+      "chunk-71165746d4df86800ee92508320508c7",
+      "chunk-dff410273edcd81cebb68f9ca99984e1",
+      "chunk-087ada5cc95e07960680f5dd1a65d70a",
+      "chunk-99e4292609495232274ab68a927137bd",
+      "chunk-47bb5da0a82739ec14b68608fcb9fc1a",
+      "chunk-5baadf043c73d680b7aa3c3fbe947fcb",
+      "chunk-499ba11b24238f1a778004c772b5e75f",
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa",
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9",
+      "chunk-54b48db7b2439594c007841fa262f5b3",
+      "chunk-758175ddac6ea86a30d83aefa15459a8",
+      "chunk-efc62955fc933269125fcfbf2fb96db6",
+      "chunk-433189dcfb42867b88848152c9787cf2",
+      "chunk-5d77c409f4ae42c28b31bf7dbd1d35b7",
+      "chunk-d485d7544ba6d32f7161fac7b495894a",
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75",
+      "chunk-850fd63fa763c1140213e57f81a2731b",
+      "chunk-6ea136825168445d14914b5eb62664a8"
+    ],
+    "count": 20,
+    "update_time": 1784370207,
+    "_id": "N1类汽车"
+  },
+  "[6.5] N1类静止车辆目标试验": {
+    "chunk_ids": [
+      "chunk-606fa22623abb87bedd32b53ab8d91cf"
+    ],
+    "count": 1,
+    "create_time": 1784365384,
+    "update_time": 1784365384,
+    "_id": "[6.5] N1类静止车辆目标试验"
+  },
+  "GB 39901-2025第6.5条": {
+    "chunk_ids": [
+      "chunk-606fa22623abb87bedd32b53ab8d91cf",
+      "chunk-e3cc843a136fd7246bb8cc2c093423c7",
+      "chunk-18d27793ba6fda13dfaa727852254d7c"
+    ],
+    "count": 3,
+    "update_time": 1784368575,
+    "_id": "GB 39901-2025第6.5条"
+  },
+  "试验车辆速度": {
+    "chunk_ids": [
+      "chunk-606fa22623abb87bedd32b53ab8d91cf",
+      "chunk-f013f6e6327c0917352ff13bd8dcc28e",
+      "chunk-dff410273edcd81cebb68f9ca99984e1",
+      "chunk-99e4292609495232274ab68a927137bd",
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901",
+      "chunk-47bb5da0a82739ec14b68608fcb9fc1a",
+      "chunk-5baadf043c73d680b7aa3c3fbe947fcb",
+      "chunk-18d27793ba6fda13dfaa727852254d7c",
+      "chunk-d485d7544ba6d32f7161fac7b495894a"
+    ],
+    "count": 9,
+    "update_time": 1784369789,
+    "_id": "试验车辆速度"
+  },
+  "速度偏差": {
+    "chunk_ids": [
+      "chunk-606fa22623abb87bedd32b53ab8d91cf",
+      "chunk-dff410273edcd81cebb68f9ca99984e1",
+      "chunk-99e4292609495232274ab68a927137bd",
+      "chunk-47bb5da0a82739ec14b68608fcb9fc1a",
+      "chunk-5baadf043c73d680b7aa3c3fbe947fcb",
+      "chunk-18d27793ba6fda13dfaa727852254d7c"
+    ],
+    "count": 6,
+    "update_time": 1784368575,
+    "_id": "速度偏差"
+  },
+  "制动车辆目标": {
+    "chunk_ids": [
+      "chunk-95e3d7f4aab32e295b0716a393915257"
+    ],
+    "count": 1,
+    "create_time": 1784365423,
+    "update_time": 1784365423,
+    "_id": "制动车辆目标"
+  },
+  "[6.7]目标速度50 km/h": {
+    "chunk_ids": [
+      "chunk-95e3d7f4aab32e295b0716a393915257"
+    ],
+    "count": 1,
+    "create_time": 1784365423,
+    "update_time": 1784365423,
+    "_id": "[6.7]目标速度50 km/h"
+  },
+  "GB 39901-2025第6.7条": {
+    "chunk_ids": [
+      "chunk-95e3d7f4aab32e295b0716a393915257",
+      "chunk-dff410273edcd81cebb68f9ca99984e1"
+    ],
+    "count": 2,
+    "update_time": 1784365689,
+    "_id": "GB 39901-2025第6.7条"
+  },
+  "[6.7]制动车辆目标的碰撞预警和紧急制动试验": {
+    "chunk_ids": [
+      "chunk-95e3d7f4aab32e295b0716a393915257"
+    ],
+    "count": 1,
+    "create_time": 1784365423,
+    "update_time": 1784365423,
+    "_id": "[6.7]制动车辆目标的碰撞预警和紧急制动试验"
+  },
+  "[6.7]横向偏差≤0.2 m": {
+    "chunk_ids": [
+      "chunk-95e3d7f4aab32e295b0716a393915257"
+    ],
+    "count": 1,
+    "create_time": 1784365423,
+    "update_time": 1784365423,
+    "_id": "[6.7]横向偏差≤0.2 m"
+  },
+  "[6.7]试验前直线行驶时间≥2 s": {
+    "chunk_ids": [
+      "chunk-95e3d7f4aab32e295b0716a393915257"
+    ],
+    "count": 1,
+    "create_time": 1784365423,
+    "update_time": 1784365423,
+    "_id": "[6.7]试验前直线行驶时间≥2 s"
+  },
+  "[6.7]初始距离40±1 m": {
+    "chunk_ids": [
+      "chunk-95e3d7f4aab32e295b0716a393915257"
+    ],
+    "count": 1,
+    "create_time": 1784365423,
+    "update_time": 1784365423,
+    "_id": "[6.7]初始距离40±1 m"
+  },
+  "[6.7]目标减速度4±0.5 m/s²": {
+    "chunk_ids": [
+      "chunk-95e3d7f4aab32e295b0716a393915257"
+    ],
+    "count": 1,
+    "create_time": 1784365423,
+    "update_time": 1784365423,
+    "_id": "[6.7]目标减速度4±0.5 m/s²"
+  },
+  "[6.7]试验结束触发条件": {
+    "chunk_ids": [
+      "chunk-95e3d7f4aab32e295b0716a393915257"
+    ],
+    "count": 1,
+    "create_time": 1784365424,
+    "update_time": 1784365424,
+    "_id": "[6.7]试验结束触发条件"
+  },
+  "[6.7]试验过程禁止调整": {
+    "chunk_ids": [
+      "chunk-95e3d7f4aab32e295b0716a393915257"
+    ],
+    "count": 1,
+    "create_time": 1784365424,
+    "update_time": 1784365424,
+    "_id": "[6.7]试验过程禁止调整"
+  },
+  "GB 39901-2025第5.2.4条": {
+    "chunk_ids": [
+      "chunk-71165746d4df86800ee92508320508c7",
+      "chunk-cf3fd3822fe82724ab22a94b116052e3",
+      "chunk-758175ddac6ea86a30d83aefa15459a8"
+    ],
+    "count": 3,
+    "update_time": 1784368785,
+    "_id": "GB 39901-2025第5.2.4条"
+  },
+  "踏板式两轮摩托车目标横穿场景": {
+    "chunk_ids": [
+      "chunk-71165746d4df86800ee92508320508c7",
+      "chunk-cf3fd3822fe82724ab22a94b116052e3"
+    ],
+    "count": 2,
+    "update_time": 1784368395,
+    "_id": "踏板式两轮摩托车目标横穿场景"
+  },
+  "[5.2.4] N1类踏板车横穿20km/h/20km/h行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-71165746d4df86800ee92508320508c7"
+    ],
+    "count": 1,
+    "create_time": 1784365549,
+    "update_time": 1784365549,
+    "_id": "[5.2.4] N1类踏板车横穿20km/h/20km/h行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.4] N1类踏板车横穿40km/h/20km/h行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-71165746d4df86800ee92508320508c7"
+    ],
+    "count": 1,
+    "create_time": 1784365549,
+    "update_time": 1784365549,
+    "_id": "[5.2.4] N1类踏板车横穿40km/h/20km/h行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.4] N1类踏板车横穿60km/h/20km/h行车质量最大相对碰撞速度≤40 km/h": {
+    "chunk_ids": [
+      "chunk-71165746d4df86800ee92508320508c7"
+    ],
+    "count": 1,
+    "create_time": 1784365551,
+    "update_time": 1784365551,
+    "_id": "[5.2.4] N1类踏板车横穿60km/h/20km/h行车质量最大相对碰撞速度≤40 km/h"
+  },
+  "[5.2.4] N1类踏板车横穿20km/h/20km/h最大设计总质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-71165746d4df86800ee92508320508c7"
+    ],
+    "count": 1,
+    "create_time": 1784365551,
+    "update_time": 1784365551,
+    "_id": "[5.2.4] N1类踏板车横穿20km/h/20km/h最大设计总质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.4] N1类踏板车横穿40km/h/20km/h最大设计总质量最大相对碰撞速度≤25 km/h": {
+    "chunk_ids": [
+      "chunk-71165746d4df86800ee92508320508c7"
+    ],
+    "count": 1,
+    "create_time": 1784365551,
+    "update_time": 1784365551,
+    "_id": "[5.2.4] N1类踏板车横穿40km/h/20km/h最大设计总质量最大相对碰撞速度≤25 km/h"
+  },
+  "[5.2.4] N1类踏板车横穿60km/h/20km/h最大设计总质量最大相对碰撞速度≤45 km/h": {
+    "chunk_ids": [
+      "chunk-71165746d4df86800ee92508320508c7"
+    ],
+    "count": 1,
+    "create_time": 1784365551,
+    "update_time": 1784365551,
+    "_id": "[5.2.4] N1类踏板车横穿60km/h/20km/h最大设计总质量最大相对碰撞速度≤45 km/h"
+  },
+  "[5.2.4] N1类踏板式两轮摩托车目标横穿最大相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-71165746d4df86800ee92508320508c7"
+    ],
+    "count": 1,
+    "create_time": 1784365551,
+    "update_time": 1784365551,
+    "_id": "[5.2.4] N1类踏板式两轮摩托车目标横穿最大相对碰撞速度要求"
+  },
+  "[6.6] M1类匀速车辆目标试验": {
+    "chunk_ids": [
+      "chunk-f013f6e6327c0917352ff13bd8dcc28e"
+    ],
+    "count": 1,
+    "create_time": 1784365655,
+    "update_time": 1784365655,
+    "_id": "[6.6] M1类匀速车辆目标试验"
+  },
+  "GB 39901-2025第6.6条": {
+    "chunk_ids": [
+      "chunk-f013f6e6327c0917352ff13bd8dcc28e",
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901",
+      "chunk-d485d7544ba6d32f7161fac7b495894a"
+    ],
+    "count": 3,
+    "update_time": 1784369789,
+    "_id": "GB 39901-2025第6.6条"
+  },
+  "试验车辆速度偏差": {
+    "chunk_ids": [
+      "chunk-f013f6e6327c0917352ff13bd8dcc28e",
+      "chunk-d485d7544ba6d32f7161fac7b495894a"
+    ],
+    "count": 2,
+    "update_time": 1784369789,
+    "_id": "试验车辆速度偏差"
+  },
+  "车辆目标速度": {
+    "chunk_ids": [
+      "chunk-f013f6e6327c0917352ff13bd8dcc28e",
+      "chunk-d485d7544ba6d32f7161fac7b495894a"
+    ],
+    "count": 2,
+    "update_time": 1784369789,
+    "_id": "车辆目标速度"
+  },
+  "车辆目标速度偏差": {
+    "chunk_ids": [
+      "chunk-f013f6e6327c0917352ff13bd8dcc28e",
+      "chunk-d485d7544ba6d32f7161fac7b495894a"
+    ],
+    "count": 2,
+    "update_time": 1784369789,
+    "_id": "车辆目标速度偏差"
+  },
+  "[6.7] M1和N1类制动车辆目标试验": {
+    "chunk_ids": [
+      "chunk-dff410273edcd81cebb68f9ca99984e1"
+    ],
+    "count": 1,
+    "create_time": 1784365689,
+    "update_time": 1784365689,
+    "_id": "[6.7] M1和N1类制动车辆目标试验"
+  },
+  "车辆目标试验结束速度": {
+    "chunk_ids": [
+      "chunk-dff410273edcd81cebb68f9ca99984e1"
+    ],
+    "count": 1,
+    "create_time": 1784365689,
+    "update_time": 1784365689,
+    "_id": "车辆目标试验结束速度"
+  },
+  "车辆目标试验开始速度": {
+    "chunk_ids": [
+      "chunk-dff410273edcd81cebb68f9ca99984e1"
+    ],
+    "count": 1,
+    "create_time": 1784365689,
+    "update_time": 1784365689,
+    "_id": "车辆目标试验开始速度"
+  },
+  "GB 39901-2025第5.2.2条": {
+    "chunk_ids": [
+      "chunk-087ada5cc95e07960680f5dd1a65d70a",
+      "chunk-5d77c409f4ae42c28b31bf7dbd1d35b7",
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "count": 3,
+    "update_time": 1784370275,
+    "_id": "GB 39901-2025第5.2.2条"
+  },
+  "[5.2.2] N1类20km/h儿童行人5km/h横穿行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-087ada5cc95e07960680f5dd1a65d70a"
+    ],
+    "count": 1,
+    "create_time": 1784365895,
+    "update_time": 1784365895,
+    "_id": "[5.2.2] N1类20km/h儿童行人5km/h横穿行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.2] N1类20km/h儿童行人5km/h横穿最大设计总质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-087ada5cc95e07960680f5dd1a65d70a"
+    ],
+    "count": 1,
+    "create_time": 1784365895,
+    "update_time": 1784365895,
+    "_id": "[5.2.2] N1类20km/h儿童行人5km/h横穿最大设计总质量最大相对碰撞速度≤0 km/h"
+  },
+  "儿童行人目标横穿场景": {
+    "chunk_ids": [
+      "chunk-087ada5cc95e07960680f5dd1a65d70a",
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "count": 2,
+    "update_time": 1784370275,
+    "_id": "儿童行人目标横穿场景"
+  },
+  "[5.2.2] N1类40km/h儿童行人5km/h横穿行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-087ada5cc95e07960680f5dd1a65d70a"
+    ],
+    "count": 1,
+    "create_time": 1784365897,
+    "update_time": 1784365897,
+    "_id": "[5.2.2] N1类40km/h儿童行人5km/h横穿行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.2] N1类40km/h儿童行人5km/h横穿最大设计总质量最大相对碰撞速度≤10 km/h": {
+    "chunk_ids": [
+      "chunk-087ada5cc95e07960680f5dd1a65d70a"
+    ],
+    "count": 1,
+    "create_time": 1784365897,
+    "update_time": 1784365897,
+    "_id": "[5.2.2] N1类40km/h儿童行人5km/h横穿最大设计总质量最大相对碰撞速度≤10 km/h"
+  },
+  "[5.2.2] N1类60km/h儿童行人5km/h横穿行车质量最大相对碰撞速度≤35 km/h": {
+    "chunk_ids": [
+      "chunk-087ada5cc95e07960680f5dd1a65d70a"
+    ],
+    "count": 1,
+    "create_time": 1784365897,
+    "update_time": 1784365897,
+    "_id": "[5.2.2] N1类60km/h儿童行人5km/h横穿行车质量最大相对碰撞速度≤35 km/h"
+  },
+  "[5.2.2] N1类60km/h儿童行人5km/h横穿最大设计总质量最大相对碰撞速度≤40 km/h": {
+    "chunk_ids": [
+      "chunk-087ada5cc95e07960680f5dd1a65d70a"
+    ],
+    "count": 1,
+    "create_time": 1784365897,
+    "update_time": 1784365897,
+    "_id": "[5.2.2] N1类60km/h儿童行人5km/h横穿最大设计总质量最大相对碰撞速度≤40 km/h"
+  },
+  "GB 39901-2025第A.3.3条": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a",
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8",
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 3,
+    "update_time": 1784368628,
+    "_id": "GB 39901-2025第A.3.3条"
+  },
+  "安全分析相关文档": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366021,
+    "update_time": 1784366021,
+    "_id": "安全分析相关文档"
+  },
+  "详细系统层面的验证计划及结果": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366021,
+    "update_time": 1784366021,
+    "_id": "详细系统层面的验证计划及结果"
+  },
+  "试验报告": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366021,
+    "update_time": 1784366021,
+    "_id": "试验报告"
+  },
+  "详细整车层面的验证和确认计划及结果": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366021,
+    "update_time": 1784366021,
+    "_id": "详细整车层面的验证和确认计划及结果"
+  },
+  "QM等级故障": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366021,
+    "update_time": 1784366021,
+    "_id": "QM等级故障"
+  },
+  "传感器集成等无法实车模拟故障": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366021,
+    "update_time": 1784366021,
+    "_id": "传感器集成等无法实车模拟故障"
+  },
+  "无法软件实现故障": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366021,
+    "update_time": 1784366021,
+    "_id": "无法软件实现故障"
+  },
+  "[A.3.3]故障类型确认要求": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366022,
+    "update_time": 1784366022,
+    "_id": "[A.3.3]故障类型确认要求"
+  },
+  "[A.3.3]特殊故障文档确认要求": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366023,
+    "update_time": 1784366023,
+    "_id": "[A.3.3]特殊故障文档确认要求"
+  },
+  "[A.3.3]验证确认试验开展要求": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366023,
+    "update_time": 1784366023,
+    "_id": "[A.3.3]验证确认试验开展要求"
+  },
+  "[A.3.3]转向修正转角限制": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366023,
+    "update_time": 1784366023,
+    "_id": "[A.3.3]转向修正转角限制"
+  },
+  "转向修正": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366023,
+    "update_time": 1784366023,
+    "_id": "转向修正"
+  },
+  "转向盘转角变化≤120°(最初2s)": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366023,
+    "update_time": 1784366023,
+    "_id": "转向盘转角变化≤120°(最初2s)"
+  },
+  "转向修正转角变化": {
+    "chunk_ids": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "count": 1,
+    "create_time": 1784366023,
+    "update_time": 1784366023,
+    "_id": "转向修正转角变化"
+  },
+  "[6.10]踏板式两轮摩托车目标横穿试验": {
+    "chunk_ids": [
+      "chunk-99e4292609495232274ab68a927137bd"
+    ],
+    "count": 1,
+    "create_time": 1784366054,
+    "update_time": 1784366054,
+    "_id": "[6.10]踏板式两轮摩托车目标横穿试验"
+  },
+  "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤0 km/h(10/20/40 km/h，行车质量)": {
+    "chunk_ids": [
+      "chunk-eb67eff5a8977cc5a09a8744534095af"
+    ],
+    "count": 1,
+    "create_time": 1784366133,
+    "update_time": 1784366133,
+    "_id": "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤0 km/h(10/20/40 km/h，行车质量)"
+  },
+  "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤0 km/h(10/20/40 km/h，最大设计总质量)": {
+    "chunk_ids": [
+      "chunk-eb67eff5a8977cc5a09a8744534095af"
+    ],
+    "count": 1,
+    "create_time": 1784366133,
+    "update_time": 1784366133,
+    "_id": "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤0 km/h(10/20/40 km/h，最大设计总质量)"
+  },
+  "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤35 km/h(60 km/h，行车质量)": {
+    "chunk_ids": [
+      "chunk-eb67eff5a8977cc5a09a8744534095af"
+    ],
+    "count": 1,
+    "create_time": 1784366133,
+    "update_time": 1784366133,
+    "_id": "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤35 km/h(60 km/h，行车质量)"
+  },
+  "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤50 km/h(80 km/h，行车质量)": {
+    "chunk_ids": [
+      "chunk-eb67eff5a8977cc5a09a8744534095af"
+    ],
+    "count": 1,
+    "create_time": 1784366133,
+    "update_time": 1784366133,
+    "_id": "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤50 km/h(80 km/h，行车质量)"
+  },
+  "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤35 km/h(60 km/h，最大设计总质量)": {
+    "chunk_ids": [
+      "chunk-eb67eff5a8977cc5a09a8744534095af"
+    ],
+    "count": 1,
+    "create_time": 1784366133,
+    "update_time": 1784366133,
+    "_id": "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤35 km/h(60 km/h，最大设计总质量)"
+  },
+  "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤50 km/h(80 km/h，最大设计总质量)": {
+    "chunk_ids": [
+      "chunk-eb67eff5a8977cc5a09a8744534095af"
+    ],
+    "count": 1,
+    "create_time": 1784366134,
+    "update_time": 1784366134,
+    "_id": "[5.2.1.1] M1静止车辆目标最大相对碰撞速度≤50 km/h(80 km/h，最大设计总质量)"
+  },
+  "[5.2.3] M1自行车横穿20km/h/15km/h最大设计总质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9"
+    ],
+    "count": 1,
+    "create_time": 1784366261,
+    "update_time": 1784366261,
+    "_id": "[5.2.3] M1自行车横穿20km/h/15km/h最大设计总质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.3] M1自行车横穿20km/h/15km/h行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9"
+    ],
+    "count": 1,
+    "create_time": 1784366261,
+    "update_time": 1784366261,
+    "_id": "[5.2.3] M1自行车横穿20km/h/15km/h行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.3] M1自行车横穿40km/h/15km/h行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9"
+    ],
+    "count": 1,
+    "create_time": 1784366261,
+    "update_time": 1784366261,
+    "_id": "[5.2.3] M1自行车横穿40km/h/15km/h行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.3] M1自行车横穿40km/h/15km/h最大设计总质量最大相对碰撞速度≤10 km/h": {
+    "chunk_ids": [
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9"
+    ],
+    "count": 1,
+    "create_time": 1784366263,
+    "update_time": 1784366263,
+    "_id": "[5.2.3] M1自行车横穿40km/h/15km/h最大设计总质量最大相对碰撞速度≤10 km/h"
+  },
+  "[5.2.3] M1自行车横穿60km/h/15km/h行车质量最大相对碰撞速度≤40 km/h": {
+    "chunk_ids": [
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9"
+    ],
+    "count": 1,
+    "create_time": 1784366263,
+    "update_time": 1784366263,
+    "_id": "[5.2.3] M1自行车横穿60km/h/15km/h行车质量最大相对碰撞速度≤40 km/h"
+  },
+  "[5.2.3] M1自行车横穿60km/h/15km/h最大设计总质量最大相对碰撞速度≤40 km/h": {
+    "chunk_ids": [
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9"
+    ],
+    "count": 1,
+    "create_time": 1784366263,
+    "update_time": 1784366263,
+    "_id": "[5.2.3] M1自行车横穿60km/h/15km/h最大设计总质量最大相对碰撞速度≤40 km/h"
+  },
+  "[5.2.3] M1类汽车自行车目标横穿场景最大相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9"
+    ],
+    "count": 1,
+    "create_time": 1784366263,
+    "update_time": 1784366263,
+    "_id": "[5.2.3] M1类汽车自行车目标横穿场景最大相对碰撞速度要求"
+  },
+  "匀速车辆目标场景": {
+    "chunk_ids": [
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f",
+      "chunk-efc62955fc933269125fcfbf2fb96db6"
+    ],
+    "count": 2,
+    "update_time": 1784369425,
+    "_id": "匀速车辆目标场景"
+  },
+  "[5.2.1.1] M1匀速车辆目标最大相对碰撞速度≤0 km/h(车速30/60，目标20，行车质量)": {
+    "chunk_ids": [
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f"
+    ],
+    "count": 1,
+    "create_time": 1784366328,
+    "update_time": 1784366328,
+    "_id": "[5.2.1.1] M1匀速车辆目标最大相对碰撞速度≤0 km/h(车速30/60，目标20，行车质量)"
+  },
+  "[5.2.1.1] M1匀速车辆目标最大相对碰撞速度≤0 km/h(车速30/60，目标20，最大设计总质量)": {
+    "chunk_ids": [
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f"
+    ],
+    "count": 1,
+    "create_time": 1784366328,
+    "update_time": 1784366328,
+    "_id": "[5.2.1.1] M1匀速车辆目标最大相对碰撞速度≤0 km/h(车速30/60，目标20，最大设计总质量)"
+  },
+  "[5.2.1.1] M1匀速车辆目标最大相对碰撞速度≤35 km/h(车速80，目标20，行车质量)": {
+    "chunk_ids": [
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f"
+    ],
+    "count": 1,
+    "create_time": 1784366329,
+    "update_time": 1784366329,
+    "_id": "[5.2.1.1] M1匀速车辆目标最大相对碰撞速度≤35 km/h(车速80，目标20，行车质量)"
+  },
+  "[5.2.1.1] M1匀速车辆目标最大相对碰撞速度≤35 km/h(车速80，目标20，最大设计总质量)": {
+    "chunk_ids": [
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f"
+    ],
+    "count": 1,
+    "create_time": 1784366329,
+    "update_time": 1784366329,
+    "_id": "[5.2.1.1] M1匀速车辆目标最大相对碰撞速度≤35 km/h(车速80，目标20，最大设计总质量)"
+  },
+  "[5.2.1.1] M1类汽车最大相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f"
+    ],
+    "count": 1,
+    "create_time": 1784366329,
+    "update_time": 1784366329,
+    "_id": "[5.2.1.1] M1类汽车最大相对碰撞速度要求"
+  },
+  "[6.5]静止车辆目标的碰撞预警和紧急制动试验": {
+    "chunk_ids": [
+      "chunk-e3cc843a136fd7246bb8cc2c093423c7"
+    ],
+    "count": 1,
+    "create_time": 1784366432,
+    "update_time": 1784366432,
+    "_id": "[6.5]静止车辆目标的碰撞预警和紧急制动试验"
+  },
+  "静止车辆目标": {
+    "chunk_ids": [
+      "chunk-e3cc843a136fd7246bb8cc2c093423c7",
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 2,
+    "update_time": 1784366723,
+    "_id": "静止车辆目标"
+  },
+  "[6.5]试验车辆与目标中心线偏差≤0.2 m": {
+    "chunk_ids": [
+      "chunk-e3cc843a136fd7246bb8cc2c093423c7"
+    ],
+    "count": 1,
+    "create_time": 1784366432,
+    "update_time": 1784366432,
+    "_id": "[6.5]试验车辆与目标中心线偏差≤0.2 m"
+  },
+  "[6.5]试验前直线行驶时间≥2 s": {
+    "chunk_ids": [
+      "chunk-e3cc843a136fd7246bb8cc2c093423c7"
+    ],
+    "count": 1,
+    "create_time": 1784366432,
+    "update_time": 1784366432,
+    "_id": "[6.5]试验前直线行驶时间≥2 s"
+  },
+  "[6.5]试验开始时TTC≥4 s": {
+    "chunk_ids": [
+      "chunk-e3cc843a136fd7246bb8cc2c093423c7"
+    ],
+    "count": 1,
+    "create_time": 1784366432,
+    "update_time": 1784366432,
+    "_id": "[6.5]试验开始时TTC≥4 s"
+  },
+  "[6.5]按表13或表14速度行驶": {
+    "chunk_ids": [
+      "chunk-e3cc843a136fd7246bb8cc2c093423c7"
+    ],
+    "count": 1,
+    "create_time": 1784366432,
+    "update_time": 1784366432,
+    "_id": "[6.5]按表13或表14速度行驶"
+  },
+  "[6.5]除保持轨迹及速度外不进行任何调整": {
+    "chunk_ids": [
+      "chunk-e3cc843a136fd7246bb8cc2c093423c7"
+    ],
+    "count": 1,
+    "create_time": 1784366432,
+    "update_time": 1784366432,
+    "_id": "[6.5]除保持轨迹及速度外不进行任何调整"
+  },
+  "[6.6]匀速车辆目标的碰撞预警和紧急制动试验": {
+    "chunk_ids": [
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901"
+    ],
+    "count": 1,
+    "create_time": 1784366539,
+    "update_time": 1784366539,
+    "_id": "[6.6]匀速车辆目标的碰撞预警和紧急制动试验"
+  },
+  "匀速车辆目标": {
+    "chunk_ids": [
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901"
+    ],
+    "count": 1,
+    "create_time": 1784366539,
+    "update_time": 1784366539,
+    "_id": "匀速车辆目标"
+  },
+  "[6.6]试验前直线行驶时间≥2 s": {
+    "chunk_ids": [
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901"
+    ],
+    "count": 1,
+    "create_time": 1784366539,
+    "update_time": 1784366539,
+    "_id": "[6.6]试验前直线行驶时间≥2 s"
+  },
+  "[6.6]横向偏差≤0.2 m": {
+    "chunk_ids": [
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901"
+    ],
+    "count": 1,
+    "create_time": 1784366539,
+    "update_time": 1784366539,
+    "_id": "[6.6]横向偏差≤0.2 m"
+  },
+  "[6.6]试验车辆速度符合表15或表16": {
+    "chunk_ids": [
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901"
+    ],
+    "count": 1,
+    "create_time": 1784366539,
+    "update_time": 1784366539,
+    "_id": "[6.6]试验车辆速度符合表15或表16"
+  },
+  "[6.6]试验开始时TTC≥4 s": {
+    "chunk_ids": [
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901"
+    ],
+    "count": 1,
+    "create_time": 1784366539,
+    "update_time": 1784366539,
+    "_id": "[6.6]试验开始时TTC≥4 s"
+  },
+  "直线行驶时间": {
+    "chunk_ids": [
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901"
+    ],
+    "count": 1,
+    "create_time": 1784366539,
+    "update_time": 1784366539,
+    "_id": "直线行驶时间"
+  },
+  "TTC": {
+    "chunk_ids": [
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901",
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 3,
+    "update_time": 1784370959,
+    "_id": "TTC"
+  },
+  "横向偏差": {
+    "chunk_ids": [
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901"
+    ],
+    "count": 1,
+    "create_time": 1784366540,
+    "update_time": 1784366540,
+    "_id": "横向偏差"
+  },
+  "[6.8]儿童行人目标横穿试验": {
+    "chunk_ids": [
+      "chunk-47bb5da0a82739ec14b68608fcb9fc1a"
+    ],
+    "count": 1,
+    "create_time": 1784366570,
+    "update_time": 1784366570,
+    "_id": "[6.8]儿童行人目标横穿试验"
+  },
+  "[6.11.4]车辆直行经过同向运动成年行人目标误响应试验": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366721,
+    "update_time": 1784366721,
+    "_id": "[6.11.4]车辆直行经过同向运动成年行人目标误响应试验"
+  },
+  "GB 39901-2025第6.11.4条": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366721,
+    "update_time": 1784366721,
+    "_id": "GB 39901-2025第6.11.4条"
+  },
+  "[6.11.4]试验车辆速度(30±2)km/h": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366721,
+    "update_time": 1784366721,
+    "_id": "[6.11.4]试验车辆速度(30±2)km/h"
+  },
+  "成年行人目标": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 2,
+    "update_time": 1784370964,
+    "_id": "成年行人目标"
+  },
+  "[6.11.4]行人目标速度(5±0.2)km/h": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366721,
+    "update_time": 1784366721,
+    "_id": "[6.11.4]行人目标速度(5±0.2)km/h"
+  },
+  "GB 39901-2025第6.11.5条": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366721,
+    "update_time": 1784366721,
+    "_id": "GB 39901-2025第6.11.5条"
+  },
+  "[6.11.4]横向距离(1±0.1)m": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366721,
+    "update_time": 1784366721,
+    "_id": "[6.11.4]横向距离(1±0.1)m"
+  },
+  "[6.11.4]起始距离至少100m": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366721,
+    "update_time": 1784366721,
+    "_id": "[6.11.4]起始距离至少100m"
+  },
+  "[6.11.5]车辆直行经过对向静止自行车目标误响应试验": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366722,
+    "update_time": 1784366722,
+    "_id": "[6.11.5]车辆直行经过对向静止自行车目标误响应试验"
+  },
+  "[6.11.5]试验车辆速度(30±2)km/h": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366722,
+    "update_time": 1784366722,
+    "_id": "[6.11.5]试验车辆速度(30±2)km/h"
+  },
+  "[6.11.5]横向距离(1±0.1)m": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366722,
+    "update_time": 1784366722,
+    "_id": "[6.11.5]横向距离(1±0.1)m"
+  },
+  "[6.11.5]起始距离至少100m": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366722,
+    "update_time": 1784366722,
+    "_id": "[6.11.5]起始距离至少100m"
+  },
+  "GB 39901-2025第6.12条": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366722,
+    "update_time": 1784366722,
+    "_id": "GB 39901-2025第6.12条"
+  },
+  "[6.12]关闭碰撞预警后的系统紧急制动试验": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366723,
+    "update_time": 1784366723,
+    "_id": "[6.12]关闭碰撞预警后的系统紧急制动试验"
+  },
+  "[6.12]试验车辆速度60(-2,0)km/h": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366723,
+    "update_time": 1784366723,
+    "_id": "[6.12]试验车辆速度60(-2,0)km/h"
+  },
+  "[6.12] TTC不小于4s": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366724,
+    "update_time": 1784366724,
+    "_id": "[6.12] TTC不小于4s"
+  },
+  "[6.12]中心线偏差不大于0.2m": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366724,
+    "update_time": 1784366724,
+    "_id": "[6.12]中心线偏差不大于0.2m"
+  },
+  "GB 39901-2025第6.13条": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366724,
+    "update_time": 1784366724,
+    "_id": "GB 39901-2025第6.13条"
+  },
+  "[6.13]关闭紧急制动后的系统碰撞预警试验": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366724,
+    "update_time": 1784366724,
+    "_id": "[6.13]关闭紧急制动后的系统碰撞预警试验"
+  },
+  "[6.13]试验车辆速度60(-2,0)km/h": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366724,
+    "update_time": 1784366724,
+    "_id": "[6.13]试验车辆速度60(-2,0)km/h"
+  },
+  "[6.13] TTC不小于4s": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366725,
+    "update_time": 1784366725,
+    "_id": "[6.13] TTC不小于4s"
+  },
+  "[6.13]中心线偏差不大于0.2m": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366725,
+    "update_time": 1784366725,
+    "_id": "[6.13]中心线偏差不大于0.2m"
+  },
+  "GB 39901-2025第6.14条": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366725,
+    "update_time": 1784366725,
+    "_id": "GB 39901-2025第6.14条"
+  },
+  "GB 39901-2025第6.14.1条": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366725,
+    "update_time": 1784366725,
+    "_id": "GB 39901-2025第6.14.1条"
+  },
+  "[6.14.1]仿真试验适用范围": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366725,
+    "update_time": 1784366725,
+    "_id": "[6.14.1]仿真试验适用范围"
+  },
+  "GB 39901-2025附录B": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74",
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 2,
+    "update_time": 1784366949,
+    "_id": "GB 39901-2025附录B"
+  },
+  "仿真试验工具链验证和确认文档": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366726,
+    "update_time": 1784366726,
+    "_id": "仿真试验工具链验证和确认文档"
+  },
+  "GB 39901-2025第6.14.2条": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366726,
+    "update_time": 1784366726,
+    "_id": "GB 39901-2025第6.14.2条"
+  },
+  "[6.14.2]仿真与场地试验组合要求": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366727,
+    "update_time": 1784366727,
+    "_id": "[6.14.2]仿真与场地试验组合要求"
+  },
+  "[6.14.2]结果不一致时第三次试验为场地试验": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366727,
+    "update_time": 1784366727,
+    "_id": "[6.14.2]结果不一致时第三次试验为场地试验"
+  },
+  "GB 39901-2025第6.14.3条": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366727,
+    "update_time": 1784366727,
+    "_id": "GB 39901-2025第6.14.3条"
+  },
+  "[6.14.3]仿真试验报告要求": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366727,
+    "update_time": 1784366727,
+    "_id": "[6.14.3]仿真试验报告要求"
+  },
+  "仿真试验单独报告": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366728,
+    "update_time": 1784366728,
+    "_id": "仿真试验单独报告"
+  },
+  "GB 39901-2025第7条": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366728,
+    "update_time": 1784366728,
+    "_id": "GB 39901-2025第7条"
+  },
+  "产品使用说明书": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366728,
+    "update_time": 1784366728,
+    "_id": "产品使用说明书"
+  },
+  "GB 39901-2025第8条": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366728,
+    "update_time": 1784366728,
+    "_id": "GB 39901-2025第8条"
+  },
+  "GB 39901-2025第8.1条": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366728,
+    "update_time": 1784366728,
+    "_id": "GB 39901-2025第8.1条"
+  },
+  "[8.1] AEB系统同一型式判定条件": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366728,
+    "update_time": 1784366728,
+    "_id": "[8.1] AEB系统同一型式判定条件"
+  },
+  "[8.1]传感器配置相同": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366729,
+    "update_time": 1784366729,
+    "_id": "[8.1]传感器配置相同"
+  },
+  "[8.1]控制器配置相同": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366729,
+    "update_time": 1784366729,
+    "_id": "[8.1]控制器配置相同"
+  },
+  "[8.1]最高设计车速相同或减少": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366729,
+    "update_time": 1784366729,
+    "_id": "[8.1]最高设计车速相同或减少"
+  },
+  "[8.1]整车生产企业相同": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366729,
+    "update_time": 1784366729,
+    "_id": "[8.1]整车生产企业相同"
+  },
+  "[8.1]轴数和布置相同": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366730,
+    "update_time": 1784366730,
+    "_id": "[8.1]轴数和布置相同"
+  },
+  "[8.1]轴距相同或增加": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366730,
+    "update_time": 1784366730,
+    "_id": "[8.1]轴距相同或增加"
+  },
+  "[8.1]轮距相同或增加": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366730,
+    "update_time": 1784366730,
+    "_id": "[8.1]轮距相同或增加"
+  },
+  "[8.1]最大允许总质量相同或减少": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366730,
+    "update_time": 1784366730,
+    "_id": "[8.1]最大允许总质量相同或减少"
+  },
+  "[8.1]前轴荷后轴荷之比相同或减少": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366731,
+    "update_time": 1784366731,
+    "_id": "[8.1]前轴荷后轴荷之比相同或减少"
+  },
+  "[8.1]变速器型式相同": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366731,
+    "update_time": 1784366731,
+    "_id": "[8.1]变速器型式相同"
+  },
+  "[8.1]行车制动系统型式相同": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366731,
+    "update_time": 1784366731,
+    "_id": "[8.1]行车制动系统型式相同"
+  },
+  "[8.1]行车制动系统助力方式相同": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366731,
+    "update_time": 1784366731,
+    "_id": "[8.1]行车制动系统助力方式相同"
+  },
+  "[8.1]制动电子控制系统型号相同": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366732,
+    "update_time": 1784366732,
+    "_id": "[8.1]制动电子控制系统型号相同"
+  },
+  "[6.11.4]不应对试验车辆进行任何调整": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366732,
+    "update_time": 1784366732,
+    "_id": "[6.11.4]不应对试验车辆进行任何调整"
+  },
+  "[6.11.5]不应对试验车辆进行任何调整": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366732,
+    "update_time": 1784366732,
+    "_id": "[6.11.5]不应对试验车辆进行任何调整"
+  },
+  "[6.12]不应对试验车辆进行任何调整": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366733,
+    "update_time": 1784366733,
+    "_id": "[6.12]不应对试验车辆进行任何调整"
+  },
+  "[6.13]不应对试验车辆进行任何调整": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366733,
+    "update_time": 1784366733,
+    "_id": "[6.13]不应对试验车辆进行任何调整"
+  },
+  "[6.12]试验开始前至少2s直线行驶": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366733,
+    "update_time": 1784366733,
+    "_id": "[6.12]试验开始前至少2s直线行驶"
+  },
+  "[6.13]试验开始前至少2s直线行驶": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366733,
+    "update_time": 1784366733,
+    "_id": "[6.13]试验开始前至少2s直线行驶"
+  },
+  "系统功能描述": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366733,
+    "update_time": 1784366733,
+    "_id": "系统功能描述"
+  },
+  "系统开启关闭及干预方式说明": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366734,
+    "update_time": 1784366734,
+    "_id": "系统开启关闭及干预方式说明"
+  },
+  "系统警告及提示信号说明": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366734,
+    "update_time": 1784366734,
+    "_id": "系统警告及提示信号说明"
+  },
+  "系统能力不足或使用限制说明": {
+    "chunk_ids": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "count": 1,
+    "create_time": 1784366734,
+    "update_time": 1784366734,
+    "_id": "系统能力不足或使用限制说明"
+  },
+  "GB 39901-2025第B.1条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366949,
+    "update_time": 1784366949,
+    "_id": "GB 39901-2025第B.1条"
+  },
+  "GB 39901-2025第B.2.1条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366949,
+    "update_time": 1784366949,
+    "_id": "GB 39901-2025第B.2.1条"
+  },
+  "GB 39901-2025第B.2.3条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366949,
+    "update_time": 1784366949,
+    "_id": "GB 39901-2025第B.2.3条"
+  },
+  "GB 39901-2025第A.3.4条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366949,
+    "update_time": 1784366949,
+    "_id": "GB 39901-2025第A.3.4条"
+  },
+  "GB 39901-2025第B.2.3.2条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366949,
+    "update_time": 1784366949,
+    "_id": "GB 39901-2025第B.2.3.2条"
+  },
+  "GB 39901-2025第B.2.3.1条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366949,
+    "update_time": 1784366949,
+    "_id": "GB 39901-2025第B.2.3.1条"
+  },
+  "GB 39901-2025第B.2.3.3条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366949,
+    "update_time": 1784366949,
+    "_id": "GB 39901-2025第B.2.3.3条"
+  },
+  "GB 39901-2025第B.2.3.4条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366950,
+    "update_time": 1784366950,
+    "_id": "GB 39901-2025第B.2.3.4条"
+  },
+  "GB 39901-2025第B.2.3.5条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366950,
+    "update_time": 1784366950,
+    "_id": "GB 39901-2025第B.2.3.5条"
+  },
+  "GB 39901-2025第B.2.3.6条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366950,
+    "update_time": 1784366950,
+    "_id": "GB 39901-2025第B.2.3.6条"
+  },
+  "GB 39901-2025第B.2.3.7条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366950,
+    "update_time": 1784366950,
+    "_id": "GB 39901-2025第B.2.3.7条"
+  },
+  "GB 39901-2025第B.2.3.8条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366950,
+    "update_time": 1784366950,
+    "_id": "GB 39901-2025第B.2.3.8条"
+  },
+  "GB 39901-2025第B.2.4.1条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366951,
+    "update_time": 1784366951,
+    "_id": "GB 39901-2025第B.2.4.1条"
+  },
+  "GB 39901-2025第B.2.4.2条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366952,
+    "update_time": 1784366952,
+    "_id": "GB 39901-2025第B.2.4.2条"
+  },
+  "GB 39901-2025第B.2.4.3条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366952,
+    "update_time": 1784366952,
+    "_id": "GB 39901-2025第B.2.4.3条"
+  },
+  "GB 39901-2025第B.2.4.4条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366952,
+    "update_time": 1784366952,
+    "_id": "GB 39901-2025第B.2.4.4条"
+  },
+  "GB 39901-2025第B.2.5.1条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366952,
+    "update_time": 1784366952,
+    "_id": "GB 39901-2025第B.2.5.1条"
+  },
+  "GB 39901-2025第B.2.5.2条": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366952,
+    "update_time": 1784366952,
+    "_id": "GB 39901-2025第B.2.5.2条"
+  },
+  "仿真试验工具链": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366952,
+    "update_time": 1784366952,
+    "_id": "仿真试验工具链"
+  },
+  "仿真试验工具链可信度评估": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366953,
+    "update_time": 1784366953,
+    "_id": "仿真试验工具链可信度评估"
+  },
+  "仿真试验工具链管理": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366954,
+    "update_time": 1784366954,
+    "_id": "仿真试验工具链管理"
+  },
+  "仿真试验工具链验证": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366954,
+    "update_time": 1784366954,
+    "_id": "仿真试验工具链验证"
+  },
+  "仿真试验工具链确认": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366954,
+    "update_time": 1784366954,
+    "_id": "仿真试验工具链确认"
+  },
+  "仿真试验工具链说明文件": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366954,
+    "update_time": 1784366954,
+    "_id": "仿真试验工具链说明文件"
+  },
+  "仿真试验工具链有效域及确认过程文件": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366954,
+    "update_time": 1784366954,
+    "_id": "仿真试验工具链有效域及确认过程文件"
+  },
+  "仿真试验工具链KPI评估文件": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366954,
+    "update_time": 1784366954,
+    "_id": "仿真试验工具链KPI评估文件"
+  },
+  "仿真试验工具链相关性阈值描述文件": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366955,
+    "update_time": 1784366955,
+    "_id": "仿真试验工具链相关性阈值描述文件"
+  },
+  "仿真试验工具链假设与限制文件": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366955,
+    "update_time": 1784366955,
+    "_id": "仿真试验工具链假设与限制文件"
+  },
+  "仿真试验工具链评估方法说明文件": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366955,
+    "update_time": 1784366955,
+    "_id": "仿真试验工具链评估方法说明文件"
+  },
+  "仿真建模验证活动文件": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366956,
+    "update_time": 1784366956,
+    "_id": "仿真建模验证活动文件"
+  },
+  "仿真确认策略文件": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366956,
+    "update_time": 1784366956,
+    "_id": "仿真确认策略文件"
+  },
+  "车辆制造商": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366957,
+    "update_time": 1784366957,
+    "_id": "车辆制造商"
+  },
+  "检验检测机构": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366957,
+    "update_time": 1784366957,
+    "_id": "检验检测机构"
+  },
+  "仿真试验工具链有效域": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366957,
+    "update_time": 1784366957,
+    "_id": "仿真试验工具链有效域"
+  },
+  "仿真试验工具链关键性能指标评估准则": {
+    "chunk_ids": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "count": 1,
+    "create_time": 1784366957,
+    "update_time": 1784366957,
+    "_id": "仿真试验工具链关键性能指标评估准则"
+  },
+  "紧急制动": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8",
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-499ba11b24238f1a778004c772b5e75f",
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 4,
+    "update_time": 1784368481,
+    "_id": "紧急制动"
+  },
+  "碰撞预警": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8",
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-499ba11b24238f1a778004c772b5e75f",
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 4,
+    "update_time": 1784368481,
+    "_id": "碰撞预警"
+  },
+  "供电类故障": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367160,
+    "update_time": 1784367160,
+    "_id": "供电类故障"
+  },
+  "摄像头故障": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367160,
+    "update_time": 1784367160,
+    "_id": "摄像头故障"
+  },
+  "激光雷达故障": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367160,
+    "update_time": 1784367160,
+    "_id": "激光雷达故障"
+  },
+  "毫米波雷达故障": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367160,
+    "update_time": 1784367160,
+    "_id": "毫米波雷达故障"
+  },
+  "通信接口类故障": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367160,
+    "update_time": 1784367160,
+    "_id": "通信接口类故障"
+  },
+  "非预期的侧向运动": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8",
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 2,
+    "update_time": 1784368481,
+    "_id": "非预期的侧向运动"
+  },
+  "非预期的减速": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8",
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 2,
+    "update_time": 1784368481,
+    "_id": "非预期的减速"
+  },
+  "非预期的减速能力下降": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8",
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 2,
+    "update_time": 1784368481,
+    "_id": "非预期的减速能力下降"
+  },
+  "无法响应驾驶员干预紧急制动": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367162,
+    "update_time": 1784367162,
+    "_id": "无法响应驾驶员干预紧急制动"
+  },
+  "人机提醒不足或丢失": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8",
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 2,
+    "update_time": 1784368481,
+    "_id": "人机提醒不足或丢失"
+  },
+  "[A.3.3]紧急制动故障注入试验": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367162,
+    "update_time": 1784367162,
+    "_id": "[A.3.3]紧急制动故障注入试验"
+  },
+  "最大纵向减速度或速度变化值不超过安全阈值": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367163,
+    "update_time": 1784367163,
+    "_id": "最大纵向减速度或速度变化值不超过安全阈值"
+  },
+  "非预期侧向运动参数不超过安全阈值": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367163,
+    "update_time": 1784367163,
+    "_id": "非预期侧向运动参数不超过安全阈值"
+  },
+  "及时且准确发出故障警告信号": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367163,
+    "update_time": 1784367163,
+    "_id": "及时且准确发出故障警告信号"
+  },
+  "进入车辆制造商定义的状态": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367163,
+    "update_time": 1784367163,
+    "_id": "进入车辆制造商定义的状态"
+  },
+  "符合A.2.6.3验证和确认计划中的接受准则": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367163,
+    "update_time": 1784367163,
+    "_id": "符合A.2.6.3验证和确认计划中的接受准则"
+  },
+  "故障警告信号": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8",
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 2,
+    "update_time": 1784367730,
+    "_id": "故障警告信号"
+  },
+  "A.2.6.3验证和确认计划": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367165,
+    "update_time": 1784367165,
+    "_id": "A.2.6.3验证和确认计划"
+  },
+  "[A.3.3]紧急制动非预期减速验证活动": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367165,
+    "update_time": 1784367165,
+    "_id": "[A.3.3]紧急制动非预期减速验证活动"
+  },
+  "[A.3.3]紧急制动故障警告验证活动": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367165,
+    "update_time": 1784367165,
+    "_id": "[A.3.3]紧急制动故障警告验证活动"
+  },
+  "[A.3.3]碰撞预警故障警告验证活动": {
+    "chunk_ids": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "count": 1,
+    "create_time": 1784367166,
+    "update_time": 1784367166,
+    "_id": "[A.3.3]碰撞预警故障警告验证活动"
+  },
+  "GB/T 3730.1": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367339,
+    "update_time": 1784367339,
+    "_id": "GB/T 3730.1"
+  },
+  "GB 39901-2025第2条": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367339,
+    "update_time": 1784367339,
+    "_id": "GB 39901-2025第2条"
+  },
+  "GB/T 34590": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 2,
+    "update_time": 1784370087,
+    "_id": "GB/T 34590"
+  },
+  "ISO 19206-3": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 2,
+    "update_time": 1784370964,
+    "_id": "ISO 19206-3"
+  },
+  "ISO 19206-4": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 2,
+    "update_time": 1784370965,
+    "_id": "ISO 19206-4"
+  },
+  "GB 34660": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 2,
+    "update_time": 1784367735,
+    "_id": "GB 34660"
+  },
+  "ISO 19206-2": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 2,
+    "update_time": 1784370965,
+    "_id": "ISO 19206-2"
+  },
+  "GB/T 39263": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367339,
+    "update_time": 1784367339,
+    "_id": "GB/T 39263"
+  },
+  "ISO 19206-5": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 2,
+    "update_time": 1784370966,
+    "_id": "ISO 19206-5"
+  },
+  "GB 39901-2025第3条": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367341,
+    "update_time": 1784367341,
+    "_id": "GB 39901-2025第3条"
+  },
+  "自动紧急制动系统": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-5db4f31813785db0b14b89d5c880444c",
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f",
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74",
+      "chunk-499ba11b24238f1a778004c772b5e75f",
+      "chunk-6ea136825168445d14914b5eb62664a8"
+    ],
+    "count": 6,
+    "update_time": 1784371902,
+    "_id": "自动紧急制动系统"
+  },
+  "激活状态": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 2,
+    "update_time": 1784367720,
+    "_id": "激活状态"
+  },
+  "待机状态": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 2,
+    "update_time": 1784367720,
+    "_id": "待机状态"
+  },
+  "不可用状态": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535",
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 2,
+    "update_time": 1784367720,
+    "_id": "不可用状态"
+  },
+  "初始化": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367342,
+    "update_time": 1784367342,
+    "_id": "初始化"
+  },
+  "自检": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367343,
+    "update_time": 1784367343,
+    "_id": "自检"
+  },
+  "预计碰撞时间": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367343,
+    "update_time": 1784367343,
+    "_id": "预计碰撞时间"
+  },
+  "整备质量": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367343,
+    "update_time": 1784367343,
+    "_id": "整备质量"
+  },
+  "电子控制系统": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367343,
+    "update_time": 1784367343,
+    "_id": "电子控制系统"
+  },
+  "单元": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367344,
+    "update_time": 1784367344,
+    "_id": "单元"
+  },
+  "传输链": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367344,
+    "update_time": 1784367344,
+    "_id": "传输链"
+  },
+  "有效工作范围": {
+    "chunk_ids": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "count": 1,
+    "create_time": 1784367344,
+    "update_time": 1784367344,
+    "_id": "有效工作范围"
+  },
+  "[6.9]自行车目标横穿试验": {
+    "chunk_ids": [
+      "chunk-5baadf043c73d680b7aa3c3fbe947fcb"
+    ],
+    "count": 1,
+    "create_time": 1784367455,
+    "update_time": 1784367455,
+    "_id": "[6.9]自行车目标横穿试验"
+  },
+  "GB 39901-2025第4.1条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367720,
+    "update_time": 1784367720,
+    "_id": "GB 39901-2025第4.1条"
+  },
+  "[4.1] AEBS安装要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367720,
+    "update_time": 1784367720,
+    "_id": "[4.1] AEBS安装要求"
+  },
+  "[4.1a] M1类车辆目标AEBS状态要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367722,
+    "update_time": 1784367722,
+    "_id": "[4.1a] M1类车辆目标AEBS状态要求"
+  },
+  "[4.1b]行人及骑行者目标AEBS状态要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367722,
+    "update_time": 1784367722,
+    "_id": "[4.1b]行人及骑行者目标AEBS状态要求"
+  },
+  "[4.1c] AEBS安全性证明要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367722,
+    "update_time": 1784367722,
+    "_id": "[4.1c] AEBS安全性证明要求"
+  },
+  "GB 39901-2025第4.2条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367722,
+    "update_time": 1784367722,
+    "_id": "GB 39901-2025第4.2条"
+  },
+  "GB 39901-2025第4.3.1.1条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367723,
+    "update_time": 1784367723,
+    "_id": "GB 39901-2025第4.3.1.1条"
+  },
+  "[4.2] AEBS自检功能要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367723,
+    "update_time": 1784367723,
+    "_id": "[4.2] AEBS自检功能要求"
+  },
+  "[4.3.1.1] AEBS自动开启要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367723,
+    "update_time": 1784367723,
+    "_id": "[4.3.1.1] AEBS自动开启要求"
+  },
+  "[4.3.1.1] AEBS主动关闭操作要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367724,
+    "update_time": 1784367724,
+    "_id": "[4.3.1.1] AEBS主动关闭操作要求"
+  },
+  "[4.3.1.1] AEBS高速禁止主动关闭要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367724,
+    "update_time": 1784367724,
+    "_id": "[4.3.1.1] AEBS高速禁止主动关闭要求"
+  },
+  "[4.3.1.1]车速>10km/h禁止关闭阈值": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367724,
+    "update_time": 1784367724,
+    "_id": "[4.3.1.1]车速>10km/h禁止关闭阈值"
+  },
+  "GB 39901-2025第4.3.1.2条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367724,
+    "update_time": 1784367724,
+    "_id": "GB 39901-2025第4.3.1.2条"
+  },
+  "[4.3.1.2] AEBS自动关闭说明文档要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367725,
+    "update_time": 1784367725,
+    "_id": "[4.3.1.2] AEBS自动关闭说明文档要求"
+  },
+  "AEBS自动关闭说明材料": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367725,
+    "update_time": 1784367725,
+    "_id": "AEBS自动关闭说明材料"
+  },
+  "[4.3.1.2] AEBS自动关闭条件一致性要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367725,
+    "update_time": 1784367725,
+    "_id": "[4.3.1.2] AEBS自动关闭条件一致性要求"
+  },
+  "[4.3.1.2] AEBS自动恢复开启要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367725,
+    "update_time": 1784367725,
+    "_id": "[4.3.1.2] AEBS自动恢复开启要求"
+  },
+  "GB 39901-2025第4.3.1.3条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367726,
+    "update_time": 1784367726,
+    "_id": "GB 39901-2025第4.3.1.3条"
+  },
+  "关闭状态": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367726,
+    "update_time": 1784367726,
+    "_id": "关闭状态"
+  },
+  "[4.3.1.3] AEBS关闭状态光学警告要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367726,
+    "update_time": 1784367726,
+    "_id": "[4.3.1.3] AEBS关闭状态光学警告要求"
+  },
+  "光学警告信号": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 2,
+    "update_time": 1784370959,
+    "_id": "光学警告信号"
+  },
+  "GB 39901-2025第4.3.1.4条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367727,
+    "update_time": 1784367727,
+    "_id": "GB 39901-2025第4.3.1.4条"
+  },
+  "碰撞预警禁用状态": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367727,
+    "update_time": 1784367727,
+    "_id": "碰撞预警禁用状态"
+  },
+  "紧急制动禁用状态": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367727,
+    "update_time": 1784367727,
+    "_id": "紧急制动禁用状态"
+  },
+  "[4.3.1.4] AEBS部分关闭光学警告要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367728,
+    "update_time": 1784367728,
+    "_id": "[4.3.1.4] AEBS部分关闭光学警告要求"
+  },
+  "GB 39901-2025第4.3.2.1条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367728,
+    "update_time": 1784367728,
+    "_id": "GB 39901-2025第4.3.2.1条"
+  },
+  "初始化状态": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367728,
+    "update_time": 1784367728,
+    "_id": "初始化状态"
+  },
+  "[4.3.2.1] AEBS初始化超时警告要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367728,
+    "update_time": 1784367728,
+    "_id": "[4.3.2.1] AEBS初始化超时警告要求"
+  },
+  "[4.3.2.1]初始化超时触发条件": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367729,
+    "update_time": 1784367729,
+    "_id": "[4.3.2.1]初始化超时触发条件"
+  },
+  "[4.3.2.1]初始化超时速度>10km/h阈值": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367729,
+    "update_time": 1784367729,
+    "_id": "[4.3.2.1]初始化超时速度>10km/h阈值"
+  },
+  "[4.3.2.1]初始化超时时间≥15s阈值": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367730,
+    "update_time": 1784367730,
+    "_id": "[4.3.2.1]初始化超时时间≥15s阈值"
+  },
+  "GB 39901-2025第4.3.2.2条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367730,
+    "update_time": 1784367730,
+    "_id": "GB 39901-2025第4.3.2.2条"
+  },
+  "[4.3.2.2] AEBS故障警告信号要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367730,
+    "update_time": 1784367730,
+    "_id": "[4.3.2.2] AEBS故障警告信号要求"
+  },
+  "[4.3.2.4] AEBS故障光学信号规格要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367731,
+    "update_time": 1784367731,
+    "_id": "[4.3.2.4] AEBS故障光学信号规格要求"
+  },
+  "GB 39901-2025第4.3.2.4条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367731,
+    "update_time": 1784367731,
+    "_id": "GB 39901-2025第4.3.2.4条"
+  },
+  "GB 39901-2025第4.3.2.5条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367732,
+    "update_time": 1784367732,
+    "_id": "GB 39901-2025第4.3.2.5条"
+  },
+  "碰撞预警信号": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367733,
+    "update_time": 1784367733,
+    "_id": "碰撞预警信号"
+  },
+  "[4.3.2.5] AEBS碰撞预警信号要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367733,
+    "update_time": 1784367733,
+    "_id": "[4.3.2.5] AEBS碰撞预警信号要求"
+  },
+  "GB 39901-2025第4.4条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367733,
+    "update_time": 1784367733,
+    "_id": "GB 39901-2025第4.4条"
+  },
+  "驾驶员干预动作": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367733,
+    "update_time": 1784367733,
+    "_id": "驾驶员干预动作"
+  },
+  "[4.4] AEBS驾驶员干预中断要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367734,
+    "update_time": 1784367734,
+    "_id": "[4.4] AEBS驾驶员干预中断要求"
+  },
+  "[4.4] AEBS制动踏板低减速度不中断要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367734,
+    "update_time": 1784367734,
+    "_id": "[4.4] AEBS制动踏板低减速度不中断要求"
+  },
+  "GB 39901-2025第4.5条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367734,
+    "update_time": 1784367734,
+    "_id": "GB 39901-2025第4.5条"
+  },
+  "[4.5] AEBS功能安全合规要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367735,
+    "update_time": 1784367735,
+    "_id": "[4.5] AEBS功能安全合规要求"
+  },
+  "GB 39901-2025第4.6条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367735,
+    "update_time": 1784367735,
+    "_id": "GB 39901-2025第4.6条"
+  },
+  "[4.6] AEBS电磁兼容要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367735,
+    "update_time": 1784367735,
+    "_id": "[4.6] AEBS电磁兼容要求"
+  },
+  "GB 39901-2025第5.1.1条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367736,
+    "update_time": 1784367736,
+    "_id": "GB 39901-2025第5.1.1条"
+  },
+  "[5.1.1]车辆目标碰撞预警时序要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367737,
+    "update_time": 1784367737,
+    "_id": "[5.1.1]车辆目标碰撞预警时序要求"
+  },
+  "碰撞预警提前时间": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367737,
+    "update_time": 1784367737,
+    "_id": "碰撞预警提前时间"
+  },
+  "[5.1.1]碰撞预警提前时间≥0.8s阈值": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367737,
+    "update_time": 1784367737,
+    "_id": "[5.1.1]碰撞预警提前时间≥0.8s阈值"
+  },
+  "[6.5-6.7]车辆目标碰撞预警和紧急制动试验": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f",
+      "chunk-433189dcfb42867b88848152c9787cf2",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 3,
+    "update_time": 1784370956,
+    "_id": "[6.5-6.7]车辆目标碰撞预警和紧急制动试验"
+  },
+  "GB 39901-2025第4.3.3条": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367737,
+    "update_time": 1784367737,
+    "_id": "GB 39901-2025第4.3.3条"
+  },
+  "[4.3.3] AEBS信号感知清晰度要求": {
+    "chunk_ids": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "count": 1,
+    "create_time": 1784367738,
+    "update_time": 1784367738,
+    "_id": "[4.3.3] AEBS信号感知清晰度要求"
+  },
+  "GB 39901-2025第B.2.5.4条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367986,
+    "update_time": 1784367986,
+    "_id": "GB 39901-2025第B.2.5.4条"
+  },
+  "GB 39901-2025第B.2.5.3条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367986,
+    "update_time": 1784367986,
+    "_id": "GB 39901-2025第B.2.5.3条"
+  },
+  "GB 39901-2025第B.2.5.5条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367986,
+    "update_time": 1784367986,
+    "_id": "GB 39901-2025第B.2.5.5条"
+  },
+  "GB 39901-2025第B.2.5.6条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367986,
+    "update_time": 1784367986,
+    "_id": "GB 39901-2025第B.2.5.6条"
+  },
+  "GB 39901-2025第B.2.5.7条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367986,
+    "update_time": 1784367986,
+    "_id": "GB 39901-2025第B.2.5.7条"
+  },
+  "GB 39901-2025第B.2.5.9条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367986,
+    "update_time": 1784367986,
+    "_id": "GB 39901-2025第B.2.5.9条"
+  },
+  "GB 39901-2025第B.2.5.8条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367986,
+    "update_time": 1784367986,
+    "_id": "GB 39901-2025第B.2.5.8条"
+  },
+  "GB 39901-2025第B.3.1条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367986,
+    "update_time": 1784367986,
+    "_id": "GB 39901-2025第B.3.1条"
+  },
+  "GB 39901-2025第B.3.2条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367987,
+    "update_time": 1784367987,
+    "_id": "GB 39901-2025第B.3.2条"
+  },
+  "GB 39901-2025第B.3.3条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367987,
+    "update_time": 1784367987,
+    "_id": "GB 39901-2025第B.3.3条"
+  },
+  "GB 39901-2025第B.4.1条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367987,
+    "update_time": 1784367987,
+    "_id": "GB 39901-2025第B.4.1条"
+  },
+  "GB 39901-2025第B.4.2条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367987,
+    "update_time": 1784367987,
+    "_id": "GB 39901-2025第B.4.2条"
+  },
+  "GB 39901-2025第C.1条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367988,
+    "update_time": 1784367988,
+    "_id": "GB 39901-2025第C.1条"
+  },
+  "GB 39901-2025第C.2.1.3条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367988,
+    "update_time": 1784367988,
+    "_id": "GB 39901-2025第C.2.1.3条"
+  },
+  "GB 39901-2025第C.2.1.2条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367988,
+    "update_time": 1784367988,
+    "_id": "GB 39901-2025第C.2.1.2条"
+  },
+  "GB 39901-2025第C.2.1.5条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367988,
+    "update_time": 1784367988,
+    "_id": "GB 39901-2025第C.2.1.5条"
+  },
+  "GB 39901-2025第C.2.1.6.1条": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367989,
+    "update_time": 1784367989,
+    "_id": "GB 39901-2025第C.2.1.6.1条"
+  },
+  "仿真试验工具链关键性能指标及阈值证明文档": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367989,
+    "update_time": 1784367989,
+    "_id": "仿真试验工具链关键性能指标及阈值证明文档"
+  },
+  "仿真试验工具链确认场景清单及参数说明": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367989,
+    "update_time": 1784367989,
+    "_id": "仿真试验工具链确认场景清单及参数说明"
+  },
+  "仿真试验工具链可信度确认活动文档": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367989,
+    "update_time": 1784367989,
+    "_id": "仿真试验工具链可信度确认活动文档"
+  },
+  "输入数据不确定性及模型参数评估文档": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367989,
+    "update_time": 1784367989,
+    "_id": "输入数据不确定性及模型参数评估文档"
+  },
+  "物理确认试验数据生成方法记录": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367990,
+    "update_time": 1784367990,
+    "_id": "物理确认试验数据生成方法记录"
+  },
+  "仿真试验证明文档": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367990,
+    "update_time": 1784367990,
+    "_id": "仿真试验证明文档"
+  },
+  "仿真试验可信度评估文件": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367990,
+    "update_time": 1784367990,
+    "_id": "仿真试验可信度评估文件"
+  },
+  "仿真试验执行文件": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367990,
+    "update_time": 1784367990,
+    "_id": "仿真试验执行文件"
+  },
+  "系统功能安全描述": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367990,
+    "update_time": 1784367990,
+    "_id": "系统功能安全描述"
+  },
+  "系统功能描述文档": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367991,
+    "update_time": 1784367991,
+    "_id": "系统功能描述文档"
+  },
+  "系统范围边界接口描述文档": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367991,
+    "update_time": 1784367991,
+    "_id": "系统范围边界接口描述文档"
+  },
+  "系统运行条件及布置描述文档": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367991,
+    "update_time": 1784367991,
+    "_id": "系统运行条件及布置描述文档"
+  },
+  "系统组件清单": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c",
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 2,
+    "update_time": 1784369312,
+    "_id": "系统组件清单"
+  },
+  "感知传感器": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367992,
+    "update_time": 1784367992,
+    "_id": "感知传感器"
+  },
+  "控制单元": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367992,
+    "update_time": 1784367992,
+    "_id": "控制单元"
+  },
+  "电源模块": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367992,
+    "update_time": 1784367992,
+    "_id": "电源模块"
+  },
+  "[B.2.5.3]仿真工具链KPI及阈值实现证明": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367993,
+    "update_time": 1784367993,
+    "_id": "[B.2.5.3]仿真工具链KPI及阈值实现证明"
+  },
+  "[B.2.5.4]提供确认场景清单及参数说明": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367993,
+    "update_time": 1784367993,
+    "_id": "[B.2.5.4]提供确认场景清单及参数说明"
+  },
+  "[B.2.5.5]提供可信度确认活动文档": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367993,
+    "update_time": 1784367993,
+    "_id": "[B.2.5.5]提供可信度确认活动文档"
+  },
+  "[B.2.5.6]提供不确定性及模型参数评估文档": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367993,
+    "update_time": 1784367993,
+    "_id": "[B.2.5.6]提供不确定性及模型参数评估文档"
+  },
+  "[B.2.5.9]记录物理确认试验数据生成方法": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367993,
+    "update_time": 1784367993,
+    "_id": "[B.2.5.9]记录物理确认试验数据生成方法"
+  },
+  "[B.3.3]提供仿真试验证明文档": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367993,
+    "update_time": 1784367993,
+    "_id": "[B.3.3]提供仿真试验证明文档"
+  },
+  "[B.4.1]提供仿真试验可信度评估文件": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367993,
+    "update_time": 1784367993,
+    "_id": "[B.4.1]提供仿真试验可信度评估文件"
+  },
+  "[B.4.2]提供仿真试验执行文件": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367994,
+    "update_time": 1784367994,
+    "_id": "[B.4.2]提供仿真试验执行文件"
+  },
+  "[C.1]提交系统功能安全描述": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367994,
+    "update_time": 1784367994,
+    "_id": "[C.1]提交系统功能安全描述"
+  },
+  "[C.2.1.2]提供系统功能描述": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367994,
+    "update_time": 1784367994,
+    "_id": "[C.2.1.2]提供系统功能描述"
+  },
+  "[C.2.1.3]提供系统范围边界接口描述": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367995,
+    "update_time": 1784367995,
+    "_id": "[C.2.1.3]提供系统范围边界接口描述"
+  },
+  "[C.2.1.5]提供系统运行条件及布置描述": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367995,
+    "update_time": 1784367995,
+    "_id": "[C.2.1.5]提供系统运行条件及布置描述"
+  },
+  "[C.2.1.6.1]提供系统组件清单": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367995,
+    "update_time": 1784367995,
+    "_id": "[C.2.1.6.1]提供系统组件清单"
+  },
+  "[6.5-6.10]碰撞预警和紧急制动仿真试验": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367995,
+    "update_time": 1784367995,
+    "_id": "[6.5-6.10]碰撞预警和紧急制动仿真试验"
+  },
+  "[B.2.5.7]额外确认试验要求": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367995,
+    "update_time": 1784367995,
+    "_id": "[B.2.5.7]额外确认试验要求"
+  },
+  "[B.2.5.8]确认试验覆盖有效域要求": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367995,
+    "update_time": 1784367995,
+    "_id": "[B.2.5.8]确认试验覆盖有效域要求"
+  },
+  "[B.3.2]仿真工具链合规性要求": {
+    "chunk_ids": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "count": 1,
+    "create_time": 1784367996,
+    "update_time": 1784367996,
+    "_id": "[B.3.2]仿真工具链合规性要求"
+  },
+  "GB 39901-2025第5.2.1.2条": {
+    "chunk_ids": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa",
+      "chunk-54b48db7b2439594c007841fa262f5b3",
+      "chunk-efc62955fc933269125fcfbf2fb96db6",
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 4,
+    "update_time": 1784369521,
+    "_id": "GB 39901-2025第5.2.1.2条"
+  },
+  "[5.2.1.2] N1类静止车辆目标最大相对碰撞速度要求(行车质量)": {
+    "chunk_ids": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa"
+    ],
+    "count": 1,
+    "create_time": 1784368190,
+    "update_time": 1784368190,
+    "_id": "[5.2.1.2] N1类静止车辆目标最大相对碰撞速度要求(行车质量)"
+  },
+  "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，静止目标，10 km/h，行车质量)": {
+    "chunk_ids": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa"
+    ],
+    "count": 1,
+    "create_time": 1784368190,
+    "update_time": 1784368190,
+    "_id": "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，静止目标，10 km/h，行车质量)"
+  },
+  "[5.2.1.2] N1类静止车辆目标最大相对碰撞速度要求(最大设计总质量)": {
+    "chunk_ids": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa"
+    ],
+    "count": 1,
+    "create_time": 1784368190,
+    "update_time": 1784368190,
+    "_id": "[5.2.1.2] N1类静止车辆目标最大相对碰撞速度要求(最大设计总质量)"
+  },
+  "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，静止目标，40 km/h，行车质量)": {
+    "chunk_ids": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa"
+    ],
+    "count": 1,
+    "create_time": 1784368192,
+    "update_time": 1784368192,
+    "_id": "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，静止目标，40 km/h，行车质量)"
+  },
+  "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，静止目标，20 km/h，行车质量)": {
+    "chunk_ids": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa"
+    ],
+    "count": 1,
+    "create_time": 1784368192,
+    "update_time": 1784368192,
+    "_id": "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，静止目标，20 km/h，行车质量)"
+  },
+  "[5.2.1.2]最大相对碰撞速度≤35 km/h(N1，静止目标，60 km/h，行车质量)": {
+    "chunk_ids": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa"
+    ],
+    "count": 1,
+    "create_time": 1784368192,
+    "update_time": 1784368192,
+    "_id": "[5.2.1.2]最大相对碰撞速度≤35 km/h(N1，静止目标，60 km/h，行车质量)"
+  },
+  "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，静止目标，10 km/h，最大设计总质量)": {
+    "chunk_ids": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa"
+    ],
+    "count": 1,
+    "create_time": 1784368192,
+    "update_time": 1784368192,
+    "_id": "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，静止目标，10 km/h，最大设计总质量)"
+  },
+  "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，静止目标，20 km/h，最大设计总质量)": {
+    "chunk_ids": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa"
+    ],
+    "count": 1,
+    "create_time": 1784368192,
+    "update_time": 1784368192,
+    "_id": "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，静止目标，20 km/h，最大设计总质量)"
+  },
+  "[5.2.1.2]最大相对碰撞速度≤10 km/h(N1，静止目标，40 km/h，最大设计总质量)": {
+    "chunk_ids": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa"
+    ],
+    "count": 1,
+    "create_time": 1784368192,
+    "update_time": 1784368192,
+    "_id": "[5.2.1.2]最大相对碰撞速度≤10 km/h(N1，静止目标，40 km/h，最大设计总质量)"
+  },
+  "[5.2.1.2]最大相对碰撞速度≤40 km/h(N1，静止目标，60 km/h，最大设计总质量)": {
+    "chunk_ids": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa"
+    ],
+    "count": 1,
+    "create_time": 1784368194,
+    "update_time": 1784368194,
+    "_id": "[5.2.1.2]最大相对碰撞速度≤40 km/h(N1，静止目标，60 km/h，最大设计总质量)"
+  },
+  "[5.2.3] N1类20km/h行车质量最大相对碰撞速度≤0 km/h(自行车横穿)": {
+    "chunk_ids": [
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9"
+    ],
+    "count": 1,
+    "create_time": 1784368322,
+    "update_time": 1784368322,
+    "_id": "[5.2.3] N1类20km/h行车质量最大相对碰撞速度≤0 km/h(自行车横穿)"
+  },
+  "[5.2.3] N1类20km/h最大设计总质量最大相对碰撞速度≤0 km/h(自行车横穿)": {
+    "chunk_ids": [
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9"
+    ],
+    "count": 1,
+    "create_time": 1784368322,
+    "update_time": 1784368322,
+    "_id": "[5.2.3] N1类20km/h最大设计总质量最大相对碰撞速度≤0 km/h(自行车横穿)"
+  },
+  "[5.2.3] N1类40km/h行车质量最大相对碰撞速度≤0 km/h(自行车横穿)": {
+    "chunk_ids": [
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9"
+    ],
+    "count": 1,
+    "create_time": 1784368322,
+    "update_time": 1784368322,
+    "_id": "[5.2.3] N1类40km/h行车质量最大相对碰撞速度≤0 km/h(自行车横穿)"
+  },
+  "[5.2.3] N1类40km/h最大设计总质量最大相对碰撞速度≤25 km/h(自行车横穿)": {
+    "chunk_ids": [
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9"
+    ],
+    "count": 1,
+    "create_time": 1784368324,
+    "update_time": 1784368324,
+    "_id": "[5.2.3] N1类40km/h最大设计总质量最大相对碰撞速度≤25 km/h(自行车横穿)"
+  },
+  "[5.2.3] N1类60km/h行车质量最大相对碰撞速度≤40 km/h(自行车横穿)": {
+    "chunk_ids": [
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9"
+    ],
+    "count": 1,
+    "create_time": 1784368324,
+    "update_time": 1784368324,
+    "_id": "[5.2.3] N1类60km/h行车质量最大相对碰撞速度≤40 km/h(自行车横穿)"
+  },
+  "[5.2.3] N1类60km/h最大设计总质量最大相对碰撞速度≤45 km/h(自行车横穿)": {
+    "chunk_ids": [
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9"
+    ],
+    "count": 1,
+    "create_time": 1784368324,
+    "update_time": 1784368324,
+    "_id": "[5.2.3] N1类60km/h最大设计总质量最大相对碰撞速度≤45 km/h(自行车横穿)"
+  },
+  "[5.2.4] M1踏板车横穿20/20km/h行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-cf3fd3822fe82724ab22a94b116052e3"
+    ],
+    "count": 1,
+    "create_time": 1784368395,
+    "update_time": 1784368395,
+    "_id": "[5.2.4] M1踏板车横穿20/20km/h行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.4] M1踏板车横穿20/20km/h最大设计总质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-cf3fd3822fe82724ab22a94b116052e3"
+    ],
+    "count": 1,
+    "create_time": 1784368395,
+    "update_time": 1784368395,
+    "_id": "[5.2.4] M1踏板车横穿20/20km/h最大设计总质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.4] M1踏板车横穿40/20km/h行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-cf3fd3822fe82724ab22a94b116052e3"
+    ],
+    "count": 1,
+    "create_time": 1784368396,
+    "update_time": 1784368396,
+    "_id": "[5.2.4] M1踏板车横穿40/20km/h行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.4] M1踏板车横穿40/20km/h最大设计总质量最大相对碰撞速度≤10 km/h": {
+    "chunk_ids": [
+      "chunk-cf3fd3822fe82724ab22a94b116052e3"
+    ],
+    "count": 1,
+    "create_time": 1784368397,
+    "update_time": 1784368397,
+    "_id": "[5.2.4] M1踏板车横穿40/20km/h最大设计总质量最大相对碰撞速度≤10 km/h"
+  },
+  "[5.2.4] M1踏板车横穿60/20km/h行车质量最大相对碰撞速度≤40 km/h": {
+    "chunk_ids": [
+      "chunk-cf3fd3822fe82724ab22a94b116052e3"
+    ],
+    "count": 1,
+    "create_time": 1784368397,
+    "update_time": 1784368397,
+    "_id": "[5.2.4] M1踏板车横穿60/20km/h行车质量最大相对碰撞速度≤40 km/h"
+  },
+  "[5.2.4] M1踏板车横穿60/20km/h最大设计总质量最大相对碰撞速度≤40 km/h": {
+    "chunk_ids": [
+      "chunk-cf3fd3822fe82724ab22a94b116052e3"
+    ],
+    "count": 1,
+    "create_time": 1784368397,
+    "update_time": 1784368397,
+    "_id": "[5.2.4] M1踏板车横穿60/20km/h最大设计总质量最大相对碰撞速度≤40 km/h"
+  },
+  "[5.2.4] M1类汽车踏板式两轮摩托车目标横穿最大相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-cf3fd3822fe82724ab22a94b116052e3"
+    ],
+    "count": 1,
+    "create_time": 1784368397,
+    "update_time": 1784368397,
+    "_id": "[5.2.4] M1类汽车踏板式两轮摩托车目标横穿最大相对碰撞速度要求"
+  },
+  "GB 39901-2025第A.2.3.1条": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a",
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 2,
+    "update_time": 1784369314,
+    "_id": "GB 39901-2025第A.2.3.1条"
+  },
+  "无法响应驾驶员干预": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368481,
+    "update_time": 1784368481,
+    "_id": "无法响应驾驶员干预"
+  },
+  "ASIL C": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368482,
+    "update_time": 1784368482,
+    "_id": "ASIL C"
+  },
+  "QM": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368483,
+    "update_time": 1784368483,
+    "_id": "QM"
+  },
+  "ASIL D": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368483,
+    "update_time": 1784368483,
+    "_id": "ASIL D"
+  },
+  "[A.2.3.1]避免非预期激活导致车辆非预期减速": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368483,
+    "update_time": 1784368483,
+    "_id": "[A.2.3.1]避免非预期激活导致车辆非预期减速"
+  },
+  "[A.2.3.1]避免非预期功能丢失导致减速能力下降": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368483,
+    "update_time": 1784368483,
+    "_id": "[A.2.3.1]避免非预期功能丢失导致减速能力下降"
+  },
+  "[A.2.3.1]避免驾驶员无法干预中断紧急制动": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368483,
+    "update_time": 1784368483,
+    "_id": "[A.2.3.1]避免驾驶员无法干预中断紧急制动"
+  },
+  "[A.2.3.1]避免非预期激活导致车辆失稳": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368483,
+    "update_time": 1784368483,
+    "_id": "[A.2.3.1]避免非预期激活导致车辆失稳"
+  },
+  "[A.2.3.1]避免系统异常导致人机提醒不足或丢失": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368484,
+    "update_time": 1784368484,
+    "_id": "[A.2.3.1]避免系统异常导致人机提醒不足或丢失"
+  },
+  "最大纵向减速度": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368484,
+    "update_time": 1784368484,
+    "_id": "最大纵向减速度"
+  },
+  "速度变化值": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368484,
+    "update_time": 1784368484,
+    "_id": "速度变化值"
+  },
+  "侧向加速度变化值或最大值": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368485,
+    "update_time": 1784368485,
+    "_id": "侧向加速度变化值或最大值"
+  },
+  "侧向位移": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368485,
+    "update_time": 1784368485,
+    "_id": "侧向位移"
+  },
+  "横摆角速度变化值": {
+    "chunk_ids": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "count": 1,
+    "create_time": 1784368485,
+    "update_time": 1784368485,
+    "_id": "横摆角速度变化值"
+  },
+  "[6.5] M1类静止车辆目标试验": {
+    "chunk_ids": [
+      "chunk-18d27793ba6fda13dfaa727852254d7c"
+    ],
+    "count": 1,
+    "create_time": 1784368575,
+    "update_time": 1784368575,
+    "_id": "[6.5] M1类静止车辆目标试验"
+  },
+  "GB 39901-2025第A.2.6.3.1条": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368627,
+    "update_time": 1784368627,
+    "_id": "GB 39901-2025第A.2.6.3.1条"
+  },
+  "整车层面验证确认计划和结果总结": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368627,
+    "update_time": 1784368627,
+    "_id": "整车层面验证确认计划和结果总结"
+  },
+  "GB 39901-2025第A.2.6.3.2条": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368627,
+    "update_time": 1784368627,
+    "_id": "GB 39901-2025第A.2.6.3.2条"
+  },
+  "详细整车层面验证确认计划和结果": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368627,
+    "update_time": 1784368627,
+    "_id": "详细整车层面验证确认计划和结果"
+  },
+  "GB 39901-2025第A.3.1条": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368627,
+    "update_time": 1784368627,
+    "_id": "GB 39901-2025第A.3.1条"
+  },
+  "GB 39901-2025第A.3.2条": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368627,
+    "update_time": 1784368627,
+    "_id": "GB 39901-2025第A.3.2条"
+  },
+  "功能概念验证确认": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368627,
+    "update_time": 1784368627,
+    "_id": "功能概念验证确认"
+  },
+  "功能安全概念验证确认": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368628,
+    "update_time": 1784368628,
+    "_id": "功能安全概念验证确认"
+  },
+  "安全目标": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f",
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 2,
+    "update_time": 1784369316,
+    "_id": "安全目标"
+  },
+  "故障注入": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368628,
+    "update_time": 1784368628,
+    "_id": "故障注入"
+  },
+  "安全措施": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368629,
+    "update_time": 1784368629,
+    "_id": "安全措施"
+  },
+  "功能安全要求": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368629,
+    "update_time": 1784368629,
+    "_id": "功能安全要求"
+  },
+  "功能安全目标": {
+    "chunk_ids": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "count": 1,
+    "create_time": 1784368629,
+    "update_time": 1784368629,
+    "_id": "功能安全目标"
+  },
+  "[5.2.1.2] N1类制动车辆目标最大相对碰撞速度要求(行车质量，50km/h)": {
+    "chunk_ids": [
+      "chunk-54b48db7b2439594c007841fa262f5b3"
+    ],
+    "count": 1,
+    "create_time": 1784368675,
+    "update_time": 1784368675,
+    "_id": "[5.2.1.2] N1类制动车辆目标最大相对碰撞速度要求(行车质量，50km/h)"
+  },
+  "[5.2.1.2] N1类制动车辆目标最大相对碰撞速度要求(最大设计总质量，50km/h)": {
+    "chunk_ids": [
+      "chunk-54b48db7b2439594c007841fa262f5b3"
+    ],
+    "count": 1,
+    "create_time": 1784368675,
+    "update_time": 1784368675,
+    "_id": "[5.2.1.2] N1类制动车辆目标最大相对碰撞速度要求(最大设计总质量，50km/h)"
+  },
+  "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，行车质量，50/50 km/h)": {
+    "chunk_ids": [
+      "chunk-54b48db7b2439594c007841fa262f5b3"
+    ],
+    "count": 1,
+    "create_time": 1784368675,
+    "update_time": 1784368675,
+    "_id": "[5.2.1.2]最大相对碰撞速度≤0 km/h(N1，行车质量，50/50 km/h)"
+  },
+  "[5.2.1.2]最大相对碰撞速度≤10 km/h(N1，最大设计总质量，50/50 km/h)": {
+    "chunk_ids": [
+      "chunk-54b48db7b2439594c007841fa262f5b3"
+    ],
+    "count": 1,
+    "create_time": 1784368675,
+    "update_time": 1784368675,
+    "_id": "[5.2.1.2]最大相对碰撞速度≤10 km/h(N1，最大设计总质量，50/50 km/h)"
+  },
+  "踏板式两轮摩托车目标": {
+    "chunk_ids": [
+      "chunk-758175ddac6ea86a30d83aefa15459a8",
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 3,
+    "update_time": 1784370964,
+    "_id": "踏板式两轮摩托车目标"
+  },
+  "[5.2.4a]车辆减速度绝对值最大值≥5.0 m/s²(踏板式两轮摩托车目标)": {
+    "chunk_ids": [
+      "chunk-758175ddac6ea86a30d83aefa15459a8"
+    ],
+    "count": 1,
+    "create_time": 1784368785,
+    "update_time": 1784368785,
+    "_id": "[5.2.4a]车辆减速度绝对值最大值≥5.0 m/s²(踏板式两轮摩托车目标)"
+  },
+  "[6.10]踏板式两轮摩托车目标碰撞预警和紧急制动试验": {
+    "chunk_ids": [
+      "chunk-758175ddac6ea86a30d83aefa15459a8",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 2,
+    "update_time": 1784370956,
+    "_id": "[6.10]踏板式两轮摩托车目标碰撞预警和紧急制动试验"
+  },
+  "[5.2.4a]踏板式两轮摩托车目标紧急制动最大减速度要求": {
+    "chunk_ids": [
+      "chunk-758175ddac6ea86a30d83aefa15459a8"
+    ],
+    "count": 1,
+    "create_time": 1784368785,
+    "update_time": 1784368785,
+    "_id": "[5.2.4a]踏板式两轮摩托车目标紧急制动最大减速度要求"
+  },
+  "[5.2.4b] M1类汽车对踏板式两轮摩托车目标相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-758175ddac6ea86a30d83aefa15459a8"
+    ],
+    "count": 1,
+    "create_time": 1784368786,
+    "update_time": 1784368786,
+    "_id": "[5.2.4b] M1类汽车对踏板式两轮摩托车目标相对碰撞速度要求"
+  },
+  "[5.2.4b] N1类汽车对踏板式两轮摩托车目标相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-758175ddac6ea86a30d83aefa15459a8"
+    ],
+    "count": 1,
+    "create_time": 1784368786,
+    "update_time": 1784368786,
+    "_id": "[5.2.4b] N1类汽车对踏板式两轮摩托车目标相对碰撞速度要求"
+  },
+  "[6.10]试验开始TTC≥4 s": {
+    "chunk_ids": [
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba"
+    ],
+    "count": 1,
+    "create_time": 1784369209,
+    "update_time": 1784369209,
+    "_id": "[6.10]试验开始TTC≥4 s"
+  },
+  "[6.10]摩托车目标速度20 km/h(0/-1)": {
+    "chunk_ids": [
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba"
+    ],
+    "count": 1,
+    "create_time": 1784369209,
+    "update_time": 1784369209,
+    "_id": "[6.10]摩托车目标速度20 km/h(0/-1)"
+  },
+  "[6.10]踏板式两轮摩托车目标横穿碰撞预警和紧急制动试验": {
+    "chunk_ids": [
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba"
+    ],
+    "count": 1,
+    "create_time": 1784369209,
+    "update_time": 1784369209,
+    "_id": "[6.10]踏板式两轮摩托车目标横穿碰撞预警和紧急制动试验"
+  },
+  "[6.10]试验开始前直线行驶时间≥2 s": {
+    "chunk_ids": [
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba"
+    ],
+    "count": 1,
+    "create_time": 1784369209,
+    "update_time": 1784369209,
+    "_id": "[6.10]试验开始前直线行驶时间≥2 s"
+  },
+  "[6.10]试验车辆中心线横向偏差≤0.1 m": {
+    "chunk_ids": [
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba"
+    ],
+    "count": 1,
+    "create_time": 1784369209,
+    "update_time": 1784369209,
+    "_id": "[6.10]试验车辆中心线横向偏差≤0.1 m"
+  },
+  "[6.10]摩托车目标垂直于试验车辆直线行驶": {
+    "chunk_ids": [
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba"
+    ],
+    "count": 1,
+    "create_time": 1784369211,
+    "update_time": 1784369211,
+    "_id": "[6.10]摩托车目标垂直于试验车辆直线行驶"
+  },
+  "[6.10]碰撞或危险消失时试验结束": {
+    "chunk_ids": [
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba"
+    ],
+    "count": 1,
+    "create_time": 1784369211,
+    "update_time": 1784369211,
+    "_id": "[6.10]碰撞或危险消失时试验结束"
+  },
+  "[6.10]虚拟边框接触判定碰撞": {
+    "chunk_ids": [
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba"
+    ],
+    "count": 1,
+    "create_time": 1784369211,
+    "update_time": 1784369211,
+    "_id": "[6.10]虚拟边框接触判定碰撞"
+  },
+  "[6.8]儿童行人目标横穿的碰撞预警和紧急制动试验": {
+    "chunk_ids": [
+      "chunk-6ecb743db9a7b66f7d3484124657ccf7"
+    ],
+    "count": 1,
+    "create_time": 1784369255,
+    "update_time": 1784369255,
+    "_id": "[6.8]儿童行人目标横穿的碰撞预警和紧急制动试验"
+  },
+  "儿童行人目标": {
+    "chunk_ids": [
+      "chunk-6ecb743db9a7b66f7d3484124657ccf7",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 2,
+    "update_time": 1784370964,
+    "_id": "儿童行人目标"
+  },
+  "[6.8]试验开始前直线行驶时间≥2 s": {
+    "chunk_ids": [
+      "chunk-6ecb743db9a7b66f7d3484124657ccf7"
+    ],
+    "count": 1,
+    "create_time": 1784369256,
+    "update_time": 1784369256,
+    "_id": "[6.8]试验开始前直线行驶时间≥2 s"
+  },
+  "[6.8]试验开始时TTC≥4 s": {
+    "chunk_ids": [
+      "chunk-6ecb743db9a7b66f7d3484124657ccf7"
+    ],
+    "count": 1,
+    "create_time": 1784369256,
+    "update_time": 1784369256,
+    "_id": "[6.8]试验开始时TTC≥4 s"
+  },
+  "[6.8]试验车辆中心线与预计碰撞点横向距离≤0.1 m": {
+    "chunk_ids": [
+      "chunk-6ecb743db9a7b66f7d3484124657ccf7"
+    ],
+    "count": 1,
+    "create_time": 1784369256,
+    "update_time": 1784369256,
+    "_id": "[6.8]试验车辆中心线与预计碰撞点横向距离≤0.1 m"
+  },
+  "[6.8]儿童行人目标速度(5±0.2) km/h": {
+    "chunk_ids": [
+      "chunk-6ecb743db9a7b66f7d3484124657ccf7"
+    ],
+    "count": 1,
+    "create_time": 1784369256,
+    "update_time": 1784369256,
+    "_id": "[6.8]儿童行人目标速度(5±0.2) km/h"
+  },
+  "[6.8]儿童行人目标行走方向垂直于试验车辆": {
+    "chunk_ids": [
+      "chunk-6ecb743db9a7b66f7d3484124657ccf7"
+    ],
+    "count": 1,
+    "create_time": 1784369256,
+    "update_time": 1784369256,
+    "_id": "[6.8]儿童行人目标行走方向垂直于试验车辆"
+  },
+  "[6.8]碰撞判定准则": {
+    "chunk_ids": [
+      "chunk-6ecb743db9a7b66f7d3484124657ccf7"
+    ],
+    "count": 1,
+    "create_time": 1784369257,
+    "update_time": 1784369257,
+    "_id": "[6.8]碰撞判定准则"
+  },
+  "GB 39901-2025第A.2.2.7.1条": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369312,
+    "update_time": 1784369312,
+    "_id": "GB 39901-2025第A.2.2.7.1条"
+  },
+  "系统布局及原理图": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369312,
+    "update_time": 1784369312,
+    "_id": "系统布局及原理图"
+  },
+  "GB 39901-2025第A.2.2.7.2条": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369312,
+    "update_time": 1784369312,
+    "_id": "GB 39901-2025第A.2.2.7.2条"
+  },
+  "单元功能说明文档": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369312,
+    "update_time": 1784369312,
+    "_id": "单元功能说明文档"
+  },
+  "相互连接说明文档": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369312,
+    "update_time": 1784369312,
+    "_id": "相互连接说明文档"
+  },
+  "GB 39901-2025第A.2.2.7.3条": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369312,
+    "update_time": 1784369312,
+    "_id": "GB 39901-2025第A.2.2.7.3条"
+  },
+  "GB 39901-2025第A.2.2.7.4条": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369312,
+    "update_time": 1784369312,
+    "_id": "GB 39901-2025第A.2.2.7.4条"
+  },
+  "信号流与优先顺序说明文档": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068",
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 2,
+    "update_time": 1784369691,
+    "_id": "信号流与优先顺序说明文档"
+  },
+  "GB 39901-2025第A.2.2.7.5条": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369314,
+    "update_time": 1784369314,
+    "_id": "GB 39901-2025第A.2.2.7.5条"
+  },
+  "单元识别说明文档": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369314,
+    "update_time": 1784369314,
+    "_id": "单元识别说明文档"
+  },
+  "GB 39901-2025第A.2.3条": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369314,
+    "update_time": 1784369314,
+    "_id": "GB 39901-2025第A.2.3条"
+  },
+  "危害分析和风险评估总结": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068",
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 2,
+    "update_time": 1784370091,
+    "_id": "危害分析和风险评估总结"
+  },
+  "功能异常表现": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068",
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 2,
+    "update_time": 1784369890,
+    "_id": "功能异常表现"
+  },
+  "整车层面危害": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369315,
+    "update_time": 1784369315,
+    "_id": "整车层面危害"
+  },
+  "汽车安全完整性等级(ASIL)": {
+    "chunk_ids": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "count": 1,
+    "create_time": 1784369316,
+    "update_time": 1784369316,
+    "_id": "汽车安全完整性等级(ASIL)"
+  },
+  "[5.2.1.2] N1匀速车辆目标30/20km/h行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-efc62955fc933269125fcfbf2fb96db6"
+    ],
+    "count": 1,
+    "create_time": 1784369425,
+    "update_time": 1784369425,
+    "_id": "[5.2.1.2] N1匀速车辆目标30/20km/h行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.1.2] N1匀速车辆目标30/20km/h最大设计总质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-efc62955fc933269125fcfbf2fb96db6"
+    ],
+    "count": 1,
+    "create_time": 1784369425,
+    "update_time": 1784369425,
+    "_id": "[5.2.1.2] N1匀速车辆目标30/20km/h最大设计总质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.1.2] N1匀速车辆目标60/20km/h行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-efc62955fc933269125fcfbf2fb96db6"
+    ],
+    "count": 1,
+    "create_time": 1784369426,
+    "update_time": 1784369426,
+    "_id": "[5.2.1.2] N1匀速车辆目标60/20km/h行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.1.2] N1匀速车辆目标60/20km/h最大设计总质量最大相对碰撞速度≤10 km/h": {
+    "chunk_ids": [
+      "chunk-efc62955fc933269125fcfbf2fb96db6"
+    ],
+    "count": 1,
+    "create_time": 1784369426,
+    "update_time": 1784369426,
+    "_id": "[5.2.1.2] N1匀速车辆目标60/20km/h最大设计总质量最大相对碰撞速度≤10 km/h"
+  },
+  "[5.2.1.2] N1类汽车匀速车辆目标最大相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-efc62955fc933269125fcfbf2fb96db6"
+    ],
+    "count": 1,
+    "create_time": 1784369426,
+    "update_time": 1784369426,
+    "_id": "[5.2.1.2] N1类汽车匀速车辆目标最大相对碰撞速度要求"
+  },
+  "GB 39901-2025第5.2.1条": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369521,
+    "update_time": 1784369521,
+    "_id": "GB 39901-2025第5.2.1条"
+  },
+  "GB 39901-2025第5.1.4条": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369521,
+    "update_time": 1784369521,
+    "_id": "GB 39901-2025第5.1.4条"
+  },
+  "GB 39901-2025第5.1.3条": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369521,
+    "update_time": 1784369521,
+    "_id": "GB 39901-2025第5.1.3条"
+  },
+  "GB 39901-2025第5.2条": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369521,
+    "update_time": 1784369521,
+    "_id": "GB 39901-2025第5.2条"
+  },
+  "[5.1.2]儿童行人目标碰撞预警时序要求": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369521,
+    "update_time": 1784369521,
+    "_id": "[5.1.2]儿童行人目标碰撞预警时序要求"
+  },
+  "GB 39901-2025第5.1.2条": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369521,
+    "update_time": 1784369521,
+    "_id": "GB 39901-2025第5.1.2条"
+  },
+  "[5.1.3]自行车目标碰撞预警时序要求": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369522,
+    "update_time": 1784369522,
+    "_id": "[5.1.3]自行车目标碰撞预警时序要求"
+  },
+  "[5.1.4]踏板式两轮摩托车目标碰撞预警时序要求": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369522,
+    "update_time": 1784369522,
+    "_id": "[5.1.4]踏板式两轮摩托车目标碰撞预警时序要求"
+  },
+  "[5.2.1.1-a] M1类车辆目标紧急制动最大减速度要求": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369522,
+    "update_time": 1784369522,
+    "_id": "[5.2.1.1-a] M1类车辆目标紧急制动最大减速度要求"
+  },
+  "[5.2.1.1-b] M1类车辆目标相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369522,
+    "update_time": 1784369522,
+    "_id": "[5.2.1.1-b] M1类车辆目标相对碰撞速度要求"
+  },
+  "[5.2.1.2-a] N1类车辆目标紧急制动最大减速度要求": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369522,
+    "update_time": 1784369522,
+    "_id": "[5.2.1.2-a] N1类车辆目标紧急制动最大减速度要求"
+  },
+  "[5.2.1.2-b] N1类车辆目标相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369522,
+    "update_time": 1784369522,
+    "_id": "[5.2.1.2-b] N1类车辆目标相对碰撞速度要求"
+  },
+  "[5.2.1.1-a]车辆减速度绝对值最大值≥5.0 m/s²(M1，20～80 km/h，速差>10 km/h)": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369524,
+    "update_time": 1784369524,
+    "_id": "[5.2.1.1-a]车辆减速度绝对值最大值≥5.0 m/s²(M1，20～80 km/h，速差>10 km/h)"
+  },
+  "[5.2.1.2-a]车辆减速度绝对值最大值≥5.0 m/s²(N1，20～60 km/h，速差>10 km/h)": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369524,
+    "update_time": 1784369524,
+    "_id": "[5.2.1.2-a]车辆减速度绝对值最大值≥5.0 m/s²(N1，20～60 km/h，速差>10 km/h)"
+  },
+  "[6.8]儿童行人目标碰撞预警试验": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369524,
+    "update_time": 1784369524,
+    "_id": "[6.8]儿童行人目标碰撞预警试验"
+  },
+  "[6.9]自行车目标碰撞预警试验": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369525,
+    "update_time": 1784369525,
+    "_id": "[6.9]自行车目标碰撞预警试验"
+  },
+  "[6.10]踏板式两轮摩托车目标碰撞预警试验": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369525,
+    "update_time": 1784369525,
+    "_id": "[6.10]踏板式两轮摩托车目标碰撞预警试验"
+  },
+  "车辆速度20 km/h～80 km/h且与车辆目标速度差大于10 km/h": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369525,
+    "update_time": 1784369525,
+    "_id": "车辆速度20 km/h～80 km/h且与车辆目标速度差大于10 km/h"
+  },
+  "车辆速度20 km/h～60 km/h且与车辆目标速度差大于10 km/h": {
+    "chunk_ids": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "count": 1,
+    "create_time": 1784369525,
+    "update_time": 1784369525,
+    "_id": "车辆速度20 km/h～60 km/h且与车辆目标速度差大于10 km/h"
+  },
+  "[5.2.2a]儿童行人目标紧急制动最大减速度要求": {
+    "chunk_ids": [
+      "chunk-5d77c409f4ae42c28b31bf7dbd1d35b7"
+    ],
+    "count": 1,
+    "create_time": 1784369630,
+    "update_time": 1784369630,
+    "_id": "[5.2.2a]儿童行人目标紧急制动最大减速度要求"
+  },
+  "车辆减速度绝对值最大值": {
+    "chunk_ids": [
+      "chunk-5d77c409f4ae42c28b31bf7dbd1d35b7",
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 2,
+    "update_time": 1784370957,
+    "_id": "车辆减速度绝对值最大值"
+  },
+  "[5.2.2b] M1/N1类儿童行人目标相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-5d77c409f4ae42c28b31bf7dbd1d35b7"
+    ],
+    "count": 1,
+    "create_time": 1784369630,
+    "update_time": 1784369630,
+    "_id": "[5.2.2b] M1/N1类儿童行人目标相对碰撞速度要求"
+  },
+  "[5.2.2a]车辆减速度绝对值最大值≥5.0 m/s²(儿童行人)": {
+    "chunk_ids": [
+      "chunk-5d77c409f4ae42c28b31bf7dbd1d35b7"
+    ],
+    "count": 1,
+    "create_time": 1784369630,
+    "update_time": 1784369630,
+    "_id": "[5.2.2a]车辆减速度绝对值最大值≥5.0 m/s²(儿童行人)"
+  },
+  "[6.8]儿童行人目标紧急制动试验": {
+    "chunk_ids": [
+      "chunk-5d77c409f4ae42c28b31bf7dbd1d35b7"
+    ],
+    "count": 1,
+    "create_time": 1784369631,
+    "update_time": 1784369631,
+    "_id": "[6.8]儿童行人目标紧急制动试验"
+  },
+  "GB 39901-2025第C.2.2条": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369691,
+    "update_time": 1784369691,
+    "_id": "GB 39901-2025第C.2.2条"
+  },
+  "GB 39901-2025第C.2.1.6.3条": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369691,
+    "update_time": 1784369691,
+    "_id": "GB 39901-2025第C.2.1.6.3条"
+  },
+  "GB 39901-2025第C.2.1.6.2条": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369691,
+    "update_time": 1784369691,
+    "_id": "GB 39901-2025第C.2.1.6.2条"
+  },
+  "GB 39901-2025第C.2.3条": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369691,
+    "update_time": 1784369691,
+    "_id": "GB 39901-2025第C.2.3条"
+  },
+  "GB 39901-2025第C.2.4条": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369691,
+    "update_time": 1784369691,
+    "_id": "GB 39901-2025第C.2.4条"
+  },
+  "系统相互连接说明文档": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369691,
+    "update_time": 1784369691,
+    "_id": "系统相互连接说明文档"
+  },
+  "危害分析和风险评估总结文档": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369691,
+    "update_time": 1784369691,
+    "_id": "危害分析和风险评估总结文档"
+  },
+  "安全措施说明文档": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369693,
+    "update_time": 1784369693,
+    "_id": "安全措施说明文档"
+  },
+  "功能安全变更说明及声明": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369693,
+    "update_time": 1784369693,
+    "_id": "功能安全变更说明及声明"
+  },
+  "[C.2.4]系统布置及外观变更不影响功能安全": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369693,
+    "update_time": 1784369693,
+    "_id": "[C.2.4]系统布置及外观变更不影响功能安全"
+  },
+  "[C.2.4]系统组件清单变更不影响功能安全": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369693,
+    "update_time": 1784369693,
+    "_id": "[C.2.4]系统组件清单变更不影响功能安全"
+  },
+  "[C.2.4]信号流和优先顺序变更不影响功能安全": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369693,
+    "update_time": 1784369693,
+    "_id": "[C.2.4]信号流和优先顺序变更不影响功能安全"
+  },
+  "GB 39901-2025": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c",
+      "chunk-6ea136825168445d14914b5eb62664a8"
+    ],
+    "count": 2,
+    "update_time": 1784370207,
+    "_id": "GB 39901-2025"
+  },
+  "中国标准出版社": {
+    "chunk_ids": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "count": 1,
+    "create_time": 1784369693,
+    "update_time": 1784369693,
+    "_id": "中国标准出版社"
+  },
+  "[6.6] N1类匀速车辆目标试验": {
+    "chunk_ids": [
+      "chunk-d485d7544ba6d32f7161fac7b495894a"
+    ],
+    "count": 1,
+    "create_time": 1784369789,
+    "update_time": 1784369789,
+    "_id": "[6.6] N1类匀速车辆目标试验"
+  },
+  "利用部分系统维持工作": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369882,
+    "update_time": 1784369882,
+    "_id": "利用部分系统维持工作"
+  },
+  "警告信号或提示信息": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369882,
+    "update_time": 1784369882,
+    "_id": "警告信号或提示信息"
+  },
+  "安全措施说明": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75",
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 2,
+    "update_time": 1784370091,
+    "_id": "安全措施说明"
+  },
+  "GB 39901-2025第A.2.3.2条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369882,
+    "update_time": 1784369882,
+    "_id": "GB 39901-2025第A.2.3.2条"
+  },
+  "关闭功能进入安全状态": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369882,
+    "update_time": 1784369882,
+    "_id": "关闭功能进入安全状态"
+  },
+  "GB 39901-2025第A.2.4条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369882,
+    "update_time": 1784369882,
+    "_id": "GB 39901-2025第A.2.4条"
+  },
+  "切换到独立的备用系统": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369882,
+    "update_time": 1784369882,
+    "_id": "切换到独立的备用系统"
+  },
+  "详细危害分析和风险评估文档": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369882,
+    "update_time": 1784369882,
+    "_id": "详细危害分析和风险评估文档"
+  },
+  "警告驾驶员降低风险暴露时间": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369883,
+    "update_time": 1784369883,
+    "_id": "警告驾驶员降低风险暴露时间"
+  },
+  "GB 39901-2025第A.2.5.1条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369884,
+    "update_time": 1784369884,
+    "_id": "GB 39901-2025第A.2.5.1条"
+  },
+  "安全分析总结": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369884,
+    "update_time": 1784369884,
+    "_id": "安全分析总结"
+  },
+  "危害分析和风险评估": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369884,
+    "update_time": 1784369884,
+    "_id": "危害分析和风险评估"
+  },
+  "失效模式与影响分析(FMEA)": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369884,
+    "update_time": 1784369884,
+    "_id": "失效模式与影响分析(FMEA)"
+  },
+  "故障树分析(FTA)": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369884,
+    "update_time": 1784369884,
+    "_id": "故障树分析(FTA)"
+  },
+  "GB 39901-2025第A.2.5.2条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369884,
+    "update_time": 1784369884,
+    "_id": "GB 39901-2025第A.2.5.2条"
+  },
+  "整车层面的安全分析总结": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75",
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 2,
+    "update_time": 1784370091,
+    "_id": "整车层面的安全分析总结"
+  },
+  "GB 39901-2025第A.2.5.3条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369885,
+    "update_time": 1784369885,
+    "_id": "GB 39901-2025第A.2.5.3条"
+  },
+  "详细整车层面的安全分析文档": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369885,
+    "update_time": 1784369885,
+    "_id": "详细整车层面的安全分析文档"
+  },
+  "GB 39901-2025第A.2.5.4条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369885,
+    "update_time": 1784369885,
+    "_id": "GB 39901-2025第A.2.5.4条"
+  },
+  "系统层面的安全分析总结": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75",
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 2,
+    "update_time": 1784370092,
+    "_id": "系统层面的安全分析总结"
+  },
+  "GB 39901-2025第A.2.5.5条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369885,
+    "update_time": 1784369885,
+    "_id": "GB 39901-2025第A.2.5.5条"
+  },
+  "详细系统层面的安全分析文档": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369885,
+    "update_time": 1784369885,
+    "_id": "详细系统层面的安全分析文档"
+  },
+  "GB 39901-2025第A.2.5.6条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369886,
+    "update_time": 1784369886,
+    "_id": "GB 39901-2025第A.2.5.6条"
+  },
+  "针对系统误响应的安全分析总结": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369887,
+    "update_time": 1784369887,
+    "_id": "针对系统误响应的安全分析总结"
+  },
+  "超过一定幅度的误响应发生的平均里程间隔": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369887,
+    "update_time": 1784369887,
+    "_id": "超过一定幅度的误响应发生的平均里程间隔"
+  },
+  "误响应": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369887,
+    "update_time": 1784369887,
+    "_id": "误响应"
+  },
+  "GB 39901-2025第A.2.6.1条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369887,
+    "update_time": 1784369887,
+    "_id": "GB 39901-2025第A.2.6.1条"
+  },
+  "验证确认计划和结果": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369887,
+    "update_time": 1784369887,
+    "_id": "验证确认计划和结果"
+  },
+  "硬件在环(HIL)测试": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369887,
+    "update_time": 1784369887,
+    "_id": "硬件在环(HIL)测试"
+  },
+  "实车测试": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369887,
+    "update_time": 1784369887,
+    "_id": "实车测试"
+  },
+  "GB 39901-2025第A.2.6.2.1条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369888,
+    "update_time": 1784369888,
+    "_id": "GB 39901-2025第A.2.6.2.1条"
+  },
+  "系统层面的验证计划和结果总结": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75",
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 2,
+    "update_time": 1784370092,
+    "_id": "系统层面的验证计划和结果总结"
+  },
+  "GB 39901-2025第A.2.6.2.2条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369888,
+    "update_time": 1784369888,
+    "_id": "GB 39901-2025第A.2.6.2.2条"
+  },
+  "详细系统层面的验证计划和结果文档": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369888,
+    "update_time": 1784369888,
+    "_id": "详细系统层面的验证计划和结果文档"
+  },
+  "QM安全目标": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369889,
+    "update_time": 1784369889,
+    "_id": "QM安全目标"
+  },
+  "整车危害": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369890,
+    "update_time": 1784369890,
+    "_id": "整车危害"
+  },
+  "GB 39901-2025第A.2.5条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369890,
+    "update_time": 1784369890,
+    "_id": "GB 39901-2025第A.2.5条"
+  },
+  "GB 39901-2025第A.2.6条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369890,
+    "update_time": 1784369890,
+    "_id": "GB 39901-2025第A.2.6条"
+  },
+  "GB 39901-2025第A.2.6.2条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369890,
+    "update_time": 1784369890,
+    "_id": "GB 39901-2025第A.2.6.2条"
+  },
+  "GB 39901-2025第A.2.6.3条": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369890,
+    "update_time": 1784369890,
+    "_id": "GB 39901-2025第A.2.6.3条"
+  },
+  "系统监测参数": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369891,
+    "update_time": 1784369891,
+    "_id": "系统监测参数"
+  },
+  "环境条件": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369891,
+    "update_time": 1784369891,
+    "_id": "环境条件"
+  },
+  "误响应原因及影响分析总结": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369891,
+    "update_time": 1784369891,
+    "_id": "误响应原因及影响分析总结"
+  },
+  "误响应验证和确认策略及结果": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369891,
+    "update_time": 1784369891,
+    "_id": "误响应验证和确认策略及结果"
+  },
+  "误响应运行阶段监控措施": {
+    "chunk_ids": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "count": 1,
+    "create_time": 1784369891,
+    "update_time": 1784369891,
+    "_id": "误响应运行阶段监控措施"
+  },
+  "GB 39901-2025第8.2条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370086,
+    "update_time": 1784370086,
+    "_id": "GB 39901-2025第8.2条"
+  },
+  "[8.2]系统型号生产企业及软件版本号相同": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370086,
+    "update_time": 1784370086,
+    "_id": "[8.2]系统型号生产企业及软件版本号相同"
+  },
+  "[8.2]系统功能安全描述相同且符合附录C": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370086,
+    "update_time": 1784370086,
+    "_id": "[8.2]系统功能安全描述相同且符合附录C"
+  },
+  "GB 39901-2025第9.1条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370086,
+    "update_time": 1784370086,
+    "_id": "GB 39901-2025第9.1条"
+  },
+  "GB 39901-2025第9.3条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370086,
+    "update_time": 1784370086,
+    "_id": "GB 39901-2025第9.3条"
+  },
+  "多用途货车": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370086,
+    "update_time": 1784370086,
+    "_id": "多用途货车"
+  },
+  "GB 39901-2025第9.4条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370087,
+    "update_time": 1784370087,
+    "_id": "GB 39901-2025第9.4条"
+  },
+  "GB 39901-2025附录A": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370087,
+    "update_time": 1784370087,
+    "_id": "GB 39901-2025附录A"
+  },
+  "GB 39901-2025第A.1条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370087,
+    "update_time": 1784370087,
+    "_id": "GB 39901-2025第A.1条"
+  },
+  "[A.1]系统功能安全文档及验证确认要求": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370087,
+    "update_time": 1784370087,
+    "_id": "[A.1]系统功能安全文档及验证确认要求"
+  },
+  "GB 39901-2025第A.2.1条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370087,
+    "update_time": 1784370087,
+    "_id": "GB 39901-2025第A.2.1条"
+  },
+  "[A.2.1]提交系统描述文档": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370088,
+    "update_time": 1784370088,
+    "_id": "[A.2.1]提交系统描述文档"
+  },
+  "[A.2.1]提交危害分析和风险评估总结": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370088,
+    "update_time": 1784370088,
+    "_id": "[A.2.1]提交危害分析和风险评估总结"
+  },
+  "[A.2.1]提交安全措施说明": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370089,
+    "update_time": 1784370089,
+    "_id": "[A.2.1]提交安全措施说明"
+  },
+  "[A.2.1]提交整车层面安全分析总结": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370089,
+    "update_time": 1784370089,
+    "_id": "[A.2.1]提交整车层面安全分析总结"
+  },
+  "[A.2.1]提交系统层面安全分析总结": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370089,
+    "update_time": 1784370089,
+    "_id": "[A.2.1]提交系统层面安全分析总结"
+  },
+  "[A.2.1]提交针对误响应的安全分析总结": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370089,
+    "update_time": 1784370089,
+    "_id": "[A.2.1]提交针对误响应的安全分析总结"
+  },
+  "[A.2.1]提交系统层面验证计划和结果总结": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370089,
+    "update_time": 1784370089,
+    "_id": "[A.2.1]提交系统层面验证计划和结果总结"
+  },
+  "[A.2.1]提交整车层面验证确认计划和结果总结": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370089,
+    "update_time": 1784370089,
+    "_id": "[A.2.1]提交整车层面验证确认计划和结果总结"
+  },
+  "[A.2.1]备查详细危害分析和风险评估": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370090,
+    "update_time": 1784370090,
+    "_id": "[A.2.1]备查详细危害分析和风险评估"
+  },
+  "[A.2.1]备查详细整车层面安全分析": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370090,
+    "update_time": 1784370090,
+    "_id": "[A.2.1]备查详细整车层面安全分析"
+  },
+  "[A.2.1]备查详细系统层面安全分析": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370091,
+    "update_time": 1784370091,
+    "_id": "[A.2.1]备查详细系统层面安全分析"
+  },
+  "[A.2.1]备查详细系统层面验证计划和结果": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370091,
+    "update_time": 1784370091,
+    "_id": "[A.2.1]备查详细系统层面验证计划和结果"
+  },
+  "系统描述": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370091,
+    "update_time": 1784370091,
+    "_id": "系统描述"
+  },
+  "[A.2.1]备查详细整车层面验证确认计划和结果": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370091,
+    "update_time": 1784370091,
+    "_id": "[A.2.1]备查详细整车层面验证确认计划和结果"
+  },
+  "针对误响应的安全分析总结": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370092,
+    "update_time": 1784370092,
+    "_id": "针对误响应的安全分析总结"
+  },
+  "整车层面的验证确认计划和结果总结": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370092,
+    "update_time": 1784370092,
+    "_id": "整车层面的验证确认计划和结果总结"
+  },
+  "详细危害分析和风险评估": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370092,
+    "update_time": 1784370092,
+    "_id": "详细危害分析和风险评估"
+  },
+  "详细整车层面的安全分析": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370092,
+    "update_time": 1784370092,
+    "_id": "详细整车层面的安全分析"
+  },
+  "详细系统层面的安全分析": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370093,
+    "update_time": 1784370093,
+    "_id": "详细系统层面的安全分析"
+  },
+  "详细系统层面的验证计划和结果": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370093,
+    "update_time": 1784370093,
+    "_id": "详细系统层面的验证计划和结果"
+  },
+  "详细整车层面的验证确认计划和结果": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370093,
+    "update_time": 1784370093,
+    "_id": "详细整车层面的验证确认计划和结果"
+  },
+  "GB 39901-2025第A.2.2.1条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370094,
+    "update_time": 1784370094,
+    "_id": "GB 39901-2025第A.2.2.1条"
+  },
+  "GB 39901-2025第A.2.2条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370094,
+    "update_time": 1784370094,
+    "_id": "GB 39901-2025第A.2.2条"
+  },
+  "GB 39901-2025第A.2.2.2条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370094,
+    "update_time": 1784370094,
+    "_id": "GB 39901-2025第A.2.2.2条"
+  },
+  "GB 39901-2025第A.2.2.3条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370094,
+    "update_time": 1784370094,
+    "_id": "GB 39901-2025第A.2.2.3条"
+  },
+  "GB 39901-2025第A.2.2.4条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370094,
+    "update_time": 1784370094,
+    "_id": "GB 39901-2025第A.2.2.4条"
+  },
+  "GB 39901-2025第A.2.2.5条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370094,
+    "update_time": 1784370094,
+    "_id": "GB 39901-2025第A.2.2.5条"
+  },
+  "GB 39901-2025第A.2.2.6条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370095,
+    "update_time": 1784370095,
+    "_id": "GB 39901-2025第A.2.2.6条"
+  },
+  "GB 39901-2025第A.2.2.7条": {
+    "chunk_ids": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "count": 1,
+    "create_time": 1784370095,
+    "update_time": 1784370095,
+    "_id": "GB 39901-2025第A.2.2.7条"
+  },
+  "国家市场监督管理局": {
+    "chunk_ids": [
+      "chunk-6ea136825168445d14914b5eb62664a8"
+    ],
+    "count": 1,
+    "create_time": 1784370207,
+    "update_time": 1784370207,
+    "_id": "国家市场监督管理局"
+  },
+  "GB 39901-2025第1条": {
+    "chunk_ids": [
+      "chunk-6ea136825168445d14914b5eb62664a8"
+    ],
+    "count": 1,
+    "create_time": 1784370207,
+    "update_time": 1784370207,
+    "_id": "GB 39901-2025第1条"
+  },
+  "中华人民共和国工业和信息化部": {
+    "chunk_ids": [
+      "chunk-6ea136825168445d14914b5eb62664a8"
+    ],
+    "count": 1,
+    "create_time": 1784370207,
+    "update_time": 1784370207,
+    "_id": "中华人民共和国工业和信息化部"
+  },
+  "GB/T 39901-2021": {
+    "chunk_ids": [
+      "chunk-6ea136825168445d14914b5eb62664a8"
+    ],
+    "count": 1,
+    "create_time": 1784370207,
+    "update_time": 1784370207,
+    "_id": "GB/T 39901-2021"
+  },
+  "国家标准化管理委员会": {
+    "chunk_ids": [
+      "chunk-6ea136825168445d14914b5eb62664a8"
+    ],
+    "count": 1,
+    "create_time": 1784370207,
+    "update_time": 1784370207,
+    "_id": "国家标准化管理委员会"
+  },
+  "[5.2.2] M1儿童行人横穿20km/h/5km/h行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "count": 1,
+    "create_time": 1784370275,
+    "update_time": 1784370275,
+    "_id": "[5.2.2] M1儿童行人横穿20km/h/5km/h行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.2] M1儿童行人横穿20km/h/5km/h最大设计总质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "count": 1,
+    "create_time": 1784370275,
+    "update_time": 1784370275,
+    "_id": "[5.2.2] M1儿童行人横穿20km/h/5km/h最大设计总质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.2] M1儿童行人横穿40km/h/5km/h行车质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "count": 1,
+    "create_time": 1784370277,
+    "update_time": 1784370277,
+    "_id": "[5.2.2] M1儿童行人横穿40km/h/5km/h行车质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.2] M1儿童行人横穿40km/h/5km/h最大设计总质量最大相对碰撞速度≤0 km/h": {
+    "chunk_ids": [
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "count": 1,
+    "create_time": 1784370277,
+    "update_time": 1784370277,
+    "_id": "[5.2.2] M1儿童行人横穿40km/h/5km/h最大设计总质量最大相对碰撞速度≤0 km/h"
+  },
+  "[5.2.2] M1儿童行人横穿60km/h/5km/h行车质量最大相对碰撞速度≤35 km/h": {
+    "chunk_ids": [
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "count": 1,
+    "create_time": 1784370277,
+    "update_time": 1784370277,
+    "_id": "[5.2.2] M1儿童行人横穿60km/h/5km/h行车质量最大相对碰撞速度≤35 km/h"
+  },
+  "[5.2.2] M1儿童行人横穿60km/h/5km/h最大设计总质量最大相对碰撞速度≤35 km/h": {
+    "chunk_ids": [
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "count": 1,
+    "create_time": 1784370277,
+    "update_time": 1784370277,
+    "_id": "[5.2.2] M1儿童行人横穿60km/h/5km/h最大设计总质量最大相对碰撞速度≤35 km/h"
+  },
+  "[5.2.2] M1类汽车儿童行人目标横穿场景最大相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "count": 1,
+    "create_time": 1784370277,
+    "update_time": 1784370277,
+    "_id": "[5.2.2] M1类汽车儿童行人目标横穿场景最大相对碰撞速度要求"
+  },
+  "[5.3]车辆目标鲁棒性试验通过率要求": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370954,
+    "update_time": 1784370954,
+    "_id": "[5.3]车辆目标鲁棒性试验通过率要求"
+  },
+  "[5.3]车辆目标试验通过次数占比≥90%": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370954,
+    "update_time": 1784370954,
+    "_id": "[5.3]车辆目标试验通过次数占比≥90%"
+  },
+  "[5.3]儿童行人目标鲁棒性试验通过率要求": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370954,
+    "update_time": 1784370954,
+    "_id": "[5.3]儿童行人目标鲁棒性试验通过率要求"
+  },
+  "GB 39901-2025第5.3条": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370954,
+    "update_time": 1784370954,
+    "_id": "GB 39901-2025第5.3条"
+  },
+  "[5.3]踏板式两轮摩托车目标鲁棒性试验通过率要求": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370954,
+    "update_time": 1784370954,
+    "_id": "[5.3]踏板式两轮摩托车目标鲁棒性试验通过率要求"
+  },
+  "[5.3]系统鲁棒性试验重复次数要求": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370954,
+    "update_time": 1784370954,
+    "_id": "[5.3]系统鲁棒性试验重复次数要求"
+  },
+  "试验通过次数占比": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370954,
+    "update_time": 1784370954,
+    "_id": "试验通过次数占比"
+  },
+  "[5.3]自行车目标鲁棒性试验通过率要求": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370954,
+    "update_time": 1784370954,
+    "_id": "[5.3]自行车目标鲁棒性试验通过率要求"
+  },
+  "[5.3]儿童行人目标试验通过次数占比≥90%": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370956,
+    "update_time": 1784370956,
+    "_id": "[5.3]儿童行人目标试验通过次数占比≥90%"
+  },
+  "[5.3]自行车目标试验通过次数占比≥80%": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370956,
+    "update_time": 1784370956,
+    "_id": "[5.3]自行车目标试验通过次数占比≥80%"
+  },
+  "[5.3]踏板式两轮摩托车目标试验通过次数占比≥80%": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370956,
+    "update_time": 1784370956,
+    "_id": "[5.3]踏板式两轮摩托车目标试验通过次数占比≥80%"
+  },
+  "[6.8]儿童行人目标碰撞预警和紧急制动试验": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370956,
+    "update_time": 1784370956,
+    "_id": "[6.8]儿童行人目标碰撞预警和紧急制动试验"
+  },
+  "[6.9]自行车目标碰撞预警和紧急制动试验": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370956,
+    "update_time": 1784370956,
+    "_id": "[6.9]自行车目标碰撞预警和紧急制动试验"
+  },
+  "GB 39901-2025第5.4条": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370956,
+    "update_time": 1784370956,
+    "_id": "GB 39901-2025第5.4条"
+  },
+  "[5.4]无碰撞危险时不应发出预警和制动要求": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370957,
+    "update_time": 1784370957,
+    "_id": "[5.4]无碰撞危险时不应发出预警和制动要求"
+  },
+  "[6.11]系统误响应试验": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370957,
+    "update_time": 1784370957,
+    "_id": "[6.11]系统误响应试验"
+  },
+  "GB 39901-2025第5.5条": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370957,
+    "update_time": 1784370957,
+    "_id": "GB 39901-2025第5.5条"
+  },
+  "[5.5]关闭碰撞预警后紧急制动减速度要求": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370957,
+    "update_time": 1784370957,
+    "_id": "[5.5]关闭碰撞预警后紧急制动减速度要求"
+  },
+  "[5.5]关闭碰撞预警后相对碰撞速度要求": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370957,
+    "update_time": 1784370957,
+    "_id": "[5.5]关闭碰撞预警后相对碰撞速度要求"
+  },
+  "[5.5]车辆减速度绝对值最大值≥5.0 m/s²(预警关闭)": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370957,
+    "update_time": 1784370957,
+    "_id": "[5.5]车辆减速度绝对值最大值≥5.0 m/s²(预警关闭)"
+  },
+  "[6.12]关闭碰撞预警后系统紧急制动能力试验": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370959,
+    "update_time": 1784370959,
+    "_id": "[6.12]关闭碰撞预警后系统紧急制动能力试验"
+  },
+  "GB 39901-2025第5.6条": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370959,
+    "update_time": 1784370959,
+    "_id": "GB 39901-2025第5.6条"
+  },
+  "[5.6]关闭紧急制动后碰撞预警TTC范围要求": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370959,
+    "update_time": 1784370959,
+    "_id": "[5.6]关闭紧急制动后碰撞预警TTC范围要求"
+  },
+  "[6.13]关闭紧急制动后系统碰撞预警能力试验": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370959,
+    "update_time": 1784370959,
+    "_id": "[6.13]关闭紧急制动后系统碰撞预警能力试验"
+  },
+  "GB 39901-2025第6.1.1.1条": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370959,
+    "update_time": 1784370959,
+    "_id": "GB 39901-2025第6.1.1.1条"
+  },
+  "[6.1.1.1] 6.5-6.10试验载荷条件": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370960,
+    "update_time": 1784370960,
+    "_id": "[6.1.1.1] 6.5-6.10试验载荷条件"
+  },
+  "[6.1.1.1] 6.11-6.13试验载荷条件": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370960,
+    "update_time": 1784370960,
+    "_id": "[6.1.1.1] 6.11-6.13试验载荷条件"
+  },
+  "燃油余量≥50%油箱容积": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370960,
+    "update_time": 1784370960,
+    "_id": "燃油余量≥50%油箱容积"
+  },
+  "GB 39901-2025第6.1.1.2条": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370960,
+    "update_time": 1784370960,
+    "_id": "GB 39901-2025第6.1.1.2条"
+  },
+  "[6.1.1.2]试验质量偏差≤1%": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370961,
+    "update_time": 1784370961,
+    "_id": "[6.1.1.2]试验质量偏差≤1%"
+  },
+  "[6.1.1.2]轴荷分布偏差≤5%": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370961,
+    "update_time": 1784370961,
+    "_id": "[6.1.1.2]轴荷分布偏差≤5%"
+  },
+  "GB 39901-2025第6.1.2.1条": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370961,
+    "update_time": 1784370961,
+    "_id": "GB 39901-2025第6.1.2.1条"
+  },
+  "GB 39901-2025第6.1.2.2条": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370962,
+    "update_time": 1784370962,
+    "_id": "GB 39901-2025第6.1.2.2条"
+  },
+  "[6.1.2.1]制动摩擦面温度65℃～100℃": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370962,
+    "update_time": 1784370962,
+    "_id": "[6.1.2.1]制动摩擦面温度65℃～100℃"
+  },
+  "[6.1.2.2] 6.5-6.10及6.12-6.13选择最晚激活时机": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370962,
+    "update_time": 1784370962,
+    "_id": "[6.1.2.2] 6.5-6.10及6.12-6.13选择最晚激活时机"
+  },
+  "[6.1.2.2] 6.11选择最早激活时机": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370962,
+    "update_time": 1784370962,
+    "_id": "[6.1.2.2] 6.11选择最早激活时机"
+  },
+  "[6.2]加速度数据滤波截止频率10Hz": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370962,
+    "update_time": 1784370962,
+    "_id": "[6.2]加速度数据滤波截止频率10Hz"
+  },
+  "GB 39901-2025第6.2条": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370962,
+    "update_time": 1784370962,
+    "_id": "GB 39901-2025第6.2条"
+  },
+  "GB 39901-2025第6.3条": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370962,
+    "update_time": 1784370962,
+    "_id": "GB 39901-2025第6.3条"
+  },
+  "GB 39901-2025第6.4条": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370966,
+    "update_time": 1784370966,
+    "_id": "GB 39901-2025第6.4条"
+  },
+  "[6.4]路面坡度<1%且附着系数≥0.8": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370966,
+    "update_time": 1784370966,
+    "_id": "[6.4]路面坡度<1%且附着系数≥0.8"
+  },
+  "[6.4]环境温度-5℃～45℃": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370967,
+    "update_time": 1784370967,
+    "_id": "[6.4]环境温度-5℃～45℃"
+  },
+  "[6.4]水平能见度≥1000m": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370967,
+    "update_time": 1784370967,
+    "_id": "[6.4]水平能见度≥1000m"
+  },
+  "[6.4] 6.5-6.7光照强度≥1000lx": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370967,
+    "update_time": 1784370967,
+    "_id": "[6.4] 6.5-6.7光照强度≥1000lx"
+  },
+  "[6.4]其他试验光照强度≥2000lx": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370967,
+    "update_time": 1784370967,
+    "_id": "[6.4]其他试验光照强度≥2000lx"
+  },
+  "[6.4]风速不干扰试验结果": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370967,
+    "update_time": 1784370967,
+    "_id": "[6.4]风速不干扰试验结果"
+  },
+  "[6.4]天气干燥无降水降雪结冰": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370967,
+    "update_time": 1784370967,
+    "_id": "[6.4]天气干燥无降水降雪结冰"
+  },
+  "[6.4]试验区域无多余金属物体": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370967,
+    "update_time": 1784370967,
+    "_id": "[6.4]试验区域无多余金属物体"
+  },
+  "[6.4]试验区域无明显阴影且非阳光直射方向": {
+    "chunk_ids": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "count": 1,
+    "create_time": 1784370968,
+    "update_time": 1784370968,
+    "_id": "[6.4]试验区域无明显阴影且非阳光直射方向"
+  }
+}

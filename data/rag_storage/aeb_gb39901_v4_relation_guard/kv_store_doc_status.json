@@ -1,0 +1,784 @@
+{
+  "doc-56dd5cd8b85cd4c2bb305d6552edcd4c": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-56dd5cd8b85cd4c2bb305d6552edcd4c"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.1.1 unit_id:table_5 kind:table table:5 -->\n\n## 表 5 $ M_{1} $ 类汽车最大相对碰撞速度要求——制动车辆目标场景\n\n所属条款：5.2.1.1\n\n表格角色：performance_limit\n\n车辆类别：M1\n\n单位为千米每小时\n\n<table border=...",
+    "content_length": 854,
+    "created_at": "2026-07-18T08:57:46.478391+00:00",
+    "updated_at": "2026-07-18T08:59:41.330473+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_5.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784365066,
+      "processing_end_time": 1784365181
+    }
+  },
+  "doc-b29f7b6cf9eed1e984cc1b9bb3839438": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-b29f7b6cf9eed1e984cc1b9bb3839438"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_015 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.10 -->\n<div style=\"t...",
+    "content_length": 4264,
+    "created_at": "2026-07-18T08:57:46.478431+00:00",
+    "updated_at": "2026-07-18T09:01:03.233680+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_015.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784365181,
+      "processing_end_time": 1784365263
+    }
+  },
+  "doc-9fc94aea745f3346ba2ae29b9a775188": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-9fc94aea745f3346ba2ae29b9a775188"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_013 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.8 -->\n<div style=\"te...",
+    "content_length": 1674,
+    "created_at": "2026-07-18T08:57:46.478425+00:00",
+    "updated_at": "2026-07-18T09:02:00.632007+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_013.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784365263,
+      "processing_end_time": 1784365320
+    }
+  },
+  "doc-6bff51ab3420cb15a18e37e295538ef2": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-6bff51ab3420cb15a18e37e295538ef2"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_006 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.3 -->\n#### 5.2.3 对...",
+    "content_length": 398,
+    "created_at": "2026-07-18T08:57:46.478399+00:00",
+    "updated_at": "2026-07-18T09:02:49.416265+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_006.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784365320,
+      "processing_end_time": 1784365369
+    }
+  },
+  "doc-606fa22623abb87bedd32b53ab8d91cf": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-606fa22623abb87bedd32b53ab8d91cf"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.5 unit_id:table_14 kind:table table:14 -->\n\n## 表 14 $ N_{1} $ 类试验车辆速度设定——静止车辆目标试验\n\n所属条款：6.5\n\n表格角色：test_input\n\n车辆类别：N1\n\n单位为千米每小时\n\n<table border=1 style='margin:...",
+    "content_length": 980,
+    "created_at": "2026-07-18T08:57:46.478413+00:00",
+    "updated_at": "2026-07-18T09:03:13.161492+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_14.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784365369,
+      "processing_end_time": 1784365393
+    }
+  },
+  "doc-95e3d7f4aab32e295b0716a393915257": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-95e3d7f4aab32e295b0716a393915257"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_011 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.6 -->\n<div style=\"te...",
+    "content_length": 1081,
+    "created_at": "2026-07-18T08:57:46.478419+00:00",
+    "updated_at": "2026-07-18T09:05:03.966276+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_011.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784365393,
+      "processing_end_time": 1784365503
+    }
+  },
+  "doc-71165746d4df86800ee92508320508c7": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-71165746d4df86800ee92508320508c7"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.4 unit_id:table_12 kind:table table:12 -->\n\n## 表 12 $ N_{1} $ 类汽车最大相对碰撞速度要求——踏板式两轮摩托车目标横穿场景\n\n所属条款：5.2.4\n\n表格角色：performance_limit\n\n车辆类别：N1\n\n单位为千米每小时\n\n<table bo...",
+    "content_length": 1374,
+    "created_at": "2026-07-18T08:57:46.478406+00:00",
+    "updated_at": "2026-07-18T09:07:14.863982+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_12.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784365504,
+      "processing_end_time": 1784365634
+    }
+  },
+  "doc-f013f6e6327c0917352ff13bd8dcc28e": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-f013f6e6327c0917352ff13bd8dcc28e"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.6 unit_id:table_15 kind:table table:15 -->\n\n## 表 15 $ M_{1} $ 类试验车辆速度设定——匀速车辆目标试验\n\n所属条款：6.6\n\n表格角色：test_input\n\n车辆类别：M1\n\n单位为千米每小时\n\n<table border=1 style='margin:...",
+    "content_length": 1443,
+    "created_at": "2026-07-18T08:57:46.478416+00:00",
+    "updated_at": "2026-07-18T09:07:48.040791+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_15.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784365634,
+      "processing_end_time": 1784365668
+    }
+  },
+  "doc-dff410273edcd81cebb68f9ca99984e1": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-dff410273edcd81cebb68f9ca99984e1"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.7 unit_id:table_17 kind:table table:17 -->\n\n## 表 17 $ M_{1} $ 和 $ N_{1} $ 类试验车辆速度设定——制动车辆目标试验\n\n所属条款：6.7\n\n表格角色：test_input\n\n车辆类别：M1,N1\n\n单位为千米每小时\n\n<table border=1...",
+    "content_length": 842,
+    "created_at": "2026-07-18T08:57:46.478421+00:00",
+    "updated_at": "2026-07-18T09:10:32.298693+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_17.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784365668,
+      "processing_end_time": 1784365832
+    }
+  },
+  "doc-087ada5cc95e07960680f5dd1a65d70a": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-087ada5cc95e07960680f5dd1a65d70a"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.2 unit_id:table_8 kind:table table:8 -->\n\n## 表 8 $ N_{1} $ 类汽车最大相对碰撞速度要求——儿童行人目标横穿场景\n\n所属条款：5.2.2\n\n表格角色：performance_limit\n\n车辆类别：N1\n\n单位为千米每小时\n\n<table border=1 ...",
+    "content_length": 1360,
+    "created_at": "2026-07-18T08:57:46.478398+00:00",
+    "updated_at": "2026-07-18T09:13:01.285498+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_8.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784365832,
+      "processing_end_time": 1784365981
+    }
+  },
+  "doc-d2fcb78758ef6af8ee795d2b97c5972a": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-d2fcb78758ef6af8ee795d2b97c5972a"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:A.3.3 unit_id:table_a_2_part_2 kind:table table:A.2 -->\n\n## 表 A.2 系统验证和确认测试要求（续）\n\n所属条款：A.3.3\n\n表格角色：functional_safety_verification\n\n车辆类别：未指定\n\n<table border=1 styl...",
+    "content_length": 1287,
+    "created_at": "2026-07-18T08:57:46.478441+00:00",
+    "updated_at": "2026-07-18T09:13:57.489806+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_a_2_part_2.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784365981,
+      "processing_end_time": 1784366037
+    }
+  },
+  "doc-99e4292609495232274ab68a927137bd": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-99e4292609495232274ab68a927137bd"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.10 unit_id:table_20 kind:table table:20 -->\n\n## 表 20 $ M_{1} $ 和 $ N_{1} $ 试验车辆速度设定——踏板式两轮摩托车目标横穿试验\n\n所属条款：6.10\n\n表格角色：test_input\n\n车辆类别：M1,N1\n\n单位为千米每小时\n\n<table b...",
+    "content_length": 858,
+    "created_at": "2026-07-18T08:57:46.478429+00:00",
+    "updated_at": "2026-07-18T09:14:26.655868+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_20.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784366037,
+      "processing_end_time": 1784366066
+    }
+  },
+  "doc-eb67eff5a8977cc5a09a8744534095af": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-eb67eff5a8977cc5a09a8744534095af"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.1.1 unit_id:table_1 kind:table table:1 -->\n\n## 表1 $ M_{1} $ 类汽车最大相对碰撞速度要求——静止车辆目标场景\n\n所属条款：5.2.1.1\n\n表格角色：performance_limit\n\n车辆类别：M1\n\n单位为千米每小时\n\n<table border=1...",
+    "content_length": 1868,
+    "created_at": "2026-07-18T08:57:46.478385+00:00",
+    "updated_at": "2026-07-18T09:16:57.138321+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_1.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784366066,
+      "processing_end_time": 1784366217
+    }
+  },
+  "doc-833ca6244f4ea2ba31c67c3f0738fee9": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-833ca6244f4ea2ba31c67c3f0738fee9"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.3 unit_id:table_9 kind:table table:9 -->\n\n## 表 9 $ M_{1} $ 类汽车最大相对碰撞速度要求——自行车目标横穿场景\n\n所属条款：5.2.3\n\n表格角色：performance_limit\n\n车辆类别：M1\n\n单位为千米每小时\n\n<table border=1 s...",
+    "content_length": 1361,
+    "created_at": "2026-07-18T08:57:46.478401+00:00",
+    "updated_at": "2026-07-18T09:18:05.740498+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_9.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784366217,
+      "processing_end_time": 1784366285
+    }
+  },
+  "doc-ca48ccb0e485912e8d7bbfc27dac668f": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-ca48ccb0e485912e8d7bbfc27dac668f"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.1.1 unit_id:table_3 kind:table table:3 -->\n\n## 表 3 $ M_{1} $ 类汽车最大相对碰撞速度要求——匀速车辆目标场景\n\n所属条款：5.2.1.1\n\n表格角色：performance_limit\n\n车辆类别：M1\n\n单位为千米每小时\n\n<table border=...",
+    "content_length": 1362,
+    "created_at": "2026-07-18T08:57:46.478388+00:00",
+    "updated_at": "2026-07-18T09:20:07.506834+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_3.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784366285,
+      "processing_end_time": 1784366407
+    }
+  },
+  "doc-e3cc843a136fd7246bb8cc2c093423c7": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-e3cc843a136fd7246bb8cc2c093423c7"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_009 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.5 -->\n### 6.5 静止车辆目标...",
+    "content_length": 438,
+    "created_at": "2026-07-18T08:57:46.478409+00:00",
+    "updated_at": "2026-07-18T09:21:49.191877+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_009.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784366407,
+      "processing_end_time": 1784366509
+    }
+  },
+  "doc-ff33cacb0ec0f25d0699ae82ccb83901": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-ff33cacb0ec0f25d0699ae82ccb83901"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_010 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.5 -->\n<div style=\"te...",
+    "content_length": 1041,
+    "created_at": "2026-07-18T08:57:46.478414+00:00",
+    "updated_at": "2026-07-18T09:22:32.768339+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_010.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784366509,
+      "processing_end_time": 1784366552
+    }
+  },
+  "doc-47bb5da0a82739ec14b68608fcb9fc1a": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-47bb5da0a82739ec14b68608fcb9fc1a"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.8 unit_id:table_18 kind:table table:18 -->\n\n## 表 18 $ M_{1} $、 $ N_{1} $ 类试验车辆速度设定——儿童行人目标横穿试验\n\n所属条款：6.8\n\n表格角色：test_input\n\n车辆类别：M1,N1\n\n单位为千米每小时\n\n<table border=...",
+    "content_length": 852,
+    "created_at": "2026-07-18T08:57:46.478424+00:00",
+    "updated_at": "2026-07-18T09:23:01.951601+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_18.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784366552,
+      "processing_end_time": 1784366581
+    }
+  },
+  "doc-aeb90ebb15e499bbe6a30b783a11ef74": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-aeb90ebb15e499bbe6a30b783a11ef74"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_016 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.11.4 -->\n#### 6.11.4...",
+    "content_length": 4330,
+    "created_at": "2026-07-18T08:57:46.478432+00:00",
+    "updated_at": "2026-07-18T09:27:11.171534+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_016.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784366582,
+      "processing_end_time": 1784366831
+    }
+  },
+  "doc-a279ef1b78aa66df0cdc1b184be9c50a": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-a279ef1b78aa66df0cdc1b184be9c50a"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_021 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:A.3.4 -->\n### A.3.4 验证...",
+    "content_length": 4207,
+    "created_at": "2026-07-18T08:57:46.478443+00:00",
+    "updated_at": "2026-07-18T09:30:54.138329+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_021.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784366831,
+      "processing_end_time": 1784367054
+    }
+  },
+  "doc-5f63845f59fd5d6ef261d8b8830424f8": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-5f63845f59fd5d6ef261d8b8830424f8"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:A.3.3 unit_id:table_a_2 kind:table table:A.2 -->\n\n## 表 A.2 系统验证和确认测试要求\n\n所属条款：A.3.3\n\n表格角色：functional_safety_verification\n\n车辆类别：未指定\n\n<table border=1 style='margin:...",
+    "content_length": 3428,
+    "created_at": "2026-07-18T08:57:46.478440+00:00",
+    "updated_at": "2026-07-18T09:34:25.812325+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_a_2.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784367054,
+      "processing_end_time": 1784367265
+    }
+  },
+  "doc-68a606521f739e5da1f541fdb47ed535": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-68a606521f739e5da1f541fdb47ed535"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_002 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:2 -->\n## 2 规范性引用文件\n\n下列...",
+    "content_length": 4291,
+    "created_at": "2026-07-18T08:57:46.478379+00:00",
+    "updated_at": "2026-07-18T09:37:18.172172+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_002.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784367265,
+      "processing_end_time": 1784367438
+    }
+  },
+  "doc-5baadf043c73d680b7aa3c3fbe947fcb": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-5baadf043c73d680b7aa3c3fbe947fcb"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.9 unit_id:table_19 kind:table table:19 -->\n\n## 表 19 $ M_{1} $、 $ N_{1} $ 类试验车辆速度设定——自行车目标横穿试验\n\n所属条款：6.9\n\n表格角色：test_input\n\n车辆类别：M1,N1\n\n单位为千米每小时\n\n<table border=1...",
+    "content_length": 854,
+    "created_at": "2026-07-18T08:57:46.478426+00:00",
+    "updated_at": "2026-07-18T09:37:51.695642+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_19.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784367438,
+      "processing_end_time": 1784367471
+    }
+  },
+  "doc-499ba11b24238f1a778004c772b5e75f": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-499ba11b24238f1a778004c772b5e75f"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_003 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:4.1 -->\n### 4.1 通用要求\n\n...",
+    "content_length": 4287,
+    "created_at": "2026-07-18T08:57:46.478381+00:00",
+    "updated_at": "2026-07-18T09:44:30.389191+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_003.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784367471,
+      "processing_end_time": 1784367870
+    }
+  },
+  "doc-5db4f31813785db0b14b89d5c880444c": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-5db4f31813785db0b14b89d5c880444c"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_022 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:B.2.5.3 -->\nB.2.5.3 车辆...",
+    "content_length": 4273,
+    "created_at": "2026-07-18T08:57:46.478444+00:00",
+    "updated_at": "2026-07-18T09:48:50.647358+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_022.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784367870,
+      "processing_end_time": 1784368130
+    }
+  },
+  "doc-cfbb181d563c2870a5df1c8d4196c6fa": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-cfbb181d563c2870a5df1c8d4196c6fa"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.1.2 unit_id:table_2 kind:table table:2 -->\n\n## 表2 $ N_{1} $ 类汽车最大相对碰撞速度要求——静止车辆目标场景\n\n所属条款：5.2.1.2\n\n表格角色：performance_limit\n\n车辆类别：N1\n\n单位为千米每小时\n\n<table border=1...",
+    "content_length": 1613,
+    "created_at": "2026-07-18T08:57:46.478386+00:00",
+    "updated_at": "2026-07-18T09:51:09.154358+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_2.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784368130,
+      "processing_end_time": 1784368269
+    }
+  },
+  "doc-5bcf378f9af32512a3ed201c1c9b03f9": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-5bcf378f9af32512a3ed201c1c9b03f9"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.3 unit_id:table_10 kind:table table:10 -->\n\n## 表 10 $ N_{1} $ 类汽车最大相对碰撞速度要求——自行车目标横穿场景\n\n所属条款：5.2.3\n\n表格角色：performance_limit\n\n车辆类别：N1\n\n单位为千米每小时\n\n<table border=...",
+    "content_length": 1364,
+    "created_at": "2026-07-18T08:57:46.478402+00:00",
+    "updated_at": "2026-07-18T09:52:24.205223+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_10.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784368269,
+      "processing_end_time": 1784368344
+    }
+  },
+  "doc-cf3fd3822fe82724ab22a94b116052e3": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-cf3fd3822fe82724ab22a94b116052e3"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.4 unit_id:table_11 kind:table table:11 -->\n\n## 表 11 $ M_{1} $ 类汽车最大相对碰撞速度要求——踏板式两轮摩托车目标横穿场景\n\n所属条款：5.2.4\n\n表格角色：performance_limit\n\n车辆类别：M1\n\n单位为千米每小时\n\n<table bo...",
+    "content_length": 1374,
+    "created_at": "2026-07-18T08:57:46.478405+00:00",
+    "updated_at": "2026-07-18T09:53:40.027867+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_11.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784368344,
+      "processing_end_time": 1784368420
+    }
+  },
+  "doc-7a2a1b8243d57927965e81cb8eb5ac6a": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-7a2a1b8243d57927965e81cb8eb5ac6a"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:A.2.3.1 unit_id:table_a_1 kind:table table:A.1 -->\n\n## 表 A.1 系统相关危害的安全要求\n\n所属条款：A.2.3.1\n\n表格角色：functional_safety_goal\n\n车辆类别：未指定\n\n<table border=1 style='margin: aut...",
+    "content_length": 2913,
+    "created_at": "2026-07-18T08:57:46.478436+00:00",
+    "updated_at": "2026-07-18T09:55:57.202051+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_a_1.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784368420,
+      "processing_end_time": 1784368557
+    }
+  },
+  "doc-18d27793ba6fda13dfaa727852254d7c": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-18d27793ba6fda13dfaa727852254d7c"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.5 unit_id:table_13 kind:table table:13 -->\n\n## 表 13 $ M_{1} $ 类试验车辆速度设定——静止车辆目标试验\n\n所属条款：6.5\n\n表格角色：test_input\n\n车辆类别：M1\n\n单位为千米每小时\n\n<table border=1 style='margin:...",
+    "content_length": 1181,
+    "created_at": "2026-07-18T08:57:46.478411+00:00",
+    "updated_at": "2026-07-18T09:56:31.575606+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_13.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784368557,
+      "processing_end_time": 1784368591
+    }
+  },
+  "doc-2ceb305d9d75e6ecefe53d69c516222f": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-2ceb305d9d75e6ecefe53d69c516222f"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_020 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:A.2.6.3.1 -->\n### A.2....",
+    "content_length": 1627,
+    "created_at": "2026-07-18T08:57:46.478439+00:00",
+    "updated_at": "2026-07-18T09:57:19.455762+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_020.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784368591,
+      "processing_end_time": 1784368639
+    }
+  },
+  "doc-54b48db7b2439594c007841fa262f5b3": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-54b48db7b2439594c007841fa262f5b3"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.1.2 unit_id:table_6 kind:table table:6 -->\n\n## 表 6 $ N_{1} $ 类汽车最大相对碰撞速度要求——制动车辆目标场景\n\n所属条款：5.2.1.2\n\n表格角色：performance_limit\n\n车辆类别：N1\n\n单位为千米每小时\n\n<table border=...",
+    "content_length": 855,
+    "created_at": "2026-07-18T08:57:46.478393+00:00",
+    "updated_at": "2026-07-18T09:59:07.295308+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_6.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784368639,
+      "processing_end_time": 1784368747
+    }
+  },
+  "doc-758175ddac6ea86a30d83aefa15459a8": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-758175ddac6ea86a30d83aefa15459a8"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_007 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.4 -->\n#### 5.2.4 对...",
+    "content_length": 407,
+    "created_at": "2026-07-18T08:57:46.478403+00:00",
+    "updated_at": "2026-07-18T10:00:14.623626+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_007.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784368747,
+      "processing_end_time": 1784368814
+    }
+  },
+  "doc-864dba0ed96b0745679ddcf5efc5a96d": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-864dba0ed96b0745679ddcf5efc5a96d"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_008 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.3 -->\n### 5.3 系统鲁棒性\n...",
+    "content_length": 4163,
+    "created_at": "2026-07-18T08:57:46.478408+00:00",
+    "updated_at": "2026-07-18T10:37:40.503974+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_008.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784370789,
+      "processing_end_time": 1784371060
+    }
+  },
+  "doc-be6f1b8d11b647301a30c0b8dc281bba": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-be6f1b8d11b647301a30c0b8dc281bba"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_014 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.9 -->\n<div style=\"te...",
+    "content_length": 1780,
+    "created_at": "2026-07-18T08:57:46.478428+00:00",
+    "updated_at": "2026-07-18T10:07:07.656394+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_014.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784369176,
+      "processing_end_time": 1784369227
+    }
+  },
+  "doc-6ecb743db9a7b66f7d3484124657ccf7": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-6ecb743db9a7b66f7d3484124657ccf7"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_012 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.7 -->\n<div style=\"te...",
+    "content_length": 1134,
+    "created_at": "2026-07-18T08:57:46.478422+00:00",
+    "updated_at": "2026-07-18T10:07:51.443508+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_012.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784369227,
+      "processing_end_time": 1784369271
+    }
+  },
+  "doc-1b1e4879bade27ff95bab68dbada4068": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-1b1e4879bade27ff95bab68dbada4068"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_018 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:A.2.2.7.1 -->\n### A.2....",
+    "content_length": 1547,
+    "created_at": "2026-07-18T08:57:46.478434+00:00",
+    "updated_at": "2026-07-18T10:09:43.698287+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_018.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784369271,
+      "processing_end_time": 1784369383
+    }
+  },
+  "doc-efc62955fc933269125fcfbf2fb96db6": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-efc62955fc933269125fcfbf2fb96db6"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.1.2 unit_id:table_4 kind:table table:4 -->\n\n## 表4 $ N_{1} $ 类汽车最大相对碰撞速度要求——匀速车辆目标场景\n\n所属条款：5.2.1.2\n\n表格角色：performance_limit\n\n车辆类别：N1\n\n单位为千米每小时\n\n<table border=1...",
+    "content_length": 1105,
+    "created_at": "2026-07-18T08:57:46.478390+00:00",
+    "updated_at": "2026-07-18T10:10:44.498575+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_4.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784369383,
+      "processing_end_time": 1784369444
+    }
+  },
+  "doc-433189dcfb42867b88848152c9787cf2": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-433189dcfb42867b88848152c9787cf2"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_004 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.1.2 -->\n#### 5.1.2 对...",
+    "content_length": 1397,
+    "created_at": "2026-07-18T08:57:46.478383+00:00",
+    "updated_at": "2026-07-18T10:13:21.057034+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_004.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784369444,
+      "processing_end_time": 1784369601
+    }
+  },
+  "doc-5d77c409f4ae42c28b31bf7dbd1d35b7": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-5d77c409f4ae42c28b31bf7dbd1d35b7"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_005 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.2 -->\n#### 5.2.2 对...",
+    "content_length": 399,
+    "created_at": "2026-07-18T08:57:46.478394+00:00",
+    "updated_at": "2026-07-18T10:14:01.257983+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_005.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784369601,
+      "processing_end_time": 1784369641
+    }
+  },
+  "doc-e4c0ce95b0e094ef9d85310b88f4a80c": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-e4c0ce95b0e094ef9d85310b88f4a80c"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_023 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:C.2.1.6.2 -->\n### C.2....",
+    "content_length": 1496,
+    "created_at": "2026-07-18T08:57:46.478446+00:00",
+    "updated_at": "2026-07-18T10:16:08.531960+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_023.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784369641,
+      "processing_end_time": 1784369768
+    }
+  },
+  "doc-d485d7544ba6d32f7161fac7b495894a": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-d485d7544ba6d32f7161fac7b495894a"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:6.6 unit_id:table_16 kind:table table:16 -->\n\n## 表 16 $ N_{1} $ 类试验车辆速度设定——匀速车辆目标试验\n\n所属条款：6.6\n\n表格角色：test_input\n\n车辆类别：N1\n\n单位为千米每小时\n\n<table border=1 style='margin:...",
+    "content_length": 1142,
+    "created_at": "2026-07-18T08:57:46.478418+00:00",
+    "updated_at": "2026-07-18T10:16:40.532344+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_16.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784369768,
+      "processing_end_time": 1784369800
+    }
+  },
+  "doc-24e2b32581b0ce5aff92f6d04f386d75": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-24e2b32581b0ce5aff92f6d04f386d75"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_019 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:A.2.3.2 -->\n### A.2.3....",
+    "content_length": 4052,
+    "created_at": "2026-07-18T08:57:46.478437+00:00",
+    "updated_at": "2026-07-18T10:19:20.021023+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_019.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784369800,
+      "processing_end_time": 1784369960
+    }
+  },
+  "doc-850fd63fa763c1140213e57f81a2731b": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-850fd63fa763c1140213e57f81a2731b"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_017 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:8.2 -->\n### 8.2 与系统功能安...",
+    "content_length": 4191,
+    "created_at": "2026-07-18T08:57:46.478433+00:00",
+    "updated_at": "2026-07-18T10:23:02.385359+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_017.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784369960,
+      "processing_end_time": 1784370182
+    }
+  },
+  "doc-6ea136825168445d14914b5eb62664a8": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-6ea136825168445d14914b5eb62664a8"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:multiple unit_id:narrative_001 kind:narrative -->\n<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:frontmatter -->\nICS 43...",
+    "content_length": 3091,
+    "created_at": "2026-07-18T08:57:46.478372+00:00",
+    "updated_at": "2026-07-18T10:23:41.651427+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__narrative_001.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784370182,
+      "processing_end_time": 1784370221
+    }
+  },
+  "doc-f7566db12038453c94ed213356549e26": {
+    "status": "processed",
+    "chunks_count": 1,
+    "chunks_list": [
+      "chunk-f7566db12038453c94ed213356549e26"
+    ],
+    "content_summary": "<!-- source_id:gb_39901_2025 source_file:GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md clause:5.2.2 unit_id:table_7 kind:table table:7 -->\n\n## 表 7 $ M_{1} $ 类汽车最大相对碰撞速度要求——儿童行人目标横穿场景\n\n所属条款：5.2.2\n\n表格角色：performance_limit\n\n车辆类别：M1\n\n单位为千米每小时\n\n<table border=1 ...",
+    "content_length": 1359,
+    "created_at": "2026-07-18T08:57:46.478396+00:00",
+    "updated_at": "2026-07-18T10:27:02.977285+00:00",
+    "file_path": "GB+39901-2025.pdf_by_PaddleOCR-VL-1.6__table_7.md",
+    "track_id": "insert_20260718_085746_e6188184",
+    "metadata": {
+      "processing_start_time": 1784370221,
+      "processing_end_time": 1784370422
+    }
+  }
+}
