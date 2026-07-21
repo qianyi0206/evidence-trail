@@ -1,274 +1,245 @@
 # EvidenceTrail
 
-**基于 GraphRAG 的文档取证 Agent（Agentic RAG）**
+**基于知识图谱增强检索的文档取证 Agent**
 
-面向智能汽车等场景：长技术文档里 **阈值、工况、合格判据** 一旦说错，代价远高于通用闲聊。  
-大模型 **幻觉** 在汽车域尤其危险——因此回答必须 **忠于已检索证据**，证据不足则 **拒答**，而不是「像模像样地编」。
-
-底层使用开源 [LightRAG](https://github.com/HKUDS/LightRAG)（图 + 向量）；本仓库实现 **多步取证编排、入库策略、忠于原文的门控作答与离线评测**。
-
-| | |
-|--|--|
-| **GitHub 仓库名建议** | `evidence-trail` |
-| **Python 包（实现）** | `harness/reg_harness`（CLI：`python -m reg_harness`） |
-| **样例域** | GB 39901-2025 轻型汽车 **AEBS** 法规（验证方法，可替换为其它技术文档） |
-
-同一套思路可迁移到试验规范、标定说明、故障诊断、内部设计文档等需要「有依据、能拒答」的知识问答。
-
-| 本仓库（应用层） | 外部依赖（不收录其源码） |
-|------------------|--------------------------|
-| 取证 Agent `harness/` | LightRAG Docker **v1.4.16** |
-| 入库与关系约束 `lightrag_custom/`、`scripts/` | Neo4j + 对话 / 向量 API |
-| 离线评测 `benchmark/` | 样例语料见 `corpus/`（prepared） |
-
-> **一句话：** EvidenceTrail = **忠于证据的取证 Agent**（plan → retrieve → audit → **grounded** answer）：先取证、再作答；不够就拒答。GraphRAG 是底座，国标 AEBS 是样例域。
-
-架构图：[docs/architecture.md](docs/architecture.md) · 贡献：[CONTRIBUTING.md](CONTRIBUTING.md) · 声明：[NOTICE.md](NOTICE.md) · 许可证：[MIT](LICENSE)
+> 先想清楚「能不能编」，再谈「检索与生成」。
 
 ---
 
-## 1. 背景与动机
+## 1. 痛点：汽车场景里，大模型幻觉尤其危险
 
-**智驾 / 主动安全工程**里，知识多在长文档中：法规、试验规程、标定与诊断说明等。这里用大模型，幻觉代价远高于通用闲聊——速度阈值、TTC、载荷、合格判据一旦「听起来对、其实是编的」，会误导试验理解与设计讨论；工程还要求 **出处可追溯**，而不是无法核查的模型记忆。
+以 **智能驾驶 / 车载知识问答** 为例（本仓库的验证样例是主动安全相关法规文档；同一问题也存在于试验规范、标定说明、故障诊断等）。
 
-因此 EvidenceTrail 的目标不是「答得更像人」，而是：
+主机厂、智能座舱、研发支持都希望用大模型回答：
 
-1. **忠于证据**：关键结论与数字须落在检索原文（数值门控、原文优先）；  
-2. **先取证、再作答**：多步检索与证据袋，而不是一次召回后自由发挥；  
-3. **不足则拒答**：空袋或未接地数值由代码硬门控，降低幻觉出站。
+- 「这个工况下速度阈值是多少？」  
+- 「误触发怎么判定？」  
+- 「某条试验要求和另一条有什么不同？」  
 
-文档侧的结构难题（表被切碎、多条款对照、图检索噪声、评测金标泄漏）会 **放大** 幻觉风险，项目在入库、Agent 与评测隔离上分别处理。
+但汽车域和闲聊不同：**答案往往对应确定的工程知识**——表格里的数、条款里的条件、试验里的合格判据。  
+一旦模型 **幻觉**（捏造条款、改数字、混淆适用条件），听起来仍可能很流畅，代价却可能是错误的试验理解、错误的设计讨论，甚至安全相关误判。
 
-**样例域**选 **GB 39901（AEBS）**：与智驾主动安全强相关、表格密、引用要求高，适合做压力测试。  
-**方法不绑死该标准**——换语料即可迁到试验规范、标定、诊断等其它技术文档。
+因此核心要求不是「答得像人」，而是：
+
+**必须严格按照已有的、可核对的确定知识来回答；材料不够就明确说不知道，而不是硬编。**
 
 ---
 
-## 2. 系统架构
+## 2. 为什么不只靠「传统 RAG」
 
-![系统架构](docs/architecture.svg)
+常见做法是 **RAG（检索增强生成）**：先从文档库里搜一段相关文字，再让大模型基于片段生成答案。这比纯靠模型记忆好，但仍有明显问题：
+
+| 传统 RAG 的短板 | 在汽车文档里会怎样 |
+|-----------------|-------------------|
+| 多一次「向量相似」召回 | 跨条款、跨表格的问题容易漏半截 |
+| 表格/条款被切碎 | 表头和数值行分离，阈值答错 |
+| 召回噪声大 | 模型用「差不多相关」的段落脑补出错误结论 |
+| 缺少「够不够」的判断 | 证据不足仍生成完整答案 → 幻觉出站 |
+| 难以解释 | 用户不知道答案对应原文哪里 |
+
+结论：要在汽车知识问答里用大模型，需要 **更强的检索组织方式**，以及 **围绕证据的控制流程**，而不能只做「搜一下再生成」。
+
+---
+
+## 3. 思路：图谱上找关系，再落到原文
+
+本项目的核心想法可以概括成两句话：
+
+1. **在知识图谱上做更广的关联搜索**（实体、关系、条款之间的结构），扩大「该去哪找」的视野；  
+2. **再回到对应的原文片段（chunk）**，用原文支撑事实与数字——**图负责找路，文负责答题**。
+
+也就是说：图谱不是为了画着好看，而是为了 **广搜与定位**；最终作答仍然要 **忠于原文**，避免只靠图上的摘要句子胡编。
+
+> 实现上，图谱构建与图+向量检索底座采用开源框架 **[LightRAG](https://github.com/HKUDS/LightRAG)**（Docker 部署）。  
+> 本仓库的重点是在此之上的 **取证 Agent 与工程配套**，而不是重新实现一套 RAG 引擎。
+
+样例语料为 **GB 39901-2025 轻型汽车 AEBS 法规**（主动安全、表格密、引用要求高，适合压测）。  
+**方法不绑定这一本标准**——换成其它技术文档集，同样适用。
+
+---
+
+## 4. 项目是什么：EvidenceTrail
+
+**EvidenceTrail** = 在「图广搜 + 原文片段」之上的 **多步取证 Agent**：
 
 ```text
-技术文档 Markdown（本仓样例：GB 39901 prepared / 结构单元）
-        │
-        ▼
- LightRAG 抽取入库 ──► Neo4j（图，本地） + 向量/KV（v4 快照可随仓）
-        │
-        ├──────────► WebUI 标准检索（naive / hybrid / mix）
-        │
-        └──────────► EvidenceTrail Agent（本仓核心）
-              问题
-                → 决策：选工具 / 写子 query
-                → LightRAG 检索（图+向量，mix|naive）
-                → 图命中回源 chunk，袋内原文优先
-                → 充足性审核（代码）：够则收网，防空转
-                → compose + 数字/空袋门控
-                → 结构化 JSON + 证据轨迹 trace
+用户问题
+  → 模型决定：下一步用什么检索、搜什么子问题
+  → 调用图/向量检索，把相关原文放进「证据袋」
+  →（可选）重排序，突出更相关的片段
+  → 检查：证据是否已够？不够就继续搜或换问法；够了就收网
+  → 仅基于证据袋生成结构化答案
+  → 代码门控：空袋拒答；答案里的关键数字必须在原文中出现
+  → 输出 JSON + 可追溯轨迹
 ```
 
-| 层级 | 路径 | 职责 |
-|------|------|------|
-| 检索底座 | LightRAG 容器 | 建图、向量、HTTP 查询 |
-| 定制注入 | `lightrag_custom/` | 领域提示词、关系端点校验 |
-| **EvidenceTrail** | `harness/reg_harness/` | 计划循环、证据袋、审核收网、门控作答 |
-| 离线评测 | `benchmark/` | 金标与打分（默认 **不** 注入在线路径） |
-
-包结构细节：[harness/ARCHITECTURE.md](harness/ARCHITECTURE.md) · 控制约定：[harness/PROTOCOL.md](harness/PROTOCOL.md) · harness 说明：[harness/README.md](harness/README.md)
+这就是业界常说的 **Agentic RAG** 形态：Agent 负责规划与停手，检索系统负责供料，**生成必须 grounded（有据）**。
 
 ---
 
-## 3. 方法要点（可写进简历）
+## 5. 实现上做了哪些事
 
-1. **文档侧：让检索「吃得进表」**  
-   表原子切块（v3）：表格独立成文档，避免表头/数值行被 token 切断。样例域表事实回归 **8/8**。
+### 5.1 取证 Agent 控制环（`harness/`）
 
-2. **图谱侧：约束关系合法性**  
-   关系契约（v4）：允许的关系类型与端点在提示词 / 运行时 guard / 后处理三处约束。样例域类型非法关系 **106 → 0**。
+| 能力 | 通俗说明 |
+|------|----------|
+| 多步规划 | 大模型每步选择工具（图检索 / 向量检索 / 检查证据 / 作答 / 结束），并写出子查询 |
+| 证据袋 | 检索结果累积；**优先保留原文 chunk**，实体/关系摘要只作导航辅助 |
+| Top-K 与预算 | 控制每次召回条数与袋内条数，避免上下文被噪声淹没 |
+| 重排序（Rerank） | 检索侧与袋内侧均可对片段再排序，把更相关的原文提前 |
+| 图命中回源 | 从图上的实体/关系追溯到源 chunk，补全文，避免只拿到干巴巴的三元组 |
+| 反思是否够用 | 每轮检索后检查：是否还在空转、证据是否已够；够则强制作答，避免无限检索 |
+| 忠于原文门控 | 空袋不能装有依据；答案中的关键数字须在证据中出现，否则按拒答处理 |
+| 轨迹 | 记录每步决策与工具结果，便于调试和评测对照 |
 
-3. **在线侧：多步取证 Agent，而不是一次 retrieve 后自由发挥**  
-   工具规划 → 检索 → 证据袋（图命中回源、**原文优先**）→ 结构化作答。  
-   **忠于信息：** 数值门控（答案中的关键数字须在袋中出现）+ 空袋拒答，压低汽车域高危幻觉。
+### 5.2 文档入库与图谱质量（`scripts/` + `lightrag_custom/`）
 
-4. **控制侧：充足性审核 + 强制收网**  
-   检索后由代码判断「是否已够作答」；重复检索 / 袋停滞时强制 compose，避免空转，也避免在证据不足时硬聊。  
-   样例难题（6.11 五类误响应）：约 **10 步空转 → 4 步收网**，结论仍正确。
+| 能力 | 通俗说明 |
+|------|----------|
+| 结构切分 | 表格尽量整表入库，减少「表被切两半」 |
+| 关系约束 | 限制图谱上允许的关系类型，降低脏边、乱边 |
+| 领域提示 | 按法规类文档调整抽取侧提示（仍走 LightRAG 流程） |
 
-5. **评测侧：金标与在线隔离**  
-   默认不加载评测金标进 Agent；benchmark 仅离线使用，避免「开卷」分数掩盖真实幻觉风险。
+### 5.3 离线评测（`benchmark/`）
 
-**不声称：** 可消灭全部幻觉；全面碾压纯向量 RAG；可直接用于型式认证或量产决策。工程上追求的是 **可核对、可拒答、可追溯**。
+用固定题目与参考证据做离线打分；**评测用的标准答案默认不进入在线 Agent**，避免「开卷考试」式虚高。
+
+### 5.4 仓库角色一览
+
+| 目录 | 内容 |
+|------|------|
+| `harness/` | EvidenceTrail Agent（Python 包名 `reg_harness`） |
+| `lightrag_custom/` | 接入 LightRAG 的定制（提示与关系校验） |
+| `scripts/` | 预处理、入库、探测 |
+| `benchmark/` | 样例题与打分脚本 |
+| `corpus/` | 样例语料（prepared） |
+| `data/rag_storage/…v4…/` | 样例最终工作区的向量/KV 快照（约 31MB） |
+| `compose.yaml` / `Makefile` | 一键起 Neo4j + LightRAG |
+
+**说明：** 图数据库 **Neo4j 数据不入库**（体积大，需本机 Docker 重建）；密钥只放本地 `.env`。
+
+架构示意图：[docs/architecture.svg](docs/architecture.svg) · [docs/architecture.md](docs/architecture.md)
 
 ---
 
-## 4. 仓库内容边界
+## 6. 环境配置
 
-| 随 git 提供 | 仅本机 |
-|-------------|--------|
-| 源码、配置、compose、无密钥 profile | **含密钥的 `.env`** |
-| 样例语料 `corpus/prepared`、`index_ready*` | **`data/neo4j`（约 500MB）** |
-| 最终工作区向量/KV：`…/aeb_gb39901_v4_relation_guard/`（约 31MB） | a0/v2/v3 索引、LLM 缓存 |
-| v4 embedding 指纹（host 已脱敏） | 其它 state 报告 |
-| 评测金标 + 少量报告 md | 大批量跑分 jsonl、`corpus/raw` |
+### 6.1 依赖
 
-**注意：** 仓内 v4 快照主要是 **向量与 KV**；**图在 Neo4j**，需本地 `make v4-up` 并按需入库。  
-向量模型维度须与指纹一致（当前记录 **2560**）。
+- Docker Desktop  
+- Python 3.10+  
+- 兼容 OpenAI 协议的 **对话模型** 与 **向量模型** API（可写在 `.env`）
 
----
-
-## 5. 快速开始
-
-需要：Docker、Python 3.10+、兼容 OpenAI 协议的对话与向量 API。
-
-### 5.1 离线自检
+### 6.2 安装
 
 ```bash
-git clone <本仓库>
-cd <本仓库>
+git clone <本仓库地址>   # 建议仓库名：evidence-trail
+cd <本仓库目录>
 
 pip install -r requirements.txt
 cd harness && pip install -e . && cd ..
+```
 
+### 6.3 配置密钥
+
+```bash
+cp .env.example .env
+```
+
+编辑 `.env`，至少配置：
+
+- `NEO4J_PASSWORD`  
+- `LLM_BINDING_HOST` / `LLM_BINDING_API_KEY` / `LLM_MODEL`  
+- `EMBEDDING_BINDING_HOST` / `EMBEDDING_BINDING_API_KEY` / `EMBEDDING_MODEL` / `EMBEDDING_DIM`  
+
+**不要**把含真实密钥的 `.env` 提交到 git。  
+样例工作区可用非密钥叠加配置：`.env.gb39901_v4`（由 Makefile / CLI 的 profile 引用）。
+
+可选：配置 Rerank 服务（`.env` 中 `RERANK_*`），检索与证据袋排序会更稳。
+
+---
+
+## 7. 如何运行
+
+### 7.1 不连大模型：先跑单元测试
+
+```bash
 cd harness
 python3 -m unittest discover -s tests -v
 python3 -m reg_harness.cli describe
 ```
 
-### 5.2 启动检索服务
+### 7.2 启动检索服务
 
 ```bash
-cp .env.example .env
-# 填写 NEO4J_PASSWORD、LLM_*、EMBEDDING_* —— 勿提交 .env
-
+# 在仓库根目录
 make v4-up
 ```
 
-- WebUI：http://127.0.0.1:9621  
+- LightRAG WebUI：http://127.0.0.1:9621  
 - Neo4j：http://127.0.0.1:7474  
 
-图为空时按 Makefile 做 v4 的 prepare / ingest（见第 7 节）。  
-工作区名：`aeb_gb39901_v4_relation_guard`。
+若图为空，按 Makefile 执行样例域的 prepare / ingest（如 `make v4-prepare`、`make v4-ingest` 等，见 Makefile 注释）。  
+向量侧若已使用仓库内 v4 快照，仍须保证 **向量模型与维度** 与入库时一致。
 
-### 5.3 运行取证 Agent（样例问题）
+### 7.3 用 Agent 提问
 
 ```bash
 cd harness
 
-# 简单事实
+# 简单题
 python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
   ask "GB 39901—2025 适用于哪两类汽车？" --max-steps 6
 
-# 多条款综合（更难）
+# 综合题（多场景 + 共同判据）
 python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
   ask "完整列出6.11规定的五类误响应场景，并说明所有场景共同的合格判据。" \
   --max-steps 10
 ```
 
-跑通后可按 [docs/screenshots/](docs/screenshots/) 补充截图（勿暴露密钥）。
-
----
-
-## 6. 目录结构
-
-```text
-.
-├── harness/           # EvidenceTrail Agent 实现（包名 reg_harness）
-├── lightrag_custom/   # LightRAG 侧定制（提示词 / schema_guard）
-├── scripts/           # 预处理与入库
-├── benchmark/         # 样例域金标与打分
-├── config/            # schema 配置
-├── corpus/            # 样例语料（prepared）
-├── data/rag_storage/  # 仅 v4 向量/KV 快照
-├── docs/              # 架构图等
-├── compose.yaml
-└── Makefile
-```
-
----
-
-## 7. 样例域实验线（A0 → v4）
-
-以下为 **GB 39901 样例** 上的消融，用来证明入库与约束策略；主演示默认 **v4**。
-
-| 标签 | 工作区 | 思路 |
-|------|--------|------|
-| A0 | `aeb_demo` | 原版 LightRAG |
-| v2 | `aeb_gb39901_v2` | 领域提示 / schema 叠加 |
-| v3 | `aeb_gb39901_v3_table_chunks` | 表原子 + 结构单元 |
-| **v4** | `aeb_gb39901_v4_relation_guard` | + 关系端点契约 |
+导出轨迹：
 
 ```bash
-# v3
-make v3-doctor && make v3-prepare && make v3-up && make v3-ingest
-make v3-postprocess && make v3-test && make v3-fact-qa
-
-# v4（推荐）
-make v4-doctor && make v4-prepare && make v4-up && make v4-ingest
-make v4-postprocess && make v4-test && make v4-fact-qa
+python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
+  ask "你的问题" --dump-trace /tmp/evidence-trail.json
 ```
 
-样例域对比（2026-07-18）：
+### 7.4 代码调用示例
 
-| 指标 | v3 | **v4** |
-|------|---:|-------:|
-| 结构文档数 | 46 | 46 |
-| 类型非法关系 | 106 | **0** |
-| 表事实 + 引用 | 8/8 | **8/8** |
+```python
+from reg_harness import build_stack
 
-更多状态：[PROJECT_STATUS.md](PROJECT_STATUS.md)
-
----
-
-## 8. 样例语料说明
-
-| 来源 | 角色 |
-|------|------|
-| **GB 39901-2025** | 本仓库 **主动** 演示与评测用的样例库 |
-| UN R152 / Euro NCAP 等 | 可存在于 prepared，不作为主结论库 |
-
-仅供学习研究，**不能**替代正式标准文本，也 **不能** 用于型式认证。见 [NOTICE.md](NOTICE.md)。
-
----
-
-## 9. 评测与报告
-
-| 材料 | 路径 |
-|------|------|
-| Pilot 报告 | [benchmark/results/pilot_6q_report.md](benchmark/results/pilot_6q_report.md) |
-| 汇总报告 | [benchmark/results/benchmark_report.md](benchmark/results/benchmark_report.md) |
-| 金标 | `benchmark/data/*.jsonl` |
-| 脚本 | `benchmark/scripts/` |
-
----
-
-## 10. 安全
-
-- 勿提交真实 `.env`  
-- 勿提交 Neo4j 数据卷与非 v4 大索引  
-- 清空索引（危险，需显式确认）：
-
-```bash
-make reset-index CONFIRM=RESET_AEB_INDEX
+stack = build_stack(profile_env=".env.gb39901_v4")
+state = stack.ask("GB 39901 适用于哪两类汽车？", max_steps=6)
+print(state.final_answer)
 ```
 
 ---
 
-## 11. 边界与后续
+## 8. 边界说明
 
-- 这是 **方法验证 + 工程 demo**，不是车企生产知识中台，也不是法规规则引擎。  
-- **门控降低幻觉风险，不能从数学上保证零错误**；合规、认证、量产相关结论必须以官方/内部受控文本为准，并由有资质人员确认。  
-- 若迁移到其它文档集：替换语料与 schema 配置，复用 EvidenceTrail 的「取证 → 忠于证据作答 → 不足则拒答」闭环即可。
-
-欢迎 Issue / PR：[CONTRIBUTING.md](CONTRIBUTING.md)
+- 本项目是 **方法与工程演示**，不是量产知识中台，也不是认证工具。  
+- 门控能 **降低** 幻觉出站概率，**不能** 从数学上保证零错误。  
+- 涉及合规、安全、量产决策时，必须以 **正式受控文本** 为准，并由有资质人员确认。  
+- 样例语料仅供学习研究，详见 [NOTICE.md](NOTICE.md)。
 
 ---
 
-## 12. 命名与引用
+## 9. 参与贡献
 
-| 用途 | 名称 |
-|------|------|
-| 项目品牌 | **EvidenceTrail** |
-| 仓库名（建议） | `evidence-trail` |
-| 形态关键词 | Agentic RAG · grounded / evidence-based answering |
-| 代码入口 | `python -m reg_harness.cli …` |
+见 [CONTRIBUTING.md](CONTRIBUTING.md)。许可证：[MIT](LICENSE)（本仓库）；LightRAG 遵循其自身许可证。
 
-简历可写：**EvidenceTrail：基于 GraphRAG 的汽车技术文档取证 Agent（样例域 GB 39901 AEBS）**。
+---
+
+## 附录：样例域实验（可选阅读）
+
+在 GB 39901 样例上做过入库策略对比（细节见 [PROJECT_STATUS.md](PROJECT_STATUS.md)）：
+
+| 阶段 | 侧重点 |
+|------|--------|
+| 基线 | 通用切分入库 |
+| 表感知 | 表格整表/结构单元，减少切表错误 |
+| 关系约束 | 限制图谱关系类型，减少脏边 |
+
+本地一次对比结果（结构 / 表事实，2026-07-18）：表事实 8/8；加强关系约束后类型非法关系由 106 降至 0。  
+**关系更干净 ≠ 问答自动变好**，仍需要取证 Agent 与忠于原文的门控——这也是 EvidenceTrail 的存在理由。
