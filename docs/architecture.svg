@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="960" height="560" viewBox="0 0 960 560" role="img" aria-labelledby="title desc">
-  <title id="title">GB 39901 AEB GraphRAG Agent architecture</title>
-  <desc id="desc">Application layer harness over LightRAG, Neo4j, and vector storage</desc>
+  <title id="title">EvidenceTrail architecture</title>
+  <desc id="desc">EvidenceTrail agent over LightRAG, Neo4j, and vector storage</desc>
   <defs>
     <style>
       .bg { fill: #0f1419; }
@@ -20,8 +20,8 @@
     </marker>
   </defs>
   <rect class="bg" width="960" height="560"/>
-  <text class="title" x="32" y="36">GB 39901 AEB · GraphRAG Agent (app layer)</text>
-  <text class="small" x="32" y="56">This repo owns harness / custom / benchmark · LightRAG is a dependency (Docker)</text>
+  <text class="title" x="32" y="36">EvidenceTrail · Agentic RAG on GraphRAG</text>
+  <text class="small" x="32" y="56">This repo: harness / custom / benchmark · LightRAG is a Docker dependency</text>
 
   <!-- User -->
   <rect class="card" x="380" y="80" width="200" height="56"/>
@@ -35,7 +35,7 @@
 
   <!-- Harness -->
   <rect class="card-app" x="40" y="190" width="320" height="200"/>
-  <text class="h" x="56" y="216">reg_harness Agent (this repo)</text>
+  <text class="h" x="56" y="216">EvidenceTrail Agent (this repo)</text>
   <text class="t" x="56" y="242">1. plan (decision LLM → JSON action)</text>
   <text class="t" x="56" y="262">2. execute tools (graph / vector / check)</text>
   <text class="t" x="56" y="282">3. sufficiency audit (code)</text>

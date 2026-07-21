@@ -1,10 +1,11 @@
-# Architecture
+# EvidenceTrail 架构
 
-Portfolio-oriented overview of the **application layer** (this repo) vs **LightRAG** (dependency).
+**EvidenceTrail** = 基于 GraphRAG 的文档取证 Agent（Agentic RAG）。  
+本页说明应用层（本仓库）与依赖 **LightRAG** 的边界。
 
-![System architecture](architecture.svg)
+![系统架构](architecture.svg)
 
-## Layers
+## 分层
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
@@ -14,9 +15,9 @@ Portfolio-oriented overview of the **application layer** (this repo) vs **LightR
          ┌───────────────────┴───────────────────┐
          ▼                                       ▼
 ┌─────────────────────┐               ┌─────────────────────┐
-│  reg_harness Agent  │               │  LightRAG API       │
-│  (this repo)        │── /query* ──► │  Docker image       │
-│  plan → tool → audit│               │  (not vendored)     │
+│  EvidenceTrail      │               │  LightRAG API       │
+│  (reg_harness)      │── /query* ──► │  Docker image       │
+│  plan→tool→audit    │               │  (not vendored)     │
 │  → compose / gate   │               └──────────┬──────────┘
 └─────────────────────┘                          │
                                                  ▼
@@ -28,7 +29,7 @@ Portfolio-oriented overview of the **application layer** (this repo) vs **LightR
                                     └────────────────────────┘
 ```
 
-## Agent control loop
+## Agent 控制环（证据轨迹）
 
 ```text
 question
@@ -37,15 +38,16 @@ question
   → post-retrieve sufficiency audit (code)
   → if sufficient / spin detected → force compose
   → numeric grounding guards on final JSON
+  → trace = evidence trail
 ```
 
-| Component | Path | Responsibility |
-|-----------|------|----------------|
-| Loop + force compose | `harness/reg_harness/loop.py` | Orchestration |
-| Sufficiency audit | `harness/reg_harness/sufficiency.py` | “Is the bag enough?” |
-| Guards | `harness/reg_harness/guards.py` | Empty bag / ungrounded numbers |
-| Schema guard | `lightrag_custom/schema_guard.py` | Relation endpoint filter at extract |
-| Benchmark | `benchmark/` | Offline gold + scorers (not loaded online by default) |
+| 组件 | 路径 | 职责 |
+|------|------|------|
+| Loop + 强制 compose | `harness/reg_harness/loop.py` | 编排 |
+| 充足性审核 | `harness/reg_harness/sufficiency.py` | 袋是否已够 |
+| 门控 | `harness/reg_harness/guards.py` | 空袋 / 未接地数字 |
+| Schema guard | `lightrag_custom/schema_guard.py` | 抽取时关系端点过滤 |
+| Benchmark | `benchmark/` | 离线金标与打分（默认不进在线） |
 
 ## Data in git vs local
 

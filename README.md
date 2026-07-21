@@ -1,9 +1,16 @@
-# 基于 GraphRAG 的汽车技术文档取证 Agent
+# EvidenceTrail
 
-**面向智能汽车场景：长技术文档 + 表格/条款交叉 + 答案必须可核对。**  
-底层使用开源 [LightRAG](https://github.com/HKUDS/LightRAG)（图 + 向量检索）；本仓库实现 **多步取证 Agent、入库策略、质量门控与离线评测**。
+**基于 GraphRAG 的文档取证 Agent（Agentic RAG）**
 
-**样例域：** [GB 39901-2025](https://openstd.samr.gov.cn/) 轻型汽车 **AEBS（自动紧急制动）** 法规——用来验证方法，不是项目的唯一目标。  
+面向智能汽车等场景：**长技术文档 + 表格/条款交叉 + 答案必须可核对**。  
+底层使用开源 [LightRAG](https://github.com/HKUDS/LightRAG)（图 + 向量）；本仓库实现 **多步取证编排、入库策略、质量门控与离线评测**。
+
+| | |
+|--|--|
+| **GitHub 仓库名建议** | `evidence-trail` |
+| **Python 包（实现）** | `harness/reg_harness`（CLI：`python -m reg_harness`） |
+| **样例域** | GB 39901-2025 轻型汽车 **AEBS** 法规（验证方法，可替换为其它技术文档） |
+
 同一套思路可迁移到试验规范、标定说明、故障诊断、内部设计文档等需要「有依据、能拒答」的知识问答。
 
 | 本仓库（应用层） | 外部依赖（不收录其源码） |
@@ -12,7 +19,7 @@
 | 入库与关系约束 `lightrag_custom/`、`scripts/` | Neo4j + 对话 / 向量 API |
 | 离线评测 `benchmark/` | 样例语料见 `corpus/`（prepared） |
 
-> **一句话：** 不是「又一个 GraphRAG 复现」，而是 **跑在 GraphRAG 上的证据编排 Agent**；国标 AEBS 是高相关压力测试样例。
+> **一句话：** EvidenceTrail = **跑在 GraphRAG 上的证据轨迹 Agent**（plan → retrieve → audit → grounded answer），不是 LightRAG 复现；国标 AEBS 是高相关压力测试样例。
 
 架构图：[docs/architecture.md](docs/architecture.md) · 贡献：[CONTRIBUTING.md](CONTRIBUTING.md) · 声明：[NOTICE.md](NOTICE.md) · 许可证：[MIT](LICENSE)
 
@@ -29,8 +36,8 @@
 | 单次 RAG 不够 | 往往要多跳检索、补表、再综合 |
 | 评测易虚高 | 金标一旦泄漏进在线路径，分数不可信 |
 
-本项目用 **样例域 GB 39901（AEBS）** 把上述问题打穿，因为主动安全法规同时具备：与智驾安全强相关、文档难、对引用要求高。  
-**方法本身不绑定这一本标准。**
+**EvidenceTrail** 用样例域 **GB 39901（AEBS）** 把上述问题打穿：主动安全法规与智驾安全强相关、文档难、对引用要求高。  
+**方法本身不绑定这一本标准**——换语料与 schema 即可迁到其它技术文档集。
 
 ---
 
@@ -46,21 +53,21 @@
         │
         ├──────────► WebUI 标准检索（naive / hybrid / mix）
         │
-        └──────────► 取证 Agent（本仓核心）
+        └──────────► EvidenceTrail Agent（本仓核心）
               问题
                 → 决策：选工具 / 写子 query
                 → LightRAG 检索（图+向量，mix|naive）
                 → 图命中回源 chunk，袋内原文优先
                 → 充足性审核（代码）：够则收网，防空转
                 → compose + 数字/空袋门控
-                → 结构化 JSON + 轨迹 trace
+                → 结构化 JSON + 证据轨迹 trace
 ```
 
 | 层级 | 路径 | 职责 |
 |------|------|------|
 | 检索底座 | LightRAG 容器 | 建图、向量、HTTP 查询 |
 | 定制注入 | `lightrag_custom/` | 领域提示词、关系端点校验 |
-| **取证 Agent** | `harness/reg_harness/` | 计划循环、证据袋、审核收网、门控作答 |
+| **EvidenceTrail** | `harness/reg_harness/` | 计划循环、证据袋、审核收网、门控作答 |
 | 离线评测 | `benchmark/` | 金标与打分（默认 **不** 注入在线路径） |
 
 包结构细节：[harness/ARCHITECTURE.md](harness/ARCHITECTURE.md) · 控制约定：[harness/PROTOCOL.md](harness/PROTOCOL.md) · harness 说明：[harness/README.md](harness/README.md)
@@ -160,7 +167,7 @@ python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
 
 ```text
 .
-├── harness/           # 取证 Agent（核心）
+├── harness/           # EvidenceTrail Agent 实现（包名 reg_harness）
 ├── lightrag_custom/   # LightRAG 侧定制（提示词 / schema_guard）
 ├── scripts/           # 预处理与入库
 ├── benchmark/         # 样例域金标与打分
@@ -245,6 +252,19 @@ make reset-index CONFIRM=RESET_AEB_INDEX
 
 - 这是 **方法验证 + 工程 demo**，不是车企生产知识中台，也不是法规规则引擎。  
 - 回答可能错误；合规场景请以官方/内部受控文本为准。  
-- 若迁移到其它文档集：替换语料与 schema 配置，复用 Agent 循环、门控与评测隔离思路即可。
+- 若迁移到其它文档集：替换语料与 schema 配置，复用 EvidenceTrail 的 Agent 循环、门控与评测隔离即可。
 
 欢迎 Issue / PR：[CONTRIBUTING.md](CONTRIBUTING.md)
+
+---
+
+## 12. 命名与引用
+
+| 用途 | 名称 |
+|------|------|
+| 项目品牌 | **EvidenceTrail** |
+| 仓库名（建议） | `evidence-trail` |
+| 形态关键词 | Agentic RAG · grounded / evidence-based answering |
+| 代码入口 | `python -m reg_harness.cli …` |
+
+简历可写：**EvidenceTrail：基于 GraphRAG 的汽车技术文档取证 Agent（样例域 GB 39901 AEBS）**。
