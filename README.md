@@ -1,128 +1,128 @@
 # GB 39901 AEB Regulation GraphRAG Agent
 
-Open-source **application layer** for light-duty vehicle **AEBS** regulation QA (primary KB: **GB 39901-2025**).
+面向 **轻型汽车 AEBS 法规（GB 39901-2025）** 的开源问答 demo：  
+在 [LightRAG](https://github.com/HKUDS/LightRAG) 之上做 **多步取证 Agent + 门控作答 + 离线评测**，而不是再实现一套 RAG 引擎。
 
-| This repo owns | Depends on (not vendored) |
-|----------------|---------------------------|
-| Multi-step **evidence Agent** (`harness/`) | [LightRAG](https://github.com/HKUDS/LightRAG) retrieval + graph build |
-| Schema / prompt guards (`lightrag_custom/`) | Neo4j + your OpenAI-compatible LLM/embedding APIs |
-| Prepare / ingest scripts, compose stack | Official regulation text (place under `corpus/` locally) |
-| Offline benchmark data + scorers | — |
+| 本仓库（应用层） | 依赖（不 vendoring） |
+|------------------|----------------------|
+| 证据 Agent `harness/` | LightRAG Docker 镜像 **v1.4.16** |
+| 入库/关系约束 `lightrag_custom/`、`scripts/` | Neo4j + 你的 LLM / Embedding API |
+| 离线 benchmark `benchmark/` | 法规正文（`corpus/` 已提供 prepared 文本） |
 
-We **do not ship the LightRAG source tree**. Runtime uses the published Docker image (pinned **v1.4.16**). See [`NOTICE.md`](NOTICE.md).
+> 一句话：**底座用开源 GraphRAG；我做的是法规场景的 Agent 控制、质量护栏与评测。**
 
-**Release scope (v0.1):** GB 39901 graph ablations (A0–v4), pilot benchmark, evidence harness. Multi-document production routing and frozen 60-question formal eval are out of scope.
-
-Chinese notes: [`DELIVERY.md`](DELIVERY.md) · status: [`PROJECT_STATUS.md`](PROJECT_STATUS.md) · agent: [`harness/`](harness/).  
-Architecture diagram: [`docs/architecture.md`](docs/architecture.md) · Contributing: [`CONTRIBUTING.md`](CONTRIBUTING.md).
+架构图 · [docs/architecture.md](docs/architecture.md) · [CONTRIBUTING](CONTRIBUTING.md) · [NOTICE](NOTICE.md) · [LICENSE](LICENSE) (MIT)
 
 ---
 
-## What this project is
+## 1. 解决什么问题
 
-An educational GraphRAG + agent stack for **AEBS** regulation text:
+法规长文 + 大量表格/条款交叉引用时，常见失败模式是：
 
-1. **Build** a knowledge graph with LightRAG (Neo4j + local vectors), comparing A0→v4 strategies.  
-2. **Query** via WebUI / API and via a multi-step **evidence harness** (not a single retrieve→concat→answer pipe).  
-3. **Control quality**: numeric grounding, gold/online isolation, and a **post-retrieve sufficiency audit** that forces compose when the bag is already enough (stops retrieval spin).  
-4. **Report** honest pilot findings: graph helps coverage; noise can hurt final answers — hence the agent, not mode-switching alone.
+1. **表被切碎** → 数值答错或丢行  
+2. **图检索噪声大** → 证据覆盖上去了，最终答案反而糊  
+3. **Agent 空转** → 袋里其实够了，模型仍反复检索同一子问题  
+4. **评测不可信** → 金标泄漏进在线路径，分数虚高  
 
-Internship / portfolio framing: this is an **applied agent + eval** project on top of an open-source RAG engine, not a re-implementation of LightRAG.
+本项目用 **表原子切块（v3）→ 关系契约（v4）→ 取证 Agent + sufficiency 强制收网** 应对上述问题，并诚实报告「图能帮检索，不自动等于更好答案」。
 
 ---
 
-## Architecture (v0.1)
+## 2. 系统架构
 
 ![Architecture](docs/architecture.svg)
 
-Full write-up: [`docs/architecture.md`](docs/architecture.md).
-
 ```text
-GB 39901 OCR Markdown
-  -> prepare / structural units (v3)
-  -> LightRAG extract (workspace v4 final)
-  -> Neo4j (local) + NanoVectorDB (v4 snapshot in git)
-        |
-        +--> WebUI /query  (classic modes: naive|hybrid|mix)
-        |
-        +--> harness/ Agent loop
-               plan -> tools -> sufficiency audit -> compose + guards
+法规 Markdown (prepared / index units)
+        │
+        ▼
+ LightRAG 抽取入库 ──► Neo4j（图，本地） + rag_storage v4（向量/KV，可随仓）
+        │
+        ├──────────► WebUI /query（naive | hybrid | mix）
+        │
+        └──────────► harness Agent
+                      plan → tools → sufficiency 审核 → compose + 数值门控
 ```
 
-| Layer | Role |
-|-------|------|
-| LightRAG | Graph **build** + retrieval backend (Docker, not vendored) |
-| `harness/` | Online **evidence agent** (tools, audit, force compose, guards) |
-| `benchmark/` | Offline gold + scorers (not loaded online by default) |
+| 层级 | 路径 | 职责 |
+|------|------|------|
+| 检索底座 | LightRAG 容器 | 建图、向量、HTTP 查询 |
+| 定制注入 | `lightrag_custom/` | 抽取 prompt、关系 endpoint 校验 |
+| 在线 Agent | `harness/reg_harness/` | 工具循环、袋压缩、审核收网、拒答 |
+| 离线评测 | `benchmark/` | 金标、跑数、打分（默认 **不** 注入在线 Agent） |
 
-Multi-KB / Librarian / merge APIs exist as **stubs and docs only** (`harness/ARCHITECTURE.md`).
-
----
-
-## Corpus (what counts in v0.1)
-
-| Source | Role in v0.1 |
-|--------|----------------|
-| **GB 39901-2025** (OCR Markdown) | **Only active KB** (`enabled: true`) |
-| UN R152 Rev.2 | Registered, **`enabled: false`**, not used for main graph/QA conclusions |
-| Euro NCAP AEB C2C v4.3.1 | Same |
-| Euro NCAP Collision Avoidance v10.4.1 | Same |
-
-English PDFs may remain under `corpus/` for local experiments; they are **not** part of the v0.1 delivery claim. Do not treat them as production knowledge bases in this release.
-
-Documents are for local, non-commercial educational study. Keep publishers’ rights; do not use answers for homologation without checking the official text.
+更细的包结构见 [harness/ARCHITECTURE.md](harness/ARCHITECTURE.md)，控制层规范见 [harness/PROTOCOL.md](harness/PROTOCOL.md)。
 
 ---
 
-## Key results (already on disk)
+## 3. 我做了什么（亮点）
 
-| Result | Where |
-|--------|--------|
-| Pilot 6-question report | `benchmark/results/pilot_6q_report.md` |
-| Aggregated report | `benchmark/results/benchmark_report.md` |
-| Table fact QA 8/8 (v3/v4) | `results/fact_qa_*.json` |
-| KG structure scores | `benchmark/results/kg_score_*` |
+适合写进简历 / 面试口述的点：
 
-**Stable takeaways**
+1. **表感知切块（v3）**  
+   23 张表独立成文档 + 叙述单元，避免表头/表体被 token 切碎；表事实回归 **8/8**。
 
-1. Table-aware chunking (v3) fixes many numeric table failures.  
-2. Relation guards (v4) improve graph legality; QA does not automatically win.  
-3. Graph modes often raise evidence coverage; high noise can cancel answer gains — hence the agent harness (precise lookup + gates), not mode-switching alone.
+2. **关系契约（v4）**  
+   42 类允许关系在 prompt / `schema_guard` / 后处理三处约束；类型非法关系 **106 → 0**。
 
-**Not claimed:** GraphRAG always beats vector RAG; 60-question frozen v1; multi-document production KB.
+3. **取证 Agent（非单次 retrieve→拼 prompt）**  
+   多步 `graph_search` / `vector_search`、证据袋、compose 与 **数值接地**（答案数字须在袋中出现）。
+
+4. **Sufficiency 审核 + 强制收网**  
+   检索后代码侧判断「够不够」；重复检索 / 袋停滞时 **强制 compose**，避免假缺失空转。  
+   实测难题「6.11 五类误响应」：约 **10 步空转 → 4 步收网**，答案仍正确。
+
+5. **评测与在线隔离**  
+   默认 `catalog_mode=none`，金标不进在线路径；benchmark 离线打分。
+
+**不声称：** GraphRAG 全面碾压向量 RAG；60 题正式榜；多标准生产多库。
 
 ---
 
-## Quick start
+## 4. 仓库里有什么 / 没有什么
 
-Clone **this** repository (application layer only). You need Docker for Neo4j + LightRAG image, and API keys for chat/embeddings.
+| 在 git 中 | 仅本地 |
+|-----------|--------|
+| 源码、`config/`、`compose`、非密钥 profile | **`.env`（API Key）** |
+| `corpus/prepared`、`index_ready*` | **`data/neo4j`（~500MB）** |
+| **最终版** `data/rag_storage/aeb_gb39901_v4_relation_guard/`（~31MB，无 LLM cache） | a0/v2/v3 索引、LLM cache |
+| v4 embedding 指纹 `state/embedding_fingerprint.*v4*` | 其它 state 报告 |
+| `benchmark/data` + 少量 `*report*.md` | 大批量跑分 jsonl |
 
-### A. Offline checks (no LLM required)
+**重要：** git 中的 v4 主要是 **向量/KV**。图库仍在 **本机 Neo4j**，需 `make v4-up` 并按需 ingest。  
+Embedding 需与指纹一致（当前记录：**dimension=2560**，模型名见 fingerprint 文件）。
+
+---
+
+## 5. 快速开始
+
+需要：Docker、Python 3.10+、OpenAI 兼容的 **Chat + Embedding** API。
+
+### 5.1 离线自检（可不启 LLM）
 
 ```bash
-# from repository root (this directory)
+git clone <this-repo> && cd <this-repo>
 pip install -r requirements.txt
 cd harness && pip install -e . && cd ..
 cd harness && python3 -m unittest discover -s tests -v
 python3 -m reg_harness.cli describe
 ```
 
-### B. Graph services (API keys required)
-
-1. Start Docker Desktop.  
-2. `cp .env.example .env` and edit **`.env`** (never commit it).  
-3. Set Neo4j password, LLM and embedding endpoints.  
-4. Prefer the v4 GB workspace overlay (non-secret):
+### 5.2 起服务（要 API Key）
 
 ```bash
-make v4-up    # relation-guard workspace + LightRAG :9621
-# or: make v3-up / make gb-up / make up
+cp .env.example .env
+# 编辑 .env：NEO4J_PASSWORD、LLM_*、EMBEDDING_* （切勿提交 .env）
+
+make v4-up    # Neo4j + LightRAG，workspace = aeb_gb39901_v4_relation_guard
 ```
 
 - WebUI: http://127.0.0.1:9621  
 - Neo4j: http://127.0.0.1:7474  
 
-Agent ask (LLM + running LightRAG):
+若图为空，按 Makefile 执行 v4 ingest / postprocess（见 §7）。向量侧已有 git 快照时，仍建议确认服务 `WORKSPACE` 与 v4 一致。
+
+### 5.3 问一题（Agent）
 
 ```bash
 cd harness
@@ -130,7 +130,7 @@ python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
   ask "GB 39901—2025 适用于哪两类汽车？" --max-steps 6
 ```
 
-Harder example (multi-scenario + shared criterion):
+难题（五类误响应 + 共同判据）：
 
 ```bash
 python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
@@ -138,14 +138,105 @@ python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
   --max-steps 10
 ```
 
-### C. Full rebuild (heavy)
+### 5.4 截图建议
 
-```bash
-make doctor && make download && make prepare && make up && make ingest
-# GB profiles: make gb-demo / v3-demo / v4-demo
+跑通后可把 WebUI / CLI 截图放到 [`docs/screenshots/`](docs/screenshots/)（勿暴露 Key 与内网地址）。
+
+---
+
+## 6. 目录导航
+
+```text
+.
+├── harness/           # 取证 Agent（主贡献）
+├── lightrag_custom/   # sitecustomize + schema_guard + prompts
+├── scripts/           # prepare / ingest / probe
+├── benchmark/         # 金标数据 + 打分脚本 + 短报告
+├── config/            # 领域 / GB 关系 schema YAML
+├── corpus/            # prepared + index-ready 单元
+├── data/rag_storage/  # 仅 v4 快照（无 neo4j）
+├── docs/              # 架构图、截图说明
+├── compose.yaml       # Neo4j + LightRAG
+└── Makefile           # v2/v3/v4 流水线入口
 ```
 
-Destructive reset only:
+---
+
+## 7. 实验线：A0 → v4（细节）
+
+主结论在 **v4**；A0–v3 为消融对照，完整命令见 Makefile / [PROJECT_STATUS.md](PROJECT_STATUS.md)。
+
+| 标签 | Workspace | 想法 |
+|------|-----------|------|
+| A0 | `aeb_demo` | 原版 LightRAG 基线 |
+| v2 | `aeb_gb39901_v2` | Schema / 中文 prompt 叠加 |
+| v3 | `aeb_gb39901_v3_table_chunks` | 46 结构单元，表原子 |
+| **v4** | `aeb_gb39901_v4_relation_guard` | + 42 关系 endpoint 契约 |
+
+**v3 表原子（摘要）**
+
+- 23 张 HTML 表各自独立入库；叙述 23 单元；共 46 文档  
+- 上传走 `/documents/texts`，大 chunk、零 overlap，失败可重试  
+
+```bash
+make v3-doctor && make v3-prepare && make v3-up && make v3-ingest
+make v3-postprocess && make v3-test && make v3-fact-qa
+```
+
+**v4 关系守护（摘要）**
+
+- Prompt 列出允许关系；`schema_guard` 写图前过滤；后处理再校验  
+
+```bash
+make v4-doctor && make v4-prepare && make v4-up && make v4-ingest
+make v4-postprocess && make v4-test && make v4-fact-qa
+```
+
+本地对比（2026-07-18，结构 / 表事实）：
+
+| 指标 | v3 表感知 | **v4 关系守护** |
+|------|----------:|----------------:|
+| 结构文档数 | 46 | 46 |
+| 类型非法关系 | 106 | **0** |
+| 表事实 + 引用 | 8/8 | **8/8** |
+
+**稳定 takeaway**
+
+1. 表切块修好大量数值题。  
+2. 关系合法 ≠ 问答自动变强 → 需要 Agent 与门控。  
+3. 图模式常提高证据覆盖，噪声会抵消答案收益。
+
+---
+
+## 8. 语料说明
+
+| 来源 | v0.1 角色 |
+|------|-----------|
+| **GB 39901-2025** | **唯一主动知识库** |
+| UN R152 / Euro NCAP 等 | 可在 `corpus/prepared` 中，**不作为** 主结论 KB |
+
+文本仅供学习研究；**不得**当作型式认证依据。请以正式出版物为准。详见 [NOTICE.md](NOTICE.md)。
+
+---
+
+## 9. 报告与评测入口
+
+| 材料 | 路径 |
+|------|------|
+| Pilot 6 题报告 | [benchmark/results/pilot_6q_report.md](benchmark/results/pilot_6q_report.md) |
+| 汇总报告 | [benchmark/results/benchmark_report.md](benchmark/results/benchmark_report.md) |
+| 金标数据 | `benchmark/data/*.jsonl` |
+| 评测脚本 | `benchmark/scripts/` |
+
+全量跑分产物默认 gitignore；需要时本地重跑。
+
+---
+
+## 10. 安全
+
+- 只提交 `.env.example` 与无密钥的 `.env.gb39901*`  
+- 禁止提交 API Key、Neo4j 数据卷、非 v4 大索引  
+- 危险重置（会清索引，需显式确认）：
 
 ```bash
 make reset-index CONFIRM=RESET_AEB_INDEX
@@ -153,147 +244,15 @@ make reset-index CONFIRM=RESET_AEB_INDEX
 
 ---
 
-## Workspaces (GB ablations, not multi-standard KBs)
+## 11. 边界（请先读）
 
-| Tag | Workspace | Idea |
-|-----|-----------|------|
-| A0 | `aeb_demo` | Stock LightRAG baseline |
-| v2 | `aeb_gb39901_v2` | Schema / prompt overlay |
-| v3 | `aeb_gb39901_v3_table_chunks` | 46 structural units (tables atomic) |
-| v4 | `aeb_gb39901_v4_relation_guard` | 42 relation endpoint contracts |
+这是 **GraphRAG 基线 + 取证 Agent demo**，不是完整汽车本体库，也不是法规规则引擎。  
+回答可能出错；涉及合规请核对 **官方标准文本**。
 
-Details: later sections below and `PROJECT_STATUS.md`.
+状态总表：[PROJECT_STATUS.md](PROJECT_STATUS.md) · 交付口径：[DELIVERY.md](DELIVERY.md)
 
 ---
 
-## Security & what is / is not in git
+## 12. English summary
 
-| In git | Not in git (local only) |
-|--------|-------------------------|
-| Source, `config/`, compose, non-secret `.env.gb39901*` | **`.env` with API keys** |
-| `corpus/prepared`, `corpus/index_ready*`, `manifest` | **`data/neo4j`** (~500MB graph DB) |
-| **Final workspace** `data/rag_storage/aeb_gb39901_v4_relation_guard/` (~32MB, no LLM cache) | Other workspaces (a0/v2/v3), `rag_storage` caches |
-| v4 embedding fingerprint `state/embedding_fingerprint.aeb_gb39901_v4_relation_guard.json` | Other `state/*` ingest reports |
-| `benchmark/data` gold + small `*report*.md` | `corpus/raw`, bulky run dumps |
-
-**v4** is the intended demo workspace (`WORKSPACE=aeb_gb39901_v4_relation_guard`).  
-Neo4j is still **local-only**: `make v4-up` starts an empty graph DB; re-ingest or restore graph as needed — vector/KV files in git do not replace Neo4j.  
-Third-party: [`NOTICE.md`](NOTICE.md) · License: [`LICENSE`](LICENSE) (MIT for **this** repo only).
-
----
-
-## Regulation Evidence Harness
-
-See [`harness/README.md`](harness/README.md) and [`harness/ARCHITECTURE.md`](harness/ARCHITECTURE.md).
-
-LightRAG builds and serves the graph; the harness is the online **evidence agent** (intent, tools, slots, compose, guards). Multi-document onboarding remains a **Librarian stub**.
-
----
-
-## GB 39901-2025 schema-constrained workspace
-
-The original `aeb_demo` workspace is retained as the automatic LightRAG
-baseline. The dedicated profile uses `aeb_gb39901_v2` and overlays only
-non-secret settings from `.env.gb39901`.
-
-```bash
-make gb-doctor       # validate schema profile and model endpoints
-make gb-prepare      # add repeatable clause anchors to the OCR Markdown
-make gb-up           # switch the running LightRAG service to the v2 workspace
-make gb-ingest       # index only the GB 39901-2025 OCR document
-make gb-postprocess  # annotate canonical names and typed relation metadata
-make gb-test         # validate the graph and write a workspace-specific snapshot
-make gb-qa           # run the eight grounded QA cases
-```
-
-`lightrag_custom/sitecustomize.py` patches only the extraction prompts at
-container startup; upstream LightRAG source is unchanged. The postprocessor
-does not auto-merge duplicate entities and does not invent edges for isolated
-nodes. It writes candidates and validation failures to
-`state/schema_report.aeb_gb39901_v2.json` for review.
-
-The generated index-ready Markdown is derived from the user-provided OCR file.
-It repeats `source_clause` anchors before blocks and table rows while uploading
-under the original filename, so citations remain recognizable. The OCR source
-itself is never modified.
-
-## Table-aware v3 experiment
-
-The v2 workspace is preserved as baseline B1. Its fixed token chunker can split
-an HTML table between the caption/header and data rows; repeated row-level
-source comments also make this more likely. The B2 profile
-`aeb_gb39901_v3_table_chunks` changes only the ingestion granularity:
-
-- all 23 OCR HTML tables become independent, atomic LightRAG documents;
-- tables 1/3/5 are explicitly owned by M1 clause 5.2.1.1 and tables 2/4/6 by
-  N1 clause 5.2.1.2;
-- narrative text becomes 23 bounded structural units;
-- the 46 units are submitted through `/documents/texts`, with a 6000-token
-  chunk budget and zero overlap;
-- ingestion fails unless every structural document produces exactly one
-  LightRAG chunk;
-- the v3 profile raises the embedding timeout to 120 seconds and waits for an
-  active queue to finish before retrying failed units (up to three rounds);
-- six source-table rows and eight model answers are checked as numeric
-  regressions.
-
-```bash
-make v3-doctor
-make v3-prepare
-make v3-up
-make v3-ingest
-make v3-postprocess
-make v3-test
-make v3-fact-qa
-```
-
-## Relation-guarded v4 experiment
-
-The v4 workspace `aeb_gb39901_v4_relation_guard` keeps the 46 structural units
-from B2 and adds a strict GB 39901 relation contract at three points:
-
-- the extraction prompt lists all 42 allowed relation endpoint contracts;
-- `lightrag_custom/schema_guard.py` validates each extracted edge before both
-  Neo4j and relation-vector writes;
-- `scripts/postprocess_graph.py` revalidates the merged graph.
-
-```bash
-make v4-doctor
-make v4-prepare
-make v4-up
-make v4-ingest
-make v4-postprocess
-make v4-test
-make v4-fact-qa
-```
-
-Verified local comparison on 2026-07-18 (structure / table facts):
-
-| Metric | B2 table-aware | v4 relation-guarded |
-| --- | ---: | ---: |
-| Processed structural documents | 46 | 46 |
-| Type-invalid relations | 106 | 0 |
-| Exact table facts with source citation | 8/8 | 8/8 |
-
-## Data safety
-
-- `.env`, downloaded documents, indexes, Neo4j data, state, and result files
-  are ignored by Git (see `.gitignore`).
-- API keys are never included in fingerprints or reports.
-- The embedding model and dimension are immutable after first indexing.
-- No normal command deletes data. Explicit destructive command:
-
-  ```bash
-  make reset-index CONFIRM=RESET_AEB_INDEX
-  ```
-
-## Baseline boundary
-
-This is an automatic GraphRAG **baseline** plus an agent harness, **not** a
-strict automotive ontology or a regulatory rule engine. Do not use answers for
-homologation without checking the official standard text.
-
-## Project status map
-
-See [`PROJECT_STATUS.md`](PROJECT_STATUS.md) for the end-to-end map of A0–v4,
-pilot evidence, and harness status.
+Open-source **application layer** for AEBS regulation QA (GB 39901-2025) on top of LightRAG: multi-step evidence agent, table-aware indexing, relation-endpoint guards, numeric grounding, and a code-side **sufficiency audit** that stops retrieval spin. LightRAG is a Docker dependency (not vendored). Final vector/KV snapshot for workspace `aeb_gb39901_v4_relation_guard` is in-repo; Neo4j remains local. See architecture diagram above and `CONTRIBUTING.md` for setup/tests.
