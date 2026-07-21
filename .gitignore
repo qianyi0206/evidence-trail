@@ -12,13 +12,10 @@
 !.env.gb39901_v4
 
 # --- Runtime / heavy artifacts (do NOT upload Neo4j or full indexes) ---
-data/
-# Explicit: graph DB and vector workspaces stay local / rebuild via scripts
-data/neo4j/
-data/rag_storage/
-data/inputs/
-results/
-state/
+# Root-only: use leading slash so paths like benchmark/results are not swallowed.
+/data/
+/results/
+/state/
 **/__pycache__/
 **/*.py[cod]
 **/.pytest_cache/
