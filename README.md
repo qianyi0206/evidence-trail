@@ -112,16 +112,45 @@ EvidenceTrail（多步 Agent）:
 - **检索**：该找回的证据找没找到、噪声多不多  
 - **问答**：事实题、表格条件题、多跳和综合题，以及故意设计成「不该硬答」的题  
 
-题目与参考数据在 `benchmark/data/`，题型包括直接事实、条件表格、跨条款、比较例外、跨章节综合、不可回答等。
+数据与脚本主要在这些文件里：
 
-### 3.2 标准答案怎么用
+| 文件 | 作用 |
+|------|------|
+| [benchmark/data/questions.jsonl](benchmark/data/questions.jsonl) | 题目、题型、评分方式、参考答案 |
+| [benchmark/data/evidence.jsonl](benchmark/data/evidence.jsonl) | 参考证据片段，供离线对照 |
+| [benchmark/data/audit_units.jsonl](benchmark/data/audit_units.jsonl) | 图谱审计单元 |
+| [benchmark/data/task_graph.jsonl](benchmark/data/task_graph.jsonl) | 任务相关图结构参考 |
+| [benchmark/scripts/score_kg.py](benchmark/scripts/score_kg.py) | 图谱侧打分 |
+| [benchmark/scripts/score_retrieval.py](benchmark/scripts/score_retrieval.py) | 检索侧打分 |
+| [benchmark/scripts/score_answers.py](benchmark/scripts/score_answers.py) | 问答侧打分 |
+| [benchmark/scripts/run_harness_benchmark.py](benchmark/scripts/run_harness_benchmark.py) | 用本项目 Agent 跑题 |
+| [benchmark/scripts/run_graphrag_benchmark.py](benchmark/scripts/run_graphrag_benchmark.py) | 用检索/作答管线跑题 |
+
+报告示例：[pilot_6q_report.md](benchmark/results/pilot_6q_report.md)、[benchmark_report.md](benchmark/results/benchmark_report.md)。
+
+### 3.2 例题
+
+下面几道都来自 [questions.jsonl](benchmark/data/questions.jsonl)，方便直观感受题型和难度：
+
+| 题型 | 题号 | 题目 |
+|------|------|------|
+| 直接事实 | `gb_direct_001` | GB 39901—2025 适用于哪两类汽车？ |
+| 条件表格 | `gb_table_001` | M1 类试验车辆以 60 km/h、静止车辆目标、最大设计总质量状态试验时，允许的最大相对碰撞速度是多少？ |
+| 多跳关系 | `gb_multi_hop_001` | 车辆目标碰撞预警能力应通过哪些试验验证，预警相对紧急制动的最迟时机是什么，并有什么例外？ |
+| 比较例外 | `gb_compare_001` | M1 与 N1 对前方车辆目标的最低激活速度范围有何不同？对行人、自行车和踏板式两轮摩托车目标是否相同？ |
+| 跨章节综合 | `gb_synthesis_001` | 完整列出 6.11 规定的五类误响应场景，并说明所有场景共同的合格判据。 |
+| 故意不可答 | `gb_unanswerable_001` | 制造商能否完全用仿真替代 6.11 的五项误响应试验？如果可以，需要满足哪些条件？ |
+
+最后一类用来检查系统会不会在材料推不出来时硬编。更多题目与字段说明见同目录 JSONL。
+
+### 3.3 标准答案怎么用
 
 标准答案和参考证据只用于 **跑完之后打分、分析错在哪**。  
 **不会在提问过程中**把它们塞进检索或提示词——否则等于开卷考试，分数不能代表用户随便问时的真实表现。
 
 在线 Agent 默认不加载这套评测数据；只有 `benchmark/scripts` 一类离线打分会用到。
 
-### 3.3 跑下来看到的现象
+### 3.4 跑下来看到的现象
 
 在 GB 39901 样例上做过入库对比和 pilot 问答，报告在 `benchmark/results/`。大致结论：
 
