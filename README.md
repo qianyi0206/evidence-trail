@@ -36,7 +36,9 @@
 
 ### 演示与截图
 
-**CLI 取证演示（推荐先看）：** [docs/demo/cli-pipeline-demo.mp4](docs/demo/cli-pipeline-demo.mp4)
+**CLI 取证演示（推荐先看）：**
+
+![CLI 取证演示](docs/demo/cli-pipeline-demo.gif)
 
 本地交互复现：
 
@@ -502,7 +504,7 @@ lightrag_custom/   # LightRAG 接入定制
 scripts/           # 预处理与入库
 config/            # 领域 schema
 benchmark/         # 评测
-docs/              # architecture · screenshots · demo 视频
+docs/              # architecture · screenshots · demo GIF
 corpus/            # 样例语料（prepared / index_ready）
 data/rag_storage/  # 仅 v4 向量/KV 快照（约 31MB，无 cache）
 compose.yaml
@@ -539,7 +541,7 @@ Makefile
 
 说明见 [docker/README.md](docker/README.md)。勿将 `.env`、Neo4j 卷、LLM cache 打进镜像；若推 Docker Hub，只推无数据的薄层并写明 pin 的上游 tag。
 
-**推荐演示：** 文首 [CLI 演示视频](docs/demo/cli-pipeline-demo.mp4) + 下方 `chat` 命令。  
+**推荐演示：** 文首 [CLI 演示 GIF](docs/demo/cli-pipeline-demo.gif) + 下方 `chat` 命令。  
 图谱静态截图见 §0；本地浏览 Neo4j：`http://127.0.0.1:7474`（数据卷不进 git）。  
 Gradio 仅为可选：`apps/README.md`。
 
