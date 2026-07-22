@@ -130,6 +130,18 @@ class TextPrimaryQuotaTests(unittest.TestCase):
         self.assertLessEqual(n_rel, 5)
         self.assertEqual(out[0].kind, "chunk")
 
+    def test_precise_catalog_evidence_is_not_dropped(self) -> None:
+        items = [
+            EvidenceItem(kind="chunk", text="unrelated chunk one", score=0.9),
+            EvidenceItem(kind="chunk", text="unrelated chunk two", score=0.8),
+            EvidenceItem(kind="catalog", text="precise table row", score=0.1),
+        ]
+        out = apply_text_primary_quota(
+            items, max_items=2, max_entities=0, max_relations=0
+        )
+        self.assertEqual(out[0].kind, "catalog")
+        self.assertIn("precise table row", [item.text for item in out])
+
 
 class ComposeSectionTests(unittest.TestCase):
     def test_compose_sections_order(self) -> None:
@@ -149,6 +161,15 @@ class ComposeSectionTests(unittest.TestCase):
         self.assertLess(pos_t, pos_r)
         self.assertLess(pos_r, pos_e)
         self.assertLess(text.index("C chunk"), text.index("R relation"))
+
+    def test_catalog_is_rendered_as_text_unit(self) -> None:
+        state = AgentState(
+            question="q",
+            evidence=[EvidenceItem(kind="catalog", text="precise catalog row")],
+        )
+        text = state.evidence_text(for_compose=True)
+        self.assertIn("## Text units", text)
+        self.assertIn("kind=catalog", text)
 
 
 class NumericNormalizeTests(unittest.TestCase):

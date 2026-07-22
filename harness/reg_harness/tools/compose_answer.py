@@ -21,8 +21,8 @@ COMPOSE_SYSTEM = """你是法规答题器。只能依据下方「证据袋」中
 }
 
 ## 读证据（必须）
-- 证据按三节组织：Text units（原文）→ Relations → Entities。
-- 通读全部 [E#]，**数字、条款、表行以 Text units（kind=chunk）为准**。
+- 证据按三节组织：Text units（原文/精确目录证据）→ Relations → Entities。
+- 通读全部 [E#]，**数字、条款、表行以 Text units（kind=chunk/catalog）为准**。
 - relationship/entity 仅为图摘要/导航，可交叉印证，不可单独作为数值依据。
 - 枚举题：先从证据中列出所有出现的条款号与场景/项目名称，再判断是否齐全。
 - 表/数值题：在证据中查找表号、车型、速度、载荷等条件行，注意被截断标记 …[truncated]。
@@ -137,6 +137,7 @@ class ComposeAnswerTool(Tool):
         continue_gather_flags = {
             "forced_refusal_empty_evidence",
             "forced_refusal_ungrounded_numeric",
+            "forced_refusal_invalid_citations",
         }
         should_continue_gathering = checked.get("answerable") is False and any(
             flag in continue_gather_flags or flag.startswith("numeric_not_in_context")

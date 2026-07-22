@@ -136,9 +136,16 @@ class TableLookupTool(Tool):
                 error="missing_table",
                 continue_loop=True,
             )
-        vehicle = args.get("vehicle") or args.get("vehicle_category")
-        ego = args.get("ego_kmh") or args.get("ego_speed") or args.get("vehicle_speed")
-        target = args.get("target_kmh") or args.get("target_speed")
+        def _first_present(*keys: str) -> Any:
+            for key in keys:
+                value = args.get(key)
+                if value is not None and value != "":
+                    return value
+            return None
+
+        vehicle = _first_present("vehicle", "vehicle_category")
+        ego = _first_present("ego_kmh", "ego_speed", "vehicle_speed")
+        target = _first_present("target_kmh", "target_speed")
         load_state = args.get("load_state")
         scenario = args.get("scenario")
         kb = str(args.get("kb") or _active_kb(state, self.catalog))

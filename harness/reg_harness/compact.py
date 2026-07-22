@@ -24,7 +24,7 @@ def heuristic_score(item: EvidenceItem, question: str) -> float:
     """Minimal fallback ranker — no fixed clause/chapter table."""
     text = item.text or ""
     score = 0.0
-    if item.kind == "chunk":
+    if item.kind in {"chunk", "catalog"}:
         score += 5.0
     elif item.kind == "relationship":
         score += 2.0
@@ -159,9 +159,9 @@ def apply_text_primary_quota(
     max_entities: int = 5,
     max_relations: int = 5,
 ) -> list[EvidenceItem]:
-    """Reserve most bag seats for chunks; soft-cap graph abstracts.
+    """Reserve most bag seats for source text; soft-cap graph abstracts.
 
-    Final order for the bag (and compose): chunks → relations → entities → other.
+    Final order: precise catalog text → chunks → relations → entities → other.
     """
     if not items:
         return []
@@ -172,6 +172,11 @@ def apply_text_primary_quota(
     def _score_key(item: EvidenceItem) -> float:
         return float(item.score) if item.score is not None else 0.0
 
+    catalogs = sorted(
+        [i for i in items if i.kind == "catalog"],
+        key=_score_key,
+        reverse=True,
+    )
     chunks = sorted(
         [i for i in items if i.kind == "chunk"],
         key=_score_key,
@@ -187,30 +192,35 @@ def apply_text_primary_quota(
         key=_score_key,
         reverse=True,
     )
-    others = [i for i in items if i.kind not in {"chunk", "relationship", "entity"}]
+    others = [
+        i
+        for i in items
+        if i.kind not in {"catalog", "chunk", "relationship", "entity"}
+    ]
 
-    # At least half the bag for chunks when any chunk exists.
-    if chunks:
+    # At least half the bag for authoritative source text when any exists.
+    text_items = catalogs + chunks
+    if text_items:
         graph_budget = min(max_entities + max_relations, limit // 2)
         take_rel = min(len(relations), max_relations, graph_budget)
         take_ent = min(len(entities), max_entities, max(0, graph_budget - take_rel))
-        chunk_budget = limit - take_rel - take_ent
+        text_budget = limit - take_rel - take_ent
     else:
         take_rel = min(len(relations), max_relations, limit)
         take_ent = min(len(entities), max_entities, max(0, limit - take_rel))
-        chunk_budget = 0
+        text_budget = 0
 
     out: list[EvidenceItem] = []
-    out.extend(chunks[:chunk_budget])
+    out.extend(text_items[:text_budget])
     out.extend(relations[:take_rel])
     out.extend(entities[:take_ent])
     for item in others:
         if len(out) >= limit:
             break
         out.append(item)
-    # Fill remaining seats with more chunks first (text-primary), not more abstracts.
+    # Fill remaining seats with more source text first, not more abstracts.
     if len(out) < limit:
-        for item in chunks[chunk_budget:]:
+        for item in text_items[text_budget:]:
             if len(out) >= limit:
                 break
             out.append(item)

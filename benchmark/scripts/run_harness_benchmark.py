@@ -52,6 +52,15 @@ def done_ids(path: Path, mode: str) -> set[str]:
     return out
 
 
+def prepare_output(path: Path, *, mode: str, resume: bool) -> set[str]:
+    """Return completed IDs for resume, or start a genuinely fresh JSONL run."""
+    if resume:
+        return done_ids(path, mode)
+    if path.exists():
+        path.write_text("", encoding="utf-8")
+    return set()
+
+
 def select_questions(
     *,
     source: str,
@@ -117,7 +126,8 @@ def state_to_result_row(
                     "text": getattr(item, "text", "") or "",
                 }
             )
-    evidence_ids = sorted(set(str(x) for x in evidence_ids if x))
+    ranked_evidence_ids = list(dict.fromkeys(str(x) for x in evidence_ids if x))
+    retrieved_evidence_ids = sorted(set(ranked_evidence_ids))
     trace_events = []
     steps = 0
     bag = 0
@@ -136,8 +146,8 @@ def state_to_result_row(
         "answerable_gold": question.get("answerable"),
         "prediction": prediction,
         "citations": prediction.get("citations") or [],
-        "retrieved_evidence_ids": evidence_ids,
-        "ranked_evidence_ids": evidence_ids,
+        "retrieved_evidence_ids": retrieved_evidence_ids,
+        "ranked_evidence_ids": ranked_evidence_ids,
         "retrieved_items": retrieved_items,
         "answer_latency_seconds": latency,
         "retrieval_latency_seconds": 0.0,
@@ -195,7 +205,7 @@ def main() -> int:
         print("No questions selected.", file=sys.stderr)
         return 1
 
-    finished = done_ids(args.output, args.mode_name) if resume else set()
+    finished = prepare_output(args.output, mode=args.mode_name, resume=resume)
     pending = [q for q in questions if q["id"] not in finished]
     print(
         f"selected={len(questions)} done={len(finished)} pending={len(pending)} "

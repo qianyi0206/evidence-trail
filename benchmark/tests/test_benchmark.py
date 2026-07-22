@@ -1,20 +1,23 @@
 from __future__ import annotations
 
 import sys
+import tempfile
 import unittest
 from collections import Counter
 from pathlib import Path
+from types import SimpleNamespace
 
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 
 from benchmark_common import AUDIT_PATH, EVIDENCE_PATH, GRAPH_PATH, QUESTIONS_PATH, index_by_id, load_jsonl  # noqa: E402
-from score_answers import score_row as score_answer_row  # noqa: E402
+from score_answers import claim_supported_by_context, score_row as score_answer_row  # noqa: E402
 from score_kg import score_one  # noqa: E402
 from score_retrieval import row_score as score_retrieval_row  # noqa: E402
 from run_graphrag_benchmark import (  # noqa: E402
     answer_contract,
+    build_answer_prompts,
     evidence_for_text,
     extract_focus_terms,
     item_relevance_score,
@@ -23,6 +26,7 @@ from run_graphrag_benchmark import (  # noqa: E402
     prioritize_items,
     token_estimate,
 )
+from run_harness_benchmark import prepare_output, state_to_result_row  # noqa: E402
 from validate_benchmark import EXPECTED_TASK_COUNTS  # noqa: E402
 
 
@@ -146,15 +150,26 @@ class BenchmarkDataTest(unittest.TestCase):
         self.assertIn("normalized_facts", item["text"])
         self.assertIn('"gross_kmh": 10', item["text"])
 
-    def test_answer_contract_preserves_list_shape_without_gold_values(self) -> None:
+    def test_answer_contract_is_independent_of_gold_fields(self) -> None:
         question = index_by_id(load_jsonl(QUESTIONS_PATH), "question")["gb_direct_001"]
         contract = answer_contract(question)
-        self.assertIsInstance(contract["answer"]["vehicle_categories"], list)
         self.assertNotIn("M1", str(contract))
-        # Must not leak gold answerable / refusal labels into the prompt contract.
+        self.assertNotIn("vehicle_categories", str(contract))
         self.assertNotEqual(contract.get("answerable"), True)
         self.assertNotEqual(contract.get("answerable"), False)
         self.assertIsInstance(contract.get("answerable"), str)
+
+    def test_answer_prompts_do_not_include_evaluation_labels(self) -> None:
+        question = "N1 类 80 km/h 时表中是否有对应试验行？"
+        system, user = build_answer_prompts(
+            question, "[R1] 表2没有80 km/h行", "hybrid"
+        )
+        prompt = system + user
+        self.assertNotIn("task_type", prompt)
+        self.assertNotIn("unanswerable_adversarial", prompt)
+        self.assertNotIn("scoring_method", prompt)
+        self.assertNotIn("gold_answer", prompt)
+        self.assertNotIn("优先拒答", prompt)
 
     def test_p0_focus_terms_from_question_only(self) -> None:
         question = index_by_id(load_jsonl(QUESTIONS_PATH), "question")["gb_table_002"]
@@ -238,6 +253,49 @@ class BenchmarkDataTest(unittest.TestCase):
         checked = post_validate_prediction(prediction, [], {"id": "x", "scoring_method": "structured_exact_match"}, "mix")
         self.assertFalse(checked["answerable"])
         self.assertIn("forced_refusal_empty_context", checked["validation_flags"])
+
+    def test_faithfulness_requires_numbers_in_same_matching_condition(self) -> None:
+        context = "M1 类阈值为 35 km/h。\nN1 类阈值为 40 km/h。"
+        self.assertFalse(
+            claim_supported_by_context("M1 类阈值为 40 km/h", context)
+        )
+        self.assertTrue(
+            claim_supported_by_context("N1 类阈值为 40 km/h", context)
+        )
+
+    def test_no_resume_clears_existing_output(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "results.jsonl"
+            path.write_text(
+                '{"question_id":"q1","mode":"harness_skill"}\n',
+                encoding="utf-8",
+            )
+            completed = prepare_output(path, mode="harness_skill", resume=False)
+            self.assertEqual(completed, set())
+            self.assertEqual(path.read_text(encoding="utf-8"), "")
+
+    def test_harness_result_preserves_evidence_rank(self) -> None:
+        state = SimpleNamespace(
+            final_answer={"answerable": False},
+            evidence=[
+                SimpleNamespace(
+                    evidence_ids=["z", "a"], kind="chunk", file_path="", text="one"
+                ),
+                SimpleNamespace(
+                    evidence_ids=["z", "b"], kind="chunk", file_path="", text="two"
+                ),
+            ],
+            step=1,
+            trace=[],
+        )
+        row = state_to_result_row(
+            {"id": "q", "split": "dev"},
+            state,
+            mode="harness_skill",
+            latency=0.1,
+        )
+        self.assertEqual(row["ranked_evidence_ids"], ["z", "a", "b"])
+        self.assertEqual(row["retrieved_evidence_ids"], ["a", "b", "z"])
 
 
 if __name__ == "__main__":
