@@ -77,6 +77,9 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip install -e ./harness
 
+      - name: Prepare CI environment
+        run: cp .env.example .env
+
       - name: Validate schema guard
         run: python scripts/test_schema_guard.py
 
@@ -90,7 +93,6 @@ jobs:
 
       - name: Validate Docker Compose configuration
         run: |
-          cp .env.example .env
           docker compose \
             --env-file .env \
             --env-file .env.gb39901_v4 \
