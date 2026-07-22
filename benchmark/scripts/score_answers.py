@@ -142,16 +142,32 @@ def claim_supported_by_context(claim: str, context_blob: str) -> bool:
     if not claim or not context_blob.strip():
         return False
     claim_norm = normalize_text(claim)
-    context_norm = normalize_text(context_blob)
-    if len(claim_norm) >= 6 and claim_norm in context_norm:
-        return True
     claim_numbers = re.findall(r"\d+(?:\.\d+)?", claim)
-    if claim_numbers:
-        context_numbers = set(re.findall(r"\d+(?:\.\d+)?", context_blob))
-        if all(number in context_numbers for number in claim_numbers):
+    claim_anchors = [
+        match.casefold()
+        for match in re.findall(
+            r"(?<![A-Za-z0-9])([A-Za-z]{1,8}\d+(?:\.\d+)*)",
+            claim,
+        )
+    ]
+    segments = [
+        segment.strip()
+        for segment in re.split(r"[\n。；;]+", context_blob)
+        if segment.strip()
+    ]
+    for segment in segments:
+        if len(claim_norm) >= 6 and claim_norm in normalize_text(segment):
             return True
-    # Character bigram overlap against the full bag (short regulatory claims).
-    return claim_similarity(claim, context_blob) >= 0.35
+        if claim_numbers:
+            segment_numbers = set(re.findall(r"\d+(?:\.\d+)?", segment))
+            if not all(number in segment_numbers for number in claim_numbers):
+                continue
+        segment_cf = segment.casefold()
+        if claim_anchors and not all(anchor in segment_cf for anchor in claim_anchors):
+            continue
+        if claim_similarity(claim, segment) >= 0.35:
+            return True
+    return False
 
 
 def extract_set_items(answer: Any) -> list[Any]:

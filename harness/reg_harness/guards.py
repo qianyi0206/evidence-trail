@@ -56,6 +56,18 @@ def extract_answer_numbers(value: Any) -> list[str]:
     return numbers
 
 
+def invalid_citations(citations: Any, *, evidence_count: int) -> list[str]:
+    """Return malformed or out-of-range compose evidence labels."""
+    if not isinstance(citations, list) or not citations:
+        return ["missing"]
+    invalid: list[str] = []
+    for citation in citations:
+        match = re.fullmatch(r"E([1-9]\d*)", str(citation).strip(), flags=re.IGNORECASE)
+        if not match or int(match.group(1)) > evidence_count:
+            invalid.append(str(citation))
+    return invalid
+
+
 def validate_final_answer(state: AgentState, prediction: dict[str, Any]) -> dict[str, Any]:
     """Deterministic post-checks (harness observation path)."""
     flags: list[str] = []
@@ -86,7 +98,11 @@ def validate_final_answer(state: AgentState, prediction: dict[str, Any]) -> dict
     if answerable is True and state.evidence:
         context_numbers = collect_context_numbers(state.evidence)
         unsupported: list[str] = []
-        for number in extract_answer_numbers(prediction.get("answer")):
+        grounded_content = {
+            "answer": prediction.get("answer"),
+            "claims": prediction.get("claims"),
+        }
+        for number in extract_answer_numbers(grounded_content):
             if number in context_numbers:
                 continue
             try:
@@ -114,6 +130,26 @@ def validate_final_answer(state: AgentState, prediction: dict[str, Any]) -> dict
             }
             flags.append("forced_refusal_ungrounded_numeric")
             flags.append("numeric_not_in_context:" + ",".join(unsupported[:8]))
+
+    if answerable is True and state.evidence:
+        invalid = invalid_citations(
+            prediction.get("citations"), evidence_count=len(state.evidence)
+        )
+        if invalid:
+            prediction = {
+                **prediction,
+                "answerable": False,
+                "answer": {
+                    "answerable": False,
+                    "reason": (
+                        "答案引用未指向证据袋中的有效证据，已按拒答处理。"
+                        f" invalid_citations={invalid[:8]}"
+                    ),
+                    "validation_note": "citation_grounding_failed",
+                },
+            }
+            flags.append("forced_refusal_invalid_citations")
+            flags.append("invalid_citations:" + ",".join(invalid[:8]))
 
     prediction["validation_flags"] = flags
     return prediction

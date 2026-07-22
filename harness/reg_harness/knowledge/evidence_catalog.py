@@ -182,6 +182,43 @@ class EvidenceCatalog:
         if kb:
             candidates = [item for item in candidates if item.source_id == kb]
 
+        def same_number(actual: Any, expected: float | int) -> bool:
+            try:
+                return float(actual) == float(expected)
+            except (TypeError, ValueError):
+                return False
+
+        def normalize_scenario(value: Any) -> str:
+            normalized = str(value or "").strip().casefold()
+            aliases = {
+                "静止": "stationary",
+                "静止目标": "stationary",
+                "匀速": "moving",
+                "移动": "moving",
+                "移动目标": "moving",
+                "制动": "braking",
+                "制动目标": "braking",
+            }
+            return aliases.get(normalized, normalized)
+
+        def matches_conditions(item: EvidenceRecord) -> bool:
+            facts = item.normalized_facts or {}
+            if vehicle and str(facts.get("vehicle", "")).upper() != str(vehicle).upper():
+                return False
+            if ego_kmh is not None and not same_number(facts.get("ego_kmh"), ego_kmh):
+                return False
+            if target_kmh is not None:
+                target_values = (facts.get("target_kmh"), facts.get("target_start_kmh"))
+                if not any(same_number(value, target_kmh) for value in target_values):
+                    return False
+            if scenario and normalize_scenario(facts.get("scenario")) != normalize_scenario(
+                scenario
+            ):
+                return False
+            return True
+
+        candidates = [item for item in candidates if matches_conditions(item)]
+
         def score(item: EvidenceRecord) -> int:
             facts = item.normalized_facts or {}
             points = 0
@@ -300,5 +337,4 @@ def merge_evidence_ids(existing: Iterable[str], new_ids: Iterable[str]) -> list[
         seen.add(item)
         result.append(item)
     return result
-
 

@@ -214,8 +214,7 @@ _FOCUS_PHRASES = (
 def extract_focus_terms(question: dict[str, Any]) -> list[str]:
     """Pull cheap lexical anchors from the question for local re-ranking.
 
-    Does not use gold answers or gold evidence — only the question text and
-    task type, so it is safe for both live runs and offline unit tests.
+    Uses only text visible to a real system at inference time.
     """
     text = str(question.get("question", ""))
     terms: list[str] = []
@@ -231,11 +230,10 @@ def extract_focus_terms(question: dict[str, Any]) -> list[str]:
     for phrase in _FOCUS_PHRASES:
         if phrase in text:
             terms.append(phrase)
-    task_type = str(question.get("task_type", ""))
-    if "table" in task_type or "表" in text:
+    if "表" in text or re.search(
+        r"\d+(?:\.\d+)?\s*km\s*/\s*h", text, flags=re.IGNORECASE
+    ):
         terms.append("__prefer_table__")
-    if "unanswerable" in task_type:
-        terms.append("__prefer_refusal_cues__")
     if any(token in text for token in ("哪些", "列出", "完整", "五类", "分别")):
         terms.append("__prefer_lists__")
     if any(token in text for token in ("不同", "区别", "例外", "异常", "如何处理")):
@@ -295,10 +293,6 @@ def item_relevance_score(
         if term == "__prefer_exceptions__":
             if any(token in text for token in ("若", "例外", "替代", "大于", "异常", "否则")):
                 score += 2.5
-            continue
-        if term == "__prefer_refusal_cues__":
-            if any(token in text for token in ("不适用", "未规定", "不要求", "无", "至少")):
-                score += 1.0
             continue
         if term.startswith("table_"):
             marker = term.replace("table_", "")
@@ -446,7 +440,12 @@ def post_validate_prediction(
 
     if mode != "closed_book" and answerable is True and items:
         context_numbers = collect_context_numbers(items)
-        answer_numbers = extract_answer_numbers(prediction.get("answer"))
+        answer_numbers = extract_answer_numbers(
+            {
+                "answer": prediction.get("answer"),
+                "claims": prediction.get("claims"),
+            }
+        )
         unsupported = []
         for number in answer_numbers:
             if number in context_numbers:
@@ -477,10 +476,6 @@ def post_validate_prediction(
                 }
                 flags.append("forced_refusal_ungrounded_numeric")
 
-    if question.get("scoring_method") == "unanswerable" and prediction.get("answerable") is True:
-        # Soft flag only: gold is not consulted; the stronger prompt should handle most cases.
-        flags.append("unanswerable_task_but_model_answered")
-
     prediction["validation_flags"] = flags
     return prediction
 
@@ -509,36 +504,66 @@ def oracle_items(question: dict[str, Any], evidence_by_id: dict[str, dict[str, A
     return items
 
 
-def answer_shape(value: Any, label: str = "value") -> Any:
-    """Preserve the gold schema and collection types without leaking values."""
-    if isinstance(value, dict):
-        return {key: answer_shape(child, key) for key, child in value.items()}
-    if isinstance(value, list):
-        return [answer_shape(value[0], "item")] if value else ["<item>"]
-    if isinstance(value, bool):
-        return f"<{label}: boolean>"
-    if isinstance(value, (int, float)):
-        return f"<{label}: number>"
-    return f"<{label}>"
-
-
-def answer_contract(question: dict[str, Any]) -> dict[str, Any]:
-    """Value-free JSON shape for the model. Never leak gold labels/values."""
-    method = question.get("scoring_method")
-    if method == "unanswerable":
-        answer: Any = {
-            "answerable": "<boolean>",
-            "reason": "<why the supplied evidence is insufficient>",
-        }
-    else:
-        answer = answer_shape(question.get("gold_answer") or {}, "answer")
+def answer_contract(_question: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Stable inference-time contract independent of every gold/eval field."""
     return {
         "answerable": "<boolean: true only if evidence fully supports the answer>",
-        "answer": answer,
+        "answer": {},
         "claims": ["<one atomic claim per item>"],
         "citations": ["R1"],
         "claim_citations": {"0": ["R1"]},
     }
+
+
+def build_answer_prompts(
+    question_text: str,
+    context: str,
+    mode: str,
+) -> tuple[str, str]:
+    """Build prompts exclusively from inference-visible question text and evidence."""
+    shared_rules = (
+        "答案必须是一个JSON对象，不要输出Markdown。"
+        "answer字段应根据问题自行选择简洁、自解释的字段名，不得照抄尖括号占位符。"
+        "claims中每项只能包含一个原子声明；citations和claim_citations只能引用证据中的R编号。"
+        "枚举类问题必须逐项完整列出，不得合并改写或漏项。"
+        "若证据中出现例外、替代、异常条件（如‘若…则…’），答案必须保留该条件，不得省略。"
+        "任何速度、阈值、百分比等数值必须能在所附证据原文中直接找到；证据没有的数字一律不得猜测邻近行或常用值。"
+        "若问题前提在证据中不存在（例如询问表中没有的车速行），answerable必须为false，并说明缺什么。"
+    )
+    if mode == "closed_book":
+        system = (
+            "你是法规基准测试中的闭卷回答器。当前不提供检索证据；只能依靠模型已有知识回答，"
+            "不得伪造引用。若不确定或问题前提错误，answerable必须为false。citations必须为空数组，"
+            "claim_citations必须为空对象。"
+            + shared_rules
+        )
+    else:
+        system = (
+            "你是法规基准测试中的受控回答器。只能使用给出的证据，不得使用外部知识补全。"
+            "若证据不足、互相冲突、或问题前提错误，answerable必须为false。"
+            + shared_rules
+        )
+        if "表" in question_text or re.search(
+            r"\d+(?:\.\d+)?\s*km\s*/\s*h", question_text, flags=re.IGNORECASE
+        ):
+            system += "表格/速度题必须同时对齐车型、场景、试验车速、目标速度与载荷状态后再取单元格。"
+        if any(
+            token in question_text
+            for token in ("比较", "不同", "区别", "例外", "异常", "如何处理")
+        ):
+            system += "比较题必须同时给出对比双方与例外处理规则。"
+        if any(
+            token in question_text for token in ("哪些", "列出", "完整", "分别", "共同")
+        ):
+            system += "综合/枚举题优先覆盖完整列表与共同判据，不要只答部分场景。"
+
+    user = (
+        f"问题：{question_text}\n\n"
+        f"证据：\n{context}\n\n"
+        "请按以下通用形状输出（尖括号只是字段提示，不是答案）：\n"
+        f"{json.dumps(answer_contract(), ensure_ascii=False)}"
+    )
+    return system, user
 
 
 def chat_url(host: str) -> str:
@@ -591,45 +616,7 @@ def generate_answer(
         references.append({"reference": reference, "evidence_ids": item.get("evidence_ids", []), "kind": item["kind"]})
         context_blocks.append(f"[{reference}] {item['text']}")
     context = "\n\n".join(context_blocks) if context_blocks else "（未提供检索证据）"
-    task_type = str(question.get("task_type", ""))
-    # P0B: stronger structured constraints — lists, exceptions, refusal, no invented numbers.
-    shared_rules = (
-        "答案必须是一个JSON对象，不要输出Markdown。"
-        "claims中每项只能包含一个原子声明；citations和claim_citations只能引用证据中的R编号。"
-        "枚举类问题必须逐项完整列出，不得合并改写或漏项。"
-        "若证据中出现例外、替代、异常条件（如“若…则…”），答案必须保留该条件，不得省略。"
-        "任何速度、阈值、百分比等数值必须能在所附证据原文中直接找到；证据没有的数字一律不得猜测邻近行或常用值。"
-        "若问题前提在证据中不存在（例如询问表中没有的车速行），answerable必须为false，并说明缺什么。"
-    )
-    if mode == "closed_book":
-        system = (
-            "你是法规基准测试中的闭卷回答器。当前不提供检索证据；只能依靠模型已有知识回答，"
-            "不得伪造引用。若不确定或问题前提错误，answerable必须为false。citations必须为空数组，"
-            "claim_citations必须为空对象。"
-            + shared_rules
-        )
-    else:
-        system = (
-            "你是法规基准测试中的受控回答器。只能使用给出的证据，不得使用外部知识补全。"
-            "若证据不足、互相冲突、或问题前提错误，answerable必须为false。"
-            + shared_rules
-        )
-        if "unanswerable" in task_type:
-            system += "本题很可能不可回答：优先拒答，禁止用相近工况的数值顶替。"
-        if "table" in task_type or "conditional_table" in task_type:
-            system += "表格题必须同时对齐车型、场景、试验车速、目标速度与载荷状态后再取单元格。"
-        if "comparison" in task_type or "exception" in task_type:
-            system += "比较题必须同时给出对比双方与例外处理规则。"
-        if "synthesis" in task_type or "multi_hop" in task_type:
-            system += "综合/多跳题优先覆盖完整列表与共同判据，不要只答部分场景。"
-
-    user = (
-        f"问题：{question['question']}\n"
-        f"task_type：{task_type}\n\n"
-        f"证据：\n{context}\n\n"
-        f"请按以下形状输出（尖括号只是字段提示，不是答案）：\n"
-        f"{json.dumps(answer_contract(question), ensure_ascii=False)}"
-    )
+    system, user = build_answer_prompts(str(question["question"]), context, mode)
     headers = {"Content-Type": "application/json"}
     api_key = env.get("LLM_BINDING_API_KEY", "").strip()
     if api_key:

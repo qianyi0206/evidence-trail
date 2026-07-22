@@ -8,6 +8,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from reg_harness.intent import resolve_intent
 from reg_harness.knowledge.evidence_catalog import EvidenceCatalog
+from reg_harness.tools.precise_lookup import TableLookupTool
+from reg_harness.types import AgentState
 
 
 AEB_ROOT = Path(__file__).resolve().parents[2]
@@ -32,6 +34,27 @@ class CatalogTests(unittest.TestCase):
         )
         ids = [item.id for item in hits]
         self.assertIn("gb39901:table:2:row:40", ids)
+
+    def test_table_lookup_rejects_mismatched_conditions(self) -> None:
+        hits = self.catalog.lookup_table(
+            2, vehicle="M1", ego_kmh=60, target_kmh=0, kb="gb39901"
+        )
+        self.assertEqual(hits, [])
+
+    def test_table_lookup_preserves_zero_target_speed(self) -> None:
+        state = AgentState(question="M1 以 80 km/h 驶向静止目标")
+        result = TableLookupTool(self.catalog).run(
+            state,
+            {
+                "table": 3,
+                "vehicle": "M1",
+                "ego_kmh": 80,
+                "target_kmh": 0,
+                "kb": "gb39901",
+            },
+        )
+        self.assertFalse(result.ok)
+        self.assertEqual(result.error, "not_found")
 
     def test_match_ids_from_clause_marker(self) -> None:
         text = "relation_type=VERIFIED_BY; source_clause=5.4; evidence=按照6.11进行试验。"

@@ -82,13 +82,13 @@ class AgentState:
         raw = item.text or ""
         cap = max_chars_per_item
         if cap is None:
-            if item.kind == "chunk" and (
+            if item.kind in {"chunk", "catalog"} and (
                 "<table" in raw.lower()
                 or re.search(r"表\s*[A-Za-z]?\d+", raw)
                 or "unit_id:table" in raw
             ):
                 cap = 9000 if for_compose else 4000
-            elif item.kind == "chunk":
+            elif item.kind in {"chunk", "catalog"}:
                 cap = 5500 if for_compose else 2800
             else:
                 cap = 1800 if for_compose else 1000
@@ -130,7 +130,9 @@ class AgentState:
                 "other": [],
             }
             for item in items:
-                if item.kind in by_kind:
+                if item.kind == "catalog":
+                    by_kind["chunk"].append(item)
+                elif item.kind in by_kind:
                     by_kind[item.kind].append(item)
                 else:
                     by_kind["other"].append(item)
