@@ -31,7 +31,8 @@ class FinalizeTool(Tool):
 
     def run(self, state: AgentState, args: dict[str, Any]) -> ToolResult:
         accept_draft = args.get("accept_draft") is True
-        if accept_draft and not state.draft_answer:
+        draft_answer = state.draft_answer
+        if accept_draft and not draft_answer:
             return ToolResult(
                 name=self.name,
                 ok=False,
@@ -50,7 +51,8 @@ class FinalizeTool(Tool):
 
         # Allow accepting a prior draft only after running the same final guards.
         if accept_draft:
-            prediction = dict(state.draft_answer)
+            assert draft_answer is not None
+            prediction = dict(draft_answer)
         else:
             prediction = {
                 "answerable": args["answerable"],
