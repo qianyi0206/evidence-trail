@@ -13,7 +13,7 @@ V4_COMPOSE := docker compose --env-file .env --env-file $(V4_PROFILE) -f compose
 V4_TOOLS := $(V4_COMPOSE) run --rm --build tools
 BENCHMARK_PYTHON ?= python3
 
-LIGHTRAG_BASE_IMAGE ?= ghcr.io/hkuds/lightrag:v1.4.16
+LIGHTRAG_BASE_IMAGE ?= ghcr.io/hkuds/lightrag:v1.4.16@sha256:67ccf8d9f74eb29da872bf8b3e6513605f5ac601fb0509c5b0ca16d98d2d307d
 LIGHTRAG_APP_IMAGE ?= evidencetrail-lightrag:v1.4.16-app
 V4_APP_COMPOSE := docker compose --env-file .env --env-file $(V4_PROFILE) -f compose.yaml -f compose.lightrag-app.yaml
 

@@ -15,6 +15,7 @@ from benchmark_common import (
     AUDIT_PATH,
     GRAPH_PATH,
     QUESTIONS_PATH,
+    benchmark_data_manifest,
     claim_similarity,
     index_by_id,
     load_jsonl,
@@ -22,9 +23,10 @@ from benchmark_common import (
     normalize_text,
     precision_recall_f1,
     safe_float,
+    sha256_file,
     write_json,
 )
-
+from benchmark_contract import graph_edge_is_schema_legal
 
 RELATION_ALIASES = {"USES_SIGNAL": "HAS_SIGNAL"}
 OPERATOR_ALIASES = {"LTE": "<=", "GTE": ">=", "LT": "<", "GT": ">", "EQ": "="}
@@ -38,7 +40,7 @@ def canonical_relation(value: Any) -> str:
 def canonical_nodes(records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     result: dict[str, dict[str, Any]] = {}
     for node in records:
-        key = f"{normalize_name(node.get('type'))}::{normalize_name(node.get('name'))}"
+        key = canonical_node_key(node)
         if key not in result:
             result[key] = node
     return result
@@ -58,14 +60,55 @@ def node_similarity(gold: dict[str, Any], predicted: dict[str, Any]) -> float:
     return best
 
 
+def record_sources(record: dict[str, Any]) -> set[str]:
+    sources = {
+        (
+            "gb39901"
+            if str(item).startswith("gb39901:")
+            else str(item).split(":", 1)[0]
+        )
+        for item in record.get("evidence_ids", [])
+        if str(item).strip()
+    }
+    explicit = str(record.get("properties", {}).get("source_id", "")).strip()
+    if explicit:
+        sources.add(explicit)
+    return sources
+
+
+def canonical_node_key(node: dict[str, Any]) -> str:
+    sources = ",".join(sorted(record_sources(node)))
+    return (
+        f"{normalize_name(node.get('type'))}::"
+        f"{normalize_name(node.get('name'))}::{sources}"
+    )
+
+
+def schema_legal_predicted_edge(
+    edge: dict[str, Any],
+    predicted_nodes: dict[str, dict[str, Any]],
+) -> bool:
+    if edge.get("schema_valid") is False:
+        return False
+    normalized = {**edge, "relation": canonical_relation(edge.get("relation"))}
+    return graph_edge_is_schema_legal(normalized, predicted_nodes)
+
+
 def match_nodes(
     gold_nodes: list[dict[str, Any]],
     predicted_nodes: list[dict[str, Any]],
     threshold: float,
+    *,
+    require_source_match: bool = False,
 ) -> tuple[dict[str, str], dict[str, str], list[tuple[str, str, float]]]:
     candidates = []
     for gold in gold_nodes:
         for predicted in predicted_nodes:
+            if require_source_match:
+                gold_sources = record_sources(gold)
+                predicted_sources = record_sources(predicted)
+                if gold_sources and not (gold_sources & predicted_sources):
+                    continue
             score = node_similarity(gold, predicted)
             if score >= threshold:
                 candidates.append((score, gold["id"], predicted["id"]))
@@ -90,17 +133,40 @@ def score_edges(
     gold_edges: list[dict[str, Any]],
     predicted_edges: list[dict[str, Any]],
     gold_to_predicted: dict[str, str],
+    *,
+    require_source_match: bool = False,
 ) -> tuple[dict[str, Any], dict[str, str]]:
-    predicted_by_key = {edge_key(edge): edge for edge in predicted_edges}
+    predicted_by_key: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    for predicted_edge in predicted_edges:
+        predicted_by_key[edge_key(predicted_edge)].append(predicted_edge)
     matched: dict[str, str] = {}
+    used_predicted: set[str] = set()
     for edge in gold_edges:
         source = gold_to_predicted.get(str(edge.get("source")))
         target = gold_to_predicted.get(str(edge.get("target")))
         if not source or not target:
             continue
-        candidate = predicted_by_key.get((source, canonical_relation(edge.get("relation")), target))
-        if candidate:
-            matched[edge["id"]] = candidate["id"]
+        candidates = predicted_by_key.get(
+            (source, canonical_relation(edge.get("relation")), target),
+            [],
+        )
+        candidate = next(
+            (
+                item
+                for item in candidates
+                if str(item.get("id")) not in used_predicted
+                and (
+                    not require_source_match
+                    or not record_sources(edge)
+                    or bool(record_sources(edge) & record_sources(item))
+                )
+            ),
+            None,
+        )
+        if candidate is not None:
+            predicted_id = str(candidate["id"])
+            matched[edge["id"]] = predicted_id
+            used_predicted.add(predicted_id)
     return precision_recall_f1(len(matched), len(predicted_edges), len(gold_edges)), matched
 
 
@@ -110,27 +176,49 @@ def match_edges_fuzzy(
     gold_nodes: dict[str, dict[str, Any]],
     predicted_nodes: dict[str, dict[str, Any]],
     threshold: float,
+    *,
+    require_source_match: bool = False,
 ) -> dict[str, str]:
     """Match task edges without forcing repeated task concepts into one node."""
     matched: dict[str, str] = {}
+    used_predicted: set[str] = set()
     for gold_edge in gold_edges:
-        gold_source = gold_nodes.get(gold_edge.get("source"))
-        gold_target = gold_nodes.get(gold_edge.get("target"))
+        gold_source_id = gold_edge.get("source")
+        gold_target_id = gold_edge.get("target")
+        if not isinstance(gold_source_id, str) or not isinstance(gold_target_id, str):
+            continue
+        gold_source = gold_nodes.get(gold_source_id)
+        gold_target = gold_nodes.get(gold_target_id)
         if not gold_source or not gold_target:
             continue
         best: tuple[float, str] | None = None
         for predicted_edge in predicted_edges:
+            if str(predicted_edge.get("id")) in used_predicted:
+                continue
             if canonical_relation(predicted_edge.get("relation")) != canonical_relation(gold_edge.get("relation")):
                 continue
-            predicted_source = predicted_nodes.get(predicted_edge.get("source"))
-            predicted_target = predicted_nodes.get(predicted_edge.get("target"))
+            if require_source_match:
+                gold_sources = record_sources(gold_edge)
+                predicted_sources = record_sources(predicted_edge)
+                if gold_sources and not (gold_sources & predicted_sources):
+                    continue
+            predicted_source_id = predicted_edge.get("source")
+            predicted_target_id = predicted_edge.get("target")
+            if not isinstance(predicted_source_id, str) or not isinstance(
+                predicted_target_id,
+                str,
+            ):
+                continue
+            predicted_source = predicted_nodes.get(predicted_source_id)
+            predicted_target = predicted_nodes.get(predicted_target_id)
             if not predicted_source or not predicted_target:
                 continue
             score = min(node_similarity(gold_source, predicted_source), node_similarity(gold_target, predicted_target))
             if score >= threshold and (best is None or score > best[0]):
-                best = (score, predicted_edge["id"])
+                best = (score, str(predicted_edge["id"]))
         if best:
             matched[gold_edge["id"]] = best[1]
+            used_predicted.add(best[1])
     return matched
 
 
@@ -222,10 +310,12 @@ def score_paths(
     questions: list[dict[str, Any]],
     gold_edges: dict[str, dict[str, Any]],
     matched_edges: dict[str, str],
+    *,
+    path_field: str = "gold_kg_path",
 ) -> dict[str, Any]:
     rows = []
     for question in questions:
-        path = question.get("gold_path", [])
+        path = question.get(path_field, [])
         if not path:
             continue
         recovered = sum(edge_id in matched_edges for edge_id in path)
@@ -247,13 +337,62 @@ def score_paths(
     }
 
 
-def score_one(path: Path, threshold: float) -> dict[str, Any]:
+def select_questions(
+    *,
+    source_set: str,
+    split: str | None,
+) -> list[dict[str, Any]]:
+    questions = load_jsonl(QUESTIONS_PATH)
+    if source_set == "gb":
+        questions = [item for item in questions if item["id"].startswith("gb_")]
+    elif source_set == "cross":
+        questions = [item for item in questions if item["id"].startswith("cross_")]
+    elif source_set != "all":
+        raise RuntimeError(f"Unsupported source_set: {source_set}")
+    if split and split != "all":
+        questions = [item for item in questions if item.get("split") == split]
+    return questions
+
+
+def score_one(
+    path: Path,
+    threshold: float,
+    *,
+    source_set: str = "gb",
+    split: str | None = None,
+) -> dict[str, Any]:
     graph_records = load_jsonl(GRAPH_PATH)
-    task_records = [item for item in graph_records if not item.get("properties", {}).get("audit_unit")]
-    gold_node_list = list(canonical_nodes([item for item in task_records if item.get("kind") == "node"]).values())
-    gold_edge_list_raw = [item for item in task_records if item.get("kind") == "edge"]
+    selected_questions = select_questions(source_set=source_set, split=split)
+    path_field = (
+        "gold_kg_path"
+        if any("gold_kg_path" in item for item in selected_questions)
+        else "gold_path"
+    )
+    task_edge_ids = {
+        edge_id
+        for question in selected_questions
+        for edge_id in question.get(path_field, [])
+    }
+    all_gold_nodes_by_id = index_by_id(
+        (item for item in graph_records if item.get("kind") == "node"),
+        "gold node",
+    )
+    all_gold_edges_by_id = index_by_id(
+        (item for item in graph_records if item.get("kind") == "edge"),
+        "gold edge",
+    )
+    gold_edge_list_raw = [all_gold_edges_by_id[item] for item in sorted(task_edge_ids)]
+    task_node_ids = {
+        endpoint
+        for edge in gold_edge_list_raw
+        for endpoint in (edge["source"], edge["target"])
+    }
+    gold_node_list = list(
+        canonical_nodes(
+            [all_gold_nodes_by_id[item] for item in sorted(task_node_ids)]
+        ).values()
+    )
     # Deduplicate task edges using canonical endpoint labels, while retaining one source id.
-    all_gold_nodes_by_id = index_by_id((item for item in graph_records if item.get("kind") == "node"), "gold node")
     edge_dedup: dict[tuple[str, str, str], dict[str, Any]] = {}
     for edge in gold_edge_list_raw:
         key = (
@@ -272,29 +411,54 @@ def score_one(path: Path, threshold: float) -> dict[str, Any]:
     gold_nodes = index_by_id(gold_node_list, "canonical gold node")
     gold_edges = index_by_id(gold_edge_list, "canonical gold edge")
 
-    gold_to_predicted, predicted_to_gold, matches = match_nodes(gold_node_list, predicted_nodes_list, threshold)
+    gold_to_predicted, _predicted_to_gold, matches = match_nodes(
+        gold_node_list,
+        predicted_nodes_list,
+        threshold,
+        require_source_match=True,
+    )
     canonical_prediction = {
-        f"{normalize_name(gold_nodes[gold_id].get('type'))}::{normalize_name(gold_nodes[gold_id].get('name'))}": predicted_id
+        canonical_node_key(gold_nodes[gold_id]): predicted_id
         for gold_id, predicted_id in gold_to_predicted.items()
     }
     all_gold_to_predicted = {
         node_id: canonical_prediction[key]
         for node_id, node in all_gold_nodes_by_id.items()
-        for key in [f"{normalize_name(node.get('type'))}::{normalize_name(node.get('name'))}"]
+        for key in [canonical_node_key(node)]
         if key in canonical_prediction
     }
     entity_scores = precision_recall_f1(len(matches), len(predicted_nodes_list), len(gold_node_list))
-    relation_scores, matched_edges = score_edges(gold_edge_list, predicted_edges_list, all_gold_to_predicted)
-    matched_raw_edges = match_edges_fuzzy(
-        gold_edge_list_raw, predicted_edges_list, all_gold_nodes_by_id, predicted_nodes, threshold
+    relation_scores, matched_edges = score_edges(
+        gold_edge_list,
+        predicted_edges_list,
+        all_gold_to_predicted,
+        require_source_match=True,
     )
-    paths = score_paths(load_jsonl(QUESTIONS_PATH), index_by_id(gold_edge_list_raw, "task edge"), matched_raw_edges)
+    path_predicted_edges = [
+        edge
+        for edge in predicted_edges_list
+        if schema_legal_predicted_edge(edge, predicted_nodes)
+    ]
+    matched_raw_edges = match_edges_fuzzy(
+        gold_edge_list_raw,
+        path_predicted_edges,
+        all_gold_nodes_by_id,
+        predicted_nodes,
+        threshold,
+        require_source_match=True,
+    )
+    paths = score_paths(
+        selected_questions,
+        index_by_id(gold_edge_list_raw, "task edge"),
+        matched_raw_edges,
+        path_field=path_field,
+    )
 
     audit_rows = []
-    for unit in load_jsonl(AUDIT_PATH):
+    audit_units = load_jsonl(AUDIT_PATH) if source_set in {"gb", "all"} else []
+    for unit in audit_units:
         evidence_id = unit["evidence_id"]
         unit_gold_nodes = [all_gold_nodes_by_id[item] for item in unit["gold_nodes"]]
-        all_gold_edges_by_id = index_by_id((item for item in graph_records if item.get("kind") == "edge"), "gold edge")
         unit_gold_edges = [all_gold_edges_by_id[item] for item in unit["gold_edges"]]
         explicit_unit_nodes = [
             item for item in predicted_nodes_list
@@ -324,13 +488,22 @@ def score_one(path: Path, threshold: float) -> dict[str, Any]:
                         "type_accuracy": None,
                     },
                     "evidence_binding": {
-                        "bound_nodes": 0,
-                        "bound_edges": 0,
-                        "node_binding_rate": 0.0,
-                        "edge_binding_rate": 0.0,
+                        "bound_items": 0,
+                        "matched_items": 0,
+                        "accuracy": 0.0,
                     },
-                    "numeric_condition_tuples": {"correct": 0, "gold": 0, "accuracy": 1.0},
-                    "alias_normalization": {"correct": 0, "gold": 0, "accuracy": 1.0},
+                    "numeric_condition_tuples": precision_recall_f1(
+                        0,
+                        0,
+                        len(unit.get("gold_numeric_condition_tuples", [])),
+                    ),
+                    "alias_normalization": {
+                        "correct": 0,
+                        "gold_alias_groups": len(unit.get("gold_aliases", {})),
+                        "accuracy": (
+                            0.0 if unit.get("gold_aliases") else 1.0
+                        ),
+                    },
                     "unsupported_node_ratio": 0.0,
                     "unsupported_edge_ratio": 0.0,
                     "diagnostic": "no_scoped_prediction_for_audit_unit",
@@ -371,6 +544,16 @@ def score_one(path: Path, threshold: float) -> dict[str, Any]:
     audit_typed_matches = sum(row["type"]["typed_matches"] for row in audit_rows)
     audit_matched_entities = sum(row["type"]["matched_entities"] for row in audit_rows)
     audit_correct_types = sum(row["type"]["correct_types"] for row in audit_rows)
+    numeric_rows = [
+        row
+        for row in audit_rows
+        if row["numeric_condition_tuples"]["gold"] > 0
+    ]
+    alias_rows = [
+        row
+        for row in audit_rows
+        if row["alias_normalization"]["gold_alias_groups"] > 0
+    ]
     known_schema_records = [item for item in predicted_records if item.get("schema_valid") is not None]
     isolated = set(predicted_nodes) - {
         endpoint for edge in predicted_edges_list for endpoint in (edge.get("source"), edge.get("target"))
@@ -378,28 +561,78 @@ def score_one(path: Path, threshold: float) -> dict[str, Any]:
     return {
         "predicted_path": str(path),
         "matching_threshold": threshold,
+        "selection": {
+            "source_set": source_set,
+            "split": split or "all",
+            "question_count": len(selected_questions),
+            "schema_evaluable_question_count": sum(
+                bool(item.get(path_field)) for item in selected_questions
+            ),
+        },
         "task_graph": {
+            "scope": "schema_valid_source_matched_gold_kg_path_only",
             "entity": entity_scores,
             "relation_direction_sensitive": relation_scores,
             "type": type_metrics(matches, gold_nodes, predicted_nodes),
             "evidence_binding": evidence_binding_metrics(gold_nodes, gold_edges, predicted_nodes, predicted_edges, gold_to_predicted, matched_edges),
             "gold_path": paths,
-            "precision_caveat": "Task gold graph only covers benchmark needs; unmatched extracted records are not automatically hallucinations. Use audit-unit precision as the primary precision estimate.",
+            "precision_caveat": "Only question gold_kg_path records that pass the extraction schema and source checks are evaluated. Reasoning-only graph records are excluded. Use audit-unit precision as the primary precision estimate.",
         },
         "audit_units": audit_rows,
         "audit_macro": {
-            "entity_f1": statistics.mean(row["entity"]["f1"] for row in audit_rows),
-            "relation_f1": statistics.mean(row["relation"]["f1"] for row in audit_rows),
+            "entity_f1": (
+                statistics.mean(row["entity"]["f1"] for row in audit_rows)
+                if audit_rows
+                else None
+            ),
+            "relation_f1": (
+                statistics.mean(row["relation"]["f1"] for row in audit_rows)
+                if audit_rows
+                else None
+            ),
             "type_accuracy": audit_correct_types / audit_typed_matches if audit_typed_matches else None,
             "type_coverage": audit_typed_matches / audit_matched_entities if audit_matched_entities else 0.0,
-            "numeric_tuple_exact_match_f1": statistics.mean(row["numeric_condition_tuples"]["f1"] for row in audit_rows),
-            "evidence_binding_accuracy": statistics.mean(row["evidence_binding"]["accuracy"] for row in audit_rows),
-            "alias_normalization_accuracy": statistics.mean(row["alias_normalization"]["accuracy"] for row in audit_rows),
-            "unsupported_node_ratio": statistics.mean(row["unsupported_node_ratio"] for row in audit_rows),
-            "unsupported_edge_ratio": statistics.mean(row["unsupported_edge_ratio"] for row in audit_rows),
+            "numeric_tuple_exact_match_f1": (
+                statistics.mean(
+                    row["numeric_condition_tuples"]["f1"] for row in numeric_rows
+                )
+                if numeric_rows
+                else None
+            ),
+            "numeric_tuple_evaluable_units": len(numeric_rows),
+            "evidence_binding_accuracy": (
+                statistics.mean(
+                    row["evidence_binding"]["accuracy"] for row in audit_rows
+                )
+                if audit_rows
+                else None
+            ),
+            "alias_normalization_accuracy": (
+                statistics.mean(
+                    row["alias_normalization"]["accuracy"] for row in alias_rows
+                )
+                if alias_rows
+                else None
+            ),
+            "alias_evaluable_units": len(alias_rows),
+            "unsupported_node_ratio": (
+                statistics.mean(
+                    row["unsupported_node_ratio"] for row in audit_rows
+                )
+                if audit_rows
+                else None
+            ),
+            "unsupported_edge_ratio": (
+                statistics.mean(
+                    row["unsupported_edge_ratio"] for row in audit_rows
+                )
+                if audit_rows
+                else None
+            ),
         },
         "diagnostics": {
             "nodes": len(predicted_nodes), "edges": len(predicted_edges), "isolated_nodes": len(isolated),
+            "schema_legal_path_edges": len(path_predicted_edges),
             "schema_valid_rate": (
                 sum(bool(item.get("schema_valid")) for item in known_schema_records) / len(known_schema_records)
                 if known_schema_records else None
@@ -428,12 +661,26 @@ def stability(paths: list[Path], reports: list[dict[str, Any]]) -> dict[str, Any
         return {"run_count": len(paths), "available": False, "reason": "Provide at least two independent graph exports."}
     sets = [canonical_sets(path) for path in paths]
     pairs = list(itertools.combinations(range(len(paths)), 2))
+    entity_f1 = [
+        report["audit_macro"]["entity_f1"]
+        for report in reports
+        if report["audit_macro"]["entity_f1"] is not None
+    ]
+    relation_f1 = [
+        report["audit_macro"]["relation_f1"]
+        for report in reports
+        if report["audit_macro"]["relation_f1"] is not None
+    ]
     return {
         "run_count": len(paths), "available": True,
         "mean_entity_jaccard": statistics.mean(jaccard(sets[a][0], sets[b][0]) for a, b in pairs),
         "mean_edge_jaccard": statistics.mean(jaccard(sets[a][1], sets[b][1]) for a, b in pairs),
-        "audit_entity_f1_stddev": statistics.pstdev(report["audit_macro"]["entity_f1"] for report in reports),
-        "audit_relation_f1_stddev": statistics.pstdev(report["audit_macro"]["relation_f1"] for report in reports),
+        "audit_entity_f1_stddev": (
+            statistics.pstdev(entity_f1) if entity_f1 else None
+        ),
+        "audit_relation_f1_stddev": (
+            statistics.pstdev(relation_f1) if relation_f1 else None
+        ),
     }
 
 
@@ -466,20 +713,54 @@ def main() -> None:
         help="repeat once per graph; JSON may contain run_id, elapsed_seconds, cost_usd, and token counts",
     )
     parser.add_argument("--name-threshold", type=float, default=0.72)
+    parser.add_argument(
+        "--source-set",
+        choices=["gb", "cross", "all"],
+        default="gb",
+    )
+    parser.add_argument("--split", choices=["dev", "test", "all"], default="all")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    reports = [score_one(path, args.name_threshold) for path in args.predicted]
+    reports = [
+        score_one(
+            path,
+            args.name_threshold,
+            source_set=args.source_set,
+            split=args.split,
+        )
+        for path in args.predicted
+    ]
     payload = {
+        "benchmark_manifest": benchmark_data_manifest(),
+        "scoring_config": {
+            "name_threshold": args.name_threshold,
+            "source_set": args.source_set,
+            "split": args.split,
+        },
+        "predicted_graphs": [
+            {
+                "path": str(path),
+                "bytes": path.stat().st_size,
+                "sha256": sha256_file(path),
+            }
+            for path in args.predicted
+        ],
         "runs": reports,
         "stability": stability(args.predicted, reports),
         "build_efficiency": build_efficiency(args.run_metadata, len(reports)),
     }
     write_json(args.output, payload)
     for report in reports:
+        entity_f1 = report["audit_macro"]["entity_f1"]
+        relation_f1 = report["audit_macro"]["relation_f1"]
+        entity_text = "n/a" if entity_f1 is None else f"{entity_f1:.3f}"
+        relation_text = (
+            "n/a" if relation_f1 is None else f"{relation_f1:.3f}"
+        )
         print(
             f"kg score {Path(report['predicted_path']).name}: "
-            f"audit_entity_f1={report['audit_macro']['entity_f1']:.3f} "
-            f"audit_relation_f1={report['audit_macro']['relation_f1']:.3f} "
+            f"audit_entity_f1={entity_text} "
+            f"audit_relation_f1={relation_text} "
             f"path_complete={report['task_graph']['gold_path']['complete_path_recall']:.3f}"
         )
     print(f"report={args.output}")

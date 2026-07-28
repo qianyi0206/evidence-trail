@@ -10,7 +10,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from reg_harness.compact import apply_text_primary_quota, compact_evidence
+from reg_harness.compact import apply_text_primary_quota
 from reg_harness.config import Settings
 from reg_harness.guards import (
     collect_context_numbers,

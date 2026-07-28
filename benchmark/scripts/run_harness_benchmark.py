@@ -26,6 +26,18 @@ if str(HARNESS_ROOT) not in sys.path:
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
+from benchmark_common import (  # noqa: E402
+    attach_run_identity,
+    build_run_manifest,
+    new_run_identity,
+    resolve_index_identity,
+    sha256_file,
+    validate_result_records,
+)
+from benchmark_common import (  # noqa: E402
+    write_jsonl as atomic_write_jsonl,
+)
+
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
     if not path.is_file():
@@ -113,8 +125,28 @@ def state_to_result_row(
     }
     evidence_ids: list[str] = []
     retrieved_items: list[dict[str, Any]] = []
+    compose_map = (
+        (getattr(state, "meta", None) or {}).get("compose_evidence_map")
+        if state is not None
+        else None
+    )
+    if not isinstance(compose_map, list):
+        compose_map = []
+    reference_map = {
+        str(item["label"]): [str(value) for value in item.get("evidence_ids", [])]
+        for item in compose_map
+        if isinstance(item, dict) and item.get("label")
+    }
+    label_by_index = {
+        int(item["evidence_index"]): str(item["label"])
+        for item in compose_map
+        if isinstance(item, dict)
+        and item.get("label")
+        and isinstance(item.get("evidence_index"), int)
+    }
     if state is not None:
-        for index, item in enumerate(getattr(state, "evidence", []) or [], 1):
+        for evidence_index, item in enumerate(getattr(state, "evidence", []) or []):
+            index = evidence_index + 1
             ids = [str(x) for x in (getattr(item, "evidence_ids", None) or []) if x]
             evidence_ids.extend(ids)
             retrieved_items.append(
@@ -124,6 +156,7 @@ def state_to_result_row(
                     "file_path": getattr(item, "file_path", "") or "",
                     "evidence_ids": ids,
                     "text": getattr(item, "text", "") or "",
+                    "rendered_label": label_by_index.get(evidence_index),
                 }
             )
     ranked_evidence_ids = list(dict.fromkeys(str(x) for x in evidence_ids if x))
@@ -149,6 +182,15 @@ def state_to_result_row(
         "retrieved_evidence_ids": retrieved_evidence_ids,
         "ranked_evidence_ids": ranked_evidence_ids,
         "retrieved_items": retrieved_items,
+        "reference_map": reference_map,
+        "rendered_evidence_labels": sorted(
+            reference_map,
+            key=lambda value: (
+                (0, int(value[1:]))
+                if value[1:].isdigit()
+                else (1, value)
+            ),
+        ),
         "answer_latency_seconds": latency,
         "retrieval_latency_seconds": 0.0,
         "answer_cost_usd": None,
@@ -157,66 +199,21 @@ def state_to_result_row(
         "harness_evidence_count": bag,
         "harness_trace_events": trace_events,
         "error": error,
+        "result_status": "error" if error else "completed",
     }
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--profile-env",
-        default=".env.gb39901_v4",
-        help="Profile under demo/aeb (default .env.gb39901_v4)",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=BENCHMARK_ROOT / "results" / "run_harness_skill_gb50.jsonl",
-    )
-    parser.add_argument("--mode-name", default="harness_skill")
-    parser.add_argument("--source", choices=("gb", "cross", "all"), default="gb")
-    parser.add_argument("--split", default=None, help="dev|test")
-    parser.add_argument("--limit", type=int, default=None)
-    parser.add_argument("--question-id", action="append", default=None)
-    parser.add_argument("--max-steps", type=int, default=8)
-    parser.add_argument("--resume", action="store_true", default=True)
-    parser.add_argument("--no-resume", action="store_true")
-    parser.add_argument(
-        "--score-output",
-        type=Path,
-        default=BENCHMARK_ROOT / "results" / "answer_score_harness_skill_gb50.json",
-    )
-    parser.add_argument("--skip-score", action="store_true")
-    parser.add_argument(
-        "--claim-threshold",
-        type=float,
-        default=0.72,
-        help="Claim matching threshold (must match score_answers default 0.72)",
-    )
-    args = parser.parse_args()
-
-    resume = bool(args.resume) and not bool(args.no_resume)
-    questions = select_questions(
-        source=args.source,
-        split=args.split,
-        limit=args.limit,
-        only_ids=args.question_id,
-    )
-    if not questions:
-        print("No questions selected.", file=sys.stderr)
-        return 1
-
-    finished = prepare_output(args.output, mode=args.mode_name, resume=resume)
-    pending = [q for q in questions if q["id"] not in finished]
-    print(
-        f"selected={len(questions)} done={len(finished)} pending={len(pending)} "
-        f"output={args.output} profile={args.profile_env}",
-        flush=True,
-    )
-
-    from reg_harness.runtime import build_stack
+def _run_benchmark(
+    stack: Any,
+    *,
+    args: argparse.Namespace,
+    pending: list[dict[str, Any]],
+    manifest: dict[str, Any],
+    run_id: str,
+    all_records: list[dict[str, Any]],
+) -> int:
     from reg_harness.loop import state_to_dict
 
-    stack = build_stack(profile_env=args.profile_env)
     print(f"stack={json.dumps(stack.describe(), ensure_ascii=False)}", flush=True)
 
     failures = 0
@@ -257,7 +254,9 @@ def main() -> int:
                 "phase": compact.get("phase"),
                 "refuse_reason": compact.get("refuse_reason"),
             }
-        append_jsonl(args.output, row)
+        row = attach_run_identity(row, run_id=run_id, manifest=manifest)
+        all_records.append(row)
+        atomic_write_jsonl(args.output, all_records)
         pred = row["prediction"]
         print(
             f"  -> answerable={pred.get('answerable')} steps={row.get('harness_steps')} "
@@ -265,18 +264,24 @@ def main() -> int:
             flush=True,
         )
 
-    print(f"run complete failures={failures} total_rows={len(load_jsonl(args.output))}", flush=True)
+    print(
+        f"run complete failures={failures} "
+        f"total_rows={len(load_jsonl(args.output))}",
+        flush=True,
+    )
 
     if args.skip_score:
         return 0 if failures == 0 else 2
 
     # Score with official scorer.
-    from score_answers import score_row, summaries  # type: ignore
     from benchmark_common import index_by_id, write_json  # type: ignore
+    from score_answers import paired_comparisons, score_row, summaries  # type: ignore
 
     gold = index_by_id(load_jsonl(QUESTIONS_PATH), "question")
     rows = []
-    for result in load_jsonl(args.output):
+    scored_records = load_jsonl(args.output)
+    validate_result_records(scored_records, expected_manifest=manifest)
+    for result in scored_records:
         if result.get("mode") != args.mode_name:
             continue
         qid = result.get("question_id")
@@ -291,11 +296,24 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001
             print(f"score failed {qid}: {exc}", file=sys.stderr)
     payload = {
+        "run_manifest": scored_records[0]["run_manifest"] if scored_records else manifest,
+        "scoring_config": {
+            "claim_threshold": args.claim_threshold,
+            "bootstrap_samples": 1000,
+            "seed": 39901,
+            "paired_baseline": "naive",
+        },
         "mode": args.mode_name,
         "source": args.source,
         "claim_threshold": args.claim_threshold,
         "per_question": rows,
         "summaries": summaries(rows, samples=1000, seed=39901),
+        "paired_comparisons": paired_comparisons(
+            rows,
+            baseline_mode="naive",
+            samples=1000,
+            seed=39901,
+        ),
         "results_path": str(args.output),
     }
     write_json(args.score_output, payload)
@@ -314,11 +332,182 @@ def main() -> int:
     overall = [float(r["primary_score"]) for r in rows]
     mean = sum(overall) / len(overall) if overall else 0.0
     print("\n===== SCORE SUMMARY =====")
-    print(f"n={len(rows)} primary_mean={mean:.3f} answerable_match={answerable_match}/{len(rows)}")
+    print(
+        f"n={len(rows)} primary_mean={mean:.3f} "
+        f"answerable_match={answerable_match}/{len(rows)}"
+    )
     for task, vals in sorted(by_type.items()):
         print(f"  {task}: n={len(vals)} mean={sum(vals)/len(vals):.3f}")
     print(f"score_json={args.score_output}")
     return 0 if failures == 0 else 2
+
+
+def _run_managed_benchmark(
+    *,
+    settings: Any,
+    args: argparse.Namespace,
+    pending: list[dict[str, Any]],
+    manifest: dict[str, Any],
+    run_id: str,
+    all_records: list[dict[str, Any]],
+) -> int:
+    from reg_harness.runtime import build_stack
+
+    stack = build_stack(settings=settings)
+    try:
+        return _run_benchmark(
+            stack,
+            args=args,
+            pending=pending,
+            manifest=manifest,
+            run_id=run_id,
+            all_records=all_records,
+        )
+    finally:
+        stack.close()
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--profile-env",
+        default=".env.gb39901_v4",
+        help="Profile under demo/aeb (default .env.gb39901_v4)",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=BENCHMARK_ROOT / "results" / "run_harness_skill_gb50.jsonl",
+    )
+    parser.add_argument("--mode-name", default="harness_skill")
+    parser.add_argument("--source", choices=("gb", "cross", "all"), default="gb")
+    parser.add_argument("--split", default=None, help="dev|test")
+    parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--question-id", action="append", default=None)
+    parser.add_argument("--max-steps", type=int, default=8)
+    parser.add_argument("--resume", action="store_true", default=True)
+    parser.add_argument("--no-resume", action="store_true")
+    parser.add_argument(
+        "--score-output",
+        type=Path,
+        default=BENCHMARK_ROOT / "results" / "answer_score_harness_skill_gb50.json",
+    )
+    parser.add_argument("--skip-score", action="store_true")
+    parser.add_argument(
+        "--index-fingerprint",
+        help=(
+            "Explicit immutable remote/cross-document index ID; "
+            "local ready state remains the default"
+        ),
+    )
+    parser.add_argument(
+        "--claim-threshold",
+        type=float,
+        default=0.72,
+        help="Claim matching threshold (must match score_answers default 0.72)",
+    )
+    args = parser.parse_args()
+
+    resume = bool(args.resume) and not bool(args.no_resume)
+    questions = select_questions(
+        source=args.source,
+        split=args.split,
+        limit=args.limit,
+        only_ids=args.question_id,
+    )
+    if not questions:
+        print("No questions selected.", file=sys.stderr)
+        return 1
+
+    profile_path = Path(args.profile_env)
+    if not profile_path.is_absolute():
+        profile_path = AEB_ROOT / profile_path
+    from reg_harness.config import load_settings
+
+    settings = load_settings(
+        profile_env=args.profile_env,
+        aeb_root=AEB_ROOT,
+    )
+    resolved_workspace = settings.workspace
+    index_identity = resolve_index_identity(
+        workspace=resolved_workspace,
+        state_dir=AEB_ROOT / "state",
+        explicit_fingerprint=args.index_fingerprint,
+    )
+    manifest = build_run_manifest(
+        runner="run_harness_benchmark",
+        selected_question_ids=(item["id"] for item in questions),
+        modes=[args.mode_name],
+        configuration={
+            "profile_env": str(args.profile_env),
+            "profile_sha256": (
+                sha256_file(profile_path) if profile_path.is_file() else None
+            ),
+            "resolved_workspace": resolved_workspace,
+            "active_kb": settings.active_kb,
+            "index_identity": index_identity,
+            "source": args.source,
+            "split": args.split,
+            "limit": args.limit,
+            "question_ids": sorted(args.question_id or []),
+            "max_steps": args.max_steps,
+            "claim_threshold": args.claim_threshold,
+            "python_version": sys.version.split()[0],
+        },
+        code_paths=[
+            Path(__file__),
+            Path(__file__).with_name("benchmark_common.py"),
+            HARNESS_ROOT / "pyproject.toml",
+            *sorted((HARNESS_ROOT / "reg_harness").rglob("*.py")),
+        ],
+    )
+    existing = load_jsonl(args.output) if resume and args.output.is_file() else []
+    if existing:
+        run_id, _ = validate_result_records(
+            existing,
+            expected_manifest=manifest,
+        )
+        if run_id is None:
+            raise RuntimeError("Resume file has no run_id")
+        completed_records = [
+            row
+            for row in existing
+            if row.get("result_status") == "completed"
+            and not row.get("error")
+        ]
+        finished = {
+            str(row["question_id"])
+            for row in completed_records
+            if row.get("mode") == args.mode_name
+        }
+        if len(completed_records) != len(existing):
+            print(
+                f"resume will retry {len(existing) - len(completed_records)} "
+                "previous error row(s)",
+                flush=True,
+            )
+            atomic_write_jsonl(args.output, completed_records)
+        existing = completed_records
+    else:
+        run_id = new_run_identity(manifest)["run_id"]
+        finished = set()
+        atomic_write_jsonl(args.output, [])
+    all_records = list(existing)
+    pending = [q for q in questions if q["id"] not in finished]
+    print(
+        f"selected={len(questions)} done={len(finished)} pending={len(pending)} "
+        f"output={args.output} profile={args.profile_env}",
+        flush=True,
+    )
+
+    return _run_managed_benchmark(
+        settings=settings,
+        args=args,
+        pending=pending,
+        manifest=manifest,
+        run_id=run_id,
+        all_records=all_records,
+    )
 
 
 if __name__ == "__main__":

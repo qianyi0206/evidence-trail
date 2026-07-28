@@ -24,7 +24,7 @@ from benchmark_common import (
     sha256_file,
     write_jsonl,
 )
-
+from benchmark_contract import graph_edge_is_schema_legal
 
 SOURCES = {
     "gb39901": {
@@ -1120,6 +1120,23 @@ REVIEW_CHECKLIST = {
     "mechanical_validation_passed": True,
 }
 
+# The six published pilot questions must never remain in the blind test set.
+# The other six dev questions provide a second example for each GB task family.
+DEV_QUESTION_IDS = {
+    "gb_direct_001",
+    "gb_direct_002",
+    "gb_table_001",
+    "gb_table_002",
+    "gb_multi_hop_001",
+    "gb_multi_hop_009",
+    "gb_compare_001",
+    "gb_compare_002",
+    "gb_synthesis_001",
+    "gb_synthesis_002",
+    "gb_unanswerable_001",
+    "gb_unanswerable_002",
+}
+
 
 def relation_for(target_type: str) -> str:
     return {
@@ -1141,7 +1158,7 @@ def materialize_questions(limit: int | None = None) -> tuple[list[dict[str, Any]
     selected = QUESTION_SPECS[:limit] if limit else QUESTION_SPECS
     graph: list[dict[str, Any]] = []
     questions: list[dict[str, Any]] = []
-    for ordinal, spec in enumerate(selected, 1):
+    for spec in selected:
         node_ids: list[str] = []
         edge_ids: list[str] = []
         primary_evidence = spec["evidence"][0]
@@ -1152,13 +1169,68 @@ def materialize_questions(limit: int | None = None) -> tuple[list[dict[str, Any]
             step_evidence = [raw_step_evidence] if isinstance(raw_step_evidence, str) else list(raw_step_evidence)
             node_id = f"n:{spec['id']}:{index:02d}"
             node_ids.append(node_id)
-            graph.append({"kind": "node", "id": node_id, "type": node_type, "name": name, "aliases": [], "properties": {}, "evidence_ids": step_evidence})
+            graph.append(
+                {
+                    "kind": "node",
+                    "id": node_id,
+                    "type": node_type,
+                    "name": name,
+                    "aliases": [],
+                    "properties": {"graph_role": "reasoning"},
+                    "evidence_ids": step_evidence,
+                }
+            )
             if index > 1:
                 edge_id = f"e:{spec['id']}:{index - 1:02d}"
                 edge_ids.append(edge_id)
                 edge_evidence = list(dict.fromkeys(previous_step_evidence + step_evidence))
-                graph.append({"kind": "edge", "id": edge_id, "source": node_ids[-2], "target": node_id, "relation": relation_for(node_type), "properties": {}, "evidence_ids": edge_evidence})
+                graph.append(
+                    {
+                        "kind": "edge",
+                        "id": edge_id,
+                        "source": node_ids[-2],
+                        "target": node_id,
+                        "relation": relation_for(node_type),
+                        "properties": {"graph_role": "reasoning"},
+                        "evidence_ids": edge_evidence,
+                    }
+                )
             previous_step_evidence = step_evidence
+        question_nodes = {
+            item["id"]: item
+            for item in graph
+            if item.get("kind") == "node" and item["id"] in node_ids
+        }
+        question_edges = {
+            item["id"]: item
+            for item in graph
+            if item.get("kind") == "edge" and item["id"] in edge_ids
+        }
+        source_ids = {
+            (
+                "gb39901"
+                if evidence_id.startswith("gb39901:")
+                else evidence_id.split(":", 1)[0]
+            )
+            for evidence_id in spec["evidence"]
+        }
+        kg_path_is_valid = (
+            source_ids == {"gb39901"}
+            and all(
+                graph_edge_is_schema_legal(question_edges[item], question_nodes)
+                and all(
+                    (
+                        "gb39901"
+                        if evidence_id.startswith("gb39901:")
+                        else evidence_id.split(":", 1)[0]
+                    )
+                    in source_ids
+                    for evidence_id in question_edges[item].get("evidence_ids", [])
+                )
+                for item in edge_ids
+            )
+        )
+        gold_kg_path = list(edge_ids) if kg_path_is_valid else []
         atomic_claims = []
         for claim_index, item in enumerate(spec["claims"], 1):
             atomic_claims.append({"id": f"{spec['id']}:claim:{claim_index:02d}", **item})
@@ -1176,11 +1248,15 @@ def materialize_questions(limit: int | None = None) -> tuple[list[dict[str, Any]
                 "gold_nodes": node_ids,
                 "gold_edges": edge_ids,
                 "gold_path": edge_ids,
+                "gold_reasoning_path": edge_ids,
+                "gold_kg_path": gold_kg_path,
+                "gold_kg_schema": "gb39901_v4" if gold_kg_path else None,
                 "expected_hops": len(edge_ids),
+                "expected_kg_hops": len(gold_kg_path),
                 "graph_dependency_reason": spec["reason"],
                 "scoring_method": method,
                 "review_status": "self_checked",
-                "split": "dev" if ordinal <= 12 else "test",
+                "split": "dev" if spec["id"] in DEV_QUESTION_IDS else "test",
                 "self_review": dict(REVIEW_CHECKLIST),
             }
         )
@@ -1210,7 +1286,7 @@ def audit_gold(question_count: int) -> tuple[list[dict[str, Any]], list[dict[str
             node_id = f"n:{unit_id}:{suffix}"
             node_ids.append(node_id)
             record = {"kind": "node", "id": node_id, "type": node_type, "name": name,
-                      "aliases": node_aliases, "properties": {"audit_unit": unit_id}, "evidence_ids": [evidence_id]}
+                      "aliases": node_aliases, "properties": {"audit_unit": unit_id, "graph_role": "extractable_kg"}, "evidence_ids": [evidence_id]}
             if suffix == "threshold" and tuples:
                 record["numeric_condition_tuples"] = tuples
             graph.append(record)
@@ -1220,7 +1296,7 @@ def audit_gold(question_count: int) -> tuple[list[dict[str, Any]], list[dict[str
             graph.append(
                 {"kind": "edge", "id": edge_id, "source": f"n:{unit_id}:{source_suffix}",
                  "target": f"n:{unit_id}:{target_suffix}", "relation": relation,
-                 "properties": {"audit_unit": unit_id, "description": description}, "evidence_ids": [evidence_id]}
+                 "properties": {"audit_unit": unit_id, "graph_role": "extractable_kg", "description": description}, "evidence_ids": [evidence_id]}
             )
         units.append(
             {"id": unit_id, "kind": kind, "title": title, "evidence_id": evidence_id,

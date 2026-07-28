@@ -21,13 +21,18 @@ from benchmark_common import (
     AEB_ROOT,
     EVIDENCE_PATH,
     QUESTIONS_PATH,
+    attach_run_identity,
+    build_run_manifest,
     index_by_id,
     load_jsonl,
+    new_run_identity,
     normalize_text,
     parse_json_object,
+    resolve_index_identity,
+    sha256_file,
+    validate_result_records,
     write_jsonl,
 )
-
 
 MODES = ("closed_book", "naive", "hybrid", "mix", "oracle")
 
@@ -113,8 +118,26 @@ def evidence_for_text(text: str, file_path: str, evidence: list[dict[str, Any]])
             continue
         locator = record.get("locator", {})
         table = str(locator.get("table", "")).lower().replace(" ", "_").replace(".", "_")
-        if table_match and table:
+        if table_match and table and allowed_source_ids:
             expected = ("a_" if table_match.group(1) else "") + table_match.group(2)
+            if table != expected:
+                # A clause can own several tables; the path is stronger evidence
+                # than a repeated clause marker.
+                continue
+            if locator.get("row"):
+                raw_excerpt = str(record.get("source_excerpt", "")).strip()
+                excerpt = normalize_text(record.get("source_excerpt", ""))
+                if (
+                    raw_excerpt
+                    and raw_excerpt in text
+                ) or (
+                    excerpt
+                    and len(excerpt) >= 20
+                    and excerpt in normalized
+                ):
+                    matched.append(record["id"])
+                # Never credit every row merely because the file is table N.
+                continue
             if table == expected:
                 matched.append(record["id"])
                 continue
@@ -122,7 +145,9 @@ def evidence_for_text(text: str, file_path: str, evidence: list[dict[str, Any]])
         if locator.get("clause"):
             clause_values.append(str(locator["clause"]))
         clause_values.extend(str(item) for item in locator.get("clauses", []))
-        if any(clause_marker_matches(text, clause) for clause in clause_values):
+        if allowed_source_ids and any(
+            clause_marker_matches(text, clause) for clause in clause_values
+        ):
             matched.append(record["id"])
             continue
         excerpt = normalize_text(record.get("source_excerpt", ""))
@@ -135,11 +160,34 @@ def raw_items(payload: dict[str, Any], evidence: list[dict[str, Any]]) -> list[d
     data = payload.get("data", {})
     items = []
     for item in data.get("relationships", []):
+        description = str(item.get("description", ""))
         text = (
             f"{item.get('src_id', '')} --{item.get('keywords', '')}--> {item.get('tgt_id', '')}\n"
-            f"{item.get('description', '')}"
+            f"{description}"
         ).strip()
-        items.append({"kind": "relationship", "text": text, "file_path": item.get("file_path", ""), "raw": item})
+        relation_match = re.search(
+            r"relation_type\s*=\s*([A-Z_]+)",
+            description,
+            flags=re.IGNORECASE,
+        )
+        relation = (
+            item.get("relation_type")
+            or (relation_match.group(1) if relation_match else None)
+            or item.get("keywords")
+        )
+        items.append(
+            {
+                "kind": "relationship",
+                "text": text,
+                "file_path": item.get("file_path", ""),
+                "raw": item,
+                "graph_edge": {
+                    "source": item.get("src_id", ""),
+                    "target": item.get("tgt_id", ""),
+                    "relation": relation or "",
+                },
+            }
+        )
     for item in data.get("entities", []):
         text = f"{item.get('entity_name', '')} [{item.get('entity_type', '')}]\n{item.get('description', '')}".strip()
         items.append({"kind": "entity", "text": text, "file_path": item.get("file_path", ""), "raw": item})
@@ -159,7 +207,11 @@ def raw_items(payload: dict[str, Any], evidence: list[dict[str, Any]]) -> list[d
     return unique
 
 
-def trim_items(items: list[dict[str, Any]], max_tokens: int) -> list[dict[str, Any]]:
+def trim_items(
+    items: list[dict[str, Any]],
+    max_tokens: int,
+    evidence: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
     selected = []
     used = 0
     for item in items:
@@ -183,6 +235,12 @@ def trim_items(items: list[dict[str, Any]], max_tokens: int) -> list[dict[str, A
             text = ""
         if text:
             truncated = {**item, "text": text, "token_estimate": token_estimate(text), "truncated": True}
+            if evidence is not None:
+                truncated["evidence_ids"] = evidence_for_text(
+                    text,
+                    str(item.get("file_path", "")),
+                    evidence,
+                )
             selected.append(truncated)
         break
     return selected
@@ -311,6 +369,7 @@ def prioritize_items(
     max_tokens: int,
     *,
     context_policy: str = "compact",
+    evidence: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """P0A: reorder and budget context to cut hybrid/mix noise.
 
@@ -321,7 +380,7 @@ def prioritize_items(
     if not items:
         return []
     if context_policy == "legacy" or mode in {"closed_book", "oracle"}:
-        return trim_items(items, max_tokens)
+        return trim_items(items, max_tokens, evidence)
 
     focus_terms = extract_focus_terms(question)
     ranked = sorted(
@@ -338,9 +397,11 @@ def prioritize_items(
         chunk_budget = max(1, int(max_tokens * 0.75))
         chunks = [item for item in ranked if item.get("kind") == "chunk"]
         others = [item for item in ranked if item.get("kind") != "chunk"]
-        selected = trim_items(chunks, chunk_budget)
+        selected = trim_items(chunks, chunk_budget, evidence)
         used = sum(int(item.get("token_estimate", 0)) for item in selected)
-        selected.extend(trim_items(others, max(0, max_tokens - used)))
+        selected.extend(
+            trim_items(others, max(0, max_tokens - used), evidence)
+        )
         # Present highest-signal items first to the answer model.
         selected.sort(
             key=lambda item: (
@@ -353,7 +414,7 @@ def prioritize_items(
             item["relevance_score"] = item_relevance_score(item, focus_terms, mode)
         return selected
 
-    selected = trim_items(ranked, max_tokens)
+    selected = trim_items(ranked, max_tokens, evidence)
     for item in selected:
         item["context_policy"] = "compact"
         item["relevance_score"] = item_relevance_score(item, focus_terms, mode)
@@ -695,6 +756,7 @@ def retrieval(
         mode,
         max_tokens,
         context_policy=context_policy,
+        evidence=evidence,
     )
     metadata = dict(payload.get("metadata") or {})
     metadata["context_policy"] = context_policy
@@ -720,6 +782,11 @@ def result_record(
             float(prompt_tokens or 0) * input_cost_per_million
             + float(completion_tokens or 0) * output_cost_per_million
         ) / 1_000_000
+    retrieved_graph_edges = [
+        item["graph_edge"]
+        for item in items
+        if isinstance(item.get("graph_edge"), dict)
+    ]
     return {
         "question_id": question["id"], "mode": mode, "split": question["split"],
         "task_type": question["task_type"], "context_budget_tokens": context_budget,
@@ -730,13 +797,16 @@ def result_record(
                 "rank": index, "kind": item["kind"], "file_path": item.get("file_path", ""),
                 "evidence_ids": item.get("evidence_ids", []), "token_estimate": item["token_estimate"],
                 "text": item["text"], "truncated": item.get("truncated", False),
+                "graph_edge": item.get("graph_edge"),
             }
             for index, item in enumerate(items, 1)
         ],
         "retrieval_latency_seconds": retrieval_latency, "retrieval_cost_usd": metadata.get("estimated_cost_usd"),
         "retrieval_metadata": metadata, "prediction": prediction or {}, "raw_answer": raw_answer,
+        "retrieved_graph_edges": retrieved_graph_edges,
         "citations": (prediction or {}).get("citations", []),
         "answer_latency_seconds": answer_latency, "answer_usage": usage, "answer_cost_usd": answer_cost,
+        "result_status": "completed",
     }
 
 
@@ -769,6 +839,13 @@ def main() -> None:
     parser.add_argument("--input-cost-per-million", type=float)
     parser.add_argument("--output-cost-per-million", type=float)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument(
+        "--index-fingerprint",
+        help=(
+            "Explicit immutable remote/cross-document index ID; "
+            "local ready state remains the default"
+        ),
+    )
     args = parser.parse_args()
     evidence = load_jsonl(EVIDENCE_PATH)
     evidence_by_id = index_by_id(evidence, "evidence")
@@ -789,11 +866,63 @@ def main() -> None:
     if args.limit:
         questions = questions[: args.limit]
     env, api_headers, lightrag_url = load_demo_env(args.profile_env)
+    resolved_workspace = str(env.get("WORKSPACE") or "aeb_demo").strip()
+    index_identity = resolve_index_identity(
+        workspace=resolved_workspace,
+        state_dir=AEB_ROOT / "state",
+        explicit_fingerprint=args.index_fingerprint,
+    )
+    profile_path = Path(args.profile_env)
+    if not profile_path.is_absolute():
+        profile_path = AEB_ROOT / profile_path
+    manifest = build_run_manifest(
+        runner="run_graphrag_benchmark",
+        selected_question_ids=(item["id"] for item in questions),
+        modes=args.modes,
+        configuration={
+            "profile_env": str(args.profile_env),
+            "profile_sha256": (
+                sha256_file(profile_path) if profile_path.is_file() else None
+            ),
+            "resolved_workspace": resolved_workspace,
+            "index_identity": index_identity,
+            "source_set": args.source_set,
+            "split": args.split,
+            "question_ids": sorted(args.question_id),
+            "limit": args.limit,
+            "context_tokens": args.context_tokens,
+            "top_k": args.top_k,
+            "context_policy": args.context_policy,
+            "retrieval_only": args.retrieval_only,
+            "llm_model": env.get("LLM_MODEL"),
+            "llm_host": env.get("LLM_BINDING_HOST"),
+            "python_version": sys.version.split()[0],
+            "httpx_version": getattr(httpx, "__version__", None),
+        },
+        code_paths=[
+            Path(__file__),
+            Path(__file__).with_name("benchmark_common.py"),
+            AEB_ROOT / "scripts" / "common.py",
+        ],
+    )
     completed: set[tuple[str, str]] = set()
     records = []
     if args.resume and args.output.is_file():
         records = load_jsonl(args.output)
-        completed = {(item["question_id"], item["mode"]) for item in records}
+        if records:
+            run_id, _ = validate_result_records(
+                records,
+                expected_manifest=manifest,
+            )
+            if run_id is None:
+                raise RuntimeError("Resume file has no run_id")
+            completed = {(item["question_id"], item["mode"]) for item in records}
+        else:
+            run_id = new_run_identity(manifest)["run_id"]
+    else:
+        run_id = new_run_identity(manifest)["run_id"]
+        # A non-resume run is always fresh, even if no row is later produced.
+        write_jsonl(args.output, [])
     with httpx.Client(timeout=600) as client:
         for question in questions:
             for mode in args.modes:
@@ -821,10 +950,14 @@ def main() -> None:
                 else:
                     prediction, raw_answer, answer_latency, usage = generate_answer(client, env, question, items, mode)
                 records.append(
-                    result_record(
+                    attach_run_identity(
+                        result_record(
                         question, mode, items, retrieval_latency, metadata, prediction,
                         raw_answer, answer_latency, usage, args.context_tokens,
                         args.input_cost_per_million, args.output_cost_per_million,
+                        ),
+                        run_id=run_id,
+                        manifest=manifest,
                     )
                 )
                 write_jsonl(args.output, records)

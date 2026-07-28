@@ -7,8 +7,11 @@
 #
 # Or: make lightrag-image
 
-ARG BASE_IMAGE=ghcr.io/hkuds/lightrag:v1.4.16
+ARG BASE_IMAGE=ghcr.io/hkuds/lightrag:v1.4.16@sha256:67ccf8d9f74eb29da872bf8b3e6513605f5ac601fb0509c5b0ca16d98d2d307d
 FROM ${BASE_IMAGE}
+
+ARG APP_UID=1000
+ARG APP_GID=1000
 
 LABEL org.opencontainers.image.title="EvidenceTrail LightRAG (app layer)" \
       org.opencontainers.image.description="Official LightRAG plus EvidenceTrail lightrag_custom hooks; no secrets or index data" \
@@ -57,7 +60,20 @@ if not copied:
 PY
 
 # Profile modules (gb39901_profile*) import as top-level from /app/custom.
-ENV PYTHONPATH=/app/custom
+ENV PYTHONPATH=/app/custom \
+    HOME=/tmp
 
-# Base image user if present; ignore failure on distros without it.
-RUN id app >/dev/null 2>&1 && chown -R app:app /app/custom || true
+# Do not retain the root build user at runtime. The Compose overlay may override
+# this numeric identity with the host UID/GID for writable bind mounts.
+RUN set -eu; \
+    if ! getent group "${APP_GID}" >/dev/null 2>&1; then \
+        groupadd --gid "${APP_GID}" app; \
+    fi; \
+    if ! getent passwd "${APP_UID}" >/dev/null 2>&1; then \
+        useradd --uid "${APP_UID}" --gid "${APP_GID}" --home-dir /app \
+            --shell /usr/sbin/nologin app; \
+    fi; \
+    mkdir -p /app/data/rag_storage /app/data/inputs; \
+    chown -R "${APP_UID}:${APP_GID}" /app/custom /app/data
+
+USER ${APP_UID}:${APP_GID}

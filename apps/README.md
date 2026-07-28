@@ -27,8 +27,8 @@ docs/screenshots/neo4j-v4-focus.png      # 可选：6.11 / 局部
 
 ```bash
 cd demo/aeb          # 本仓库应用根目录
-pip install -r requirements-ui.txt
-cd harness && pip install -e . && cd ..
+pip install --require-hashes -r requirements-ui.lock
+pip install --no-build-isolation --no-deps -e ./harness
 
 # 密钥与 Neo4j
 cp -n .env.example .env   # 编辑 LLM / EMBEDDING / NEO4J_PASSWORD
@@ -37,6 +37,11 @@ make v4-up
 python apps/gradio_pipeline.py
 # http://127.0.0.1:7860
 # python apps/gradio_pipeline.py --profile-env .env.gb39901_v4 --port 7860
+
+# 公开分享必须启用认证；密码只从环境变量读取，不放入命令行历史。
+export GRADIO_AUTH_USER=reviewer
+export GRADIO_AUTH_PASSWORD='replace-with-a-strong-password'
+python apps/gradio_pipeline.py --share
 ```
 
 ### 说明
@@ -44,6 +49,8 @@ python apps/gradio_pipeline.py
 - 默认 skill：`HARNESS_CATALOG_MODE=none`，不加载金标  
 - 需 LightRAG `http://127.0.0.1:9621` 健康  
 - 轨迹与 CLI `--dump-trace` 同源（`state.trace`）
+- profile 只能由服务启动者通过 `--profile-env` 指定，页面访问者不能读取任意本地配置。
+- `--share` 强制认证、隐藏后端错误细节，并限制问题长度、队列大小和并发数。
 
 相关文档：
 

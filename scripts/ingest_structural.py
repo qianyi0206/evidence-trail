@@ -12,9 +12,9 @@ import httpx
 from common import (
     ROOT,
     api_headers,
-    embedding_fingerprint,
+    ensure_index_compatible,
     lightrag_url,
-    load_env,
+    workspace_locked,
     workspace_state_path,
     write_json_atomic,
 )
@@ -47,17 +47,6 @@ def load_bundle(env: dict[str, str]) -> tuple[Path, dict]:
     if len({unit["file_source"] for unit in units}) != len(units):
         raise RuntimeError("Structural bundle file sources are not unique")
     return path, bundle
-
-
-def ensure_fingerprint_compatible(env: dict[str, str], fingerprint_path: Path) -> dict:
-    current = embedding_fingerprint(env)
-    if fingerprint_path.exists():
-        stored = json.loads(fingerprint_path.read_text(encoding="utf-8"))
-        if stored.get("sha256") != current["sha256"]:
-            raise RuntimeError(
-                "Embedding configuration changed after indexing. Refusing to mix vector spaces."
-            )
-    return current
 
 
 def wait_until_pipeline_idle(
@@ -93,21 +82,57 @@ def wait_until_pipeline_idle(
     raise RuntimeError("Timed out after 2 hours waiting for the active indexing queue to finish")
 
 
-def main() -> None:
-    env = load_env()
+@workspace_locked
+def main(env: dict[str, str]) -> None:
     bundle_path, bundle = load_bundle(env)
     units = bundle["units"]
     expected_names = {unit["file_source"] for unit in units}
     fingerprint_path = workspace_state_path(env, "embedding_fingerprint")
     report_path = workspace_state_path(env, "ingest_report")
-    current_fingerprint = ensure_fingerprint_compatible(env, fingerprint_path)
+    had_fingerprint = fingerprint_path.exists()
+    current_fingerprint = ensure_index_compatible(env, fingerprint_path)
     submitted: list[str] = []
     reprocessed: list[str] = []
+    mutation_started = False
+
+    def mark_indexing() -> None:
+        nonlocal mutation_started
+        if mutation_started:
+            return
+        write_json_atomic(
+            fingerprint_path,
+            {
+                **current_fingerprint,
+                "recorded_at": datetime.now(timezone.utc).isoformat(),
+                "status": "indexing",
+            },
+        )
+        mutation_started = True
+
+    def mark_unverified(unexpected_documents: list[str]) -> None:
+        write_json_atomic(
+            fingerprint_path,
+            {
+                **current_fingerprint,
+                "recorded_at": datetime.now(timezone.utc).isoformat(),
+                "status": "unverified",
+                "reason": "workspace_contains_unexpected_documents",
+                "unexpected_documents": unexpected_documents,
+            },
+        )
 
     with httpx.Client(timeout=180) as client:
         health = client.get(lightrag_url(env, "/health"), headers=api_headers(env))
         health.raise_for_status()
         documents = get_documents(client, env)
+        if not had_fingerprint and any(
+            item.get("status") in {"pending", "processing", "processed", "failed"}
+            for item in documents
+        ):
+            raise RuntimeError(
+                "The workspace contains documents but has no verified index fingerprint. "
+                "Use a clean workspace or reset it before structural ingest."
+            )
         existing = by_name(documents)
         unexpected = sorted(
             name
@@ -116,6 +141,7 @@ def main() -> None:
             and name not in expected_names
         )
         if unexpected:
+            mark_unverified(unexpected)
             raise RuntimeError(
                 "The v3 workspace contains non-structural documents: "
                 f"{unexpected}. Use a clean workspace label."
@@ -127,6 +153,7 @@ def main() -> None:
             if existing.get(name, {}).get("status") in {"pending", "processing"}
         }
         if active_names:
+            mark_indexing()
             print(
                 f"ingest-v3  waiting for the existing active queue "
                 f"({len(active_names)} structural units)"
@@ -138,6 +165,7 @@ def main() -> None:
 
         missing_units = [unit for unit in units if unit["file_source"] not in existing]
         if missing_units:
+            mark_indexing()
             response = client.post(
                 lightrag_url(env, "/documents/texts"),
                 headers=api_headers(env),
@@ -182,6 +210,7 @@ def main() -> None:
                 )
             retry_names = sorted(failed)
             reprocessed.extend(name for name in retry_names if name not in reprocessed)
+            mark_indexing()
             response = client.post(
                 lightrag_url(env, "/documents/reprocess_failed"),
                 headers=api_headers(env),
@@ -207,7 +236,11 @@ def main() -> None:
     recorded_at = datetime.now(timezone.utc).isoformat()
     write_json_atomic(
         fingerprint_path,
-        {**current_fingerprint, "recorded_at": recorded_at},
+        {
+            **current_fingerprint,
+            "recorded_at": recorded_at,
+            "status": "ready",
+        },
     )
     write_json_atomic(
         report_path,
@@ -215,7 +248,11 @@ def main() -> None:
             "completed_at": recorded_at,
             "strategy": bundle.get("strategy"),
             "bundle_file": str(bundle_path.relative_to(ROOT)),
+            "bundle_sha256": current_fingerprint["corpus"]["inputs"][
+                "bundle_sha256"
+            ],
             "source_sha256": bundle.get("source_sha256"),
+            "corpus": current_fingerprint["corpus"],
             "submitted": submitted,
             "reprocessed": reprocessed,
             "documents": list(final_documents.values()),

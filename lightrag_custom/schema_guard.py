@@ -62,7 +62,6 @@ _TYPE_CANONICAL = {
 }
 _RELATION_RE = re.compile(r"relation_type\s*=\s*([A-Z_]+)", re.IGNORECASE)
 _RELATION_SPLIT_RE = re.compile(r"(?:,|，|<SEP>|\s)+")
-_ENTITY_TYPES_BY_CHUNK: dict[str, dict[str, str]] = defaultdict(dict)
 
 
 def relation_contract_text() -> str:
@@ -120,9 +119,6 @@ def filter_extraction_result(
             canonical = _canonical_type(entities[0].get("entity_type"))
             if canonical:
                 chunk_types[name] = canonical
-    # Optional debug snapshot (not used for later chunks).
-    _ENTITY_TYPES_BY_CHUNK[chunk_key] = dict(chunk_types)
-
     filtered: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     stats = {
         "kept": 0,
@@ -215,4 +211,6 @@ def install_schema_guard() -> None:
 
 
 def reset_type_cache() -> None:
-    _ENTITY_TYPES_BY_CHUNK.clear()
+    # Backward-compatible test hook. Entity types are intentionally call-local
+    # now, so long-running indexing cannot accumulate an unbounded debug cache.
+    return None

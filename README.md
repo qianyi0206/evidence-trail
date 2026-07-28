@@ -45,7 +45,7 @@ CLI session (GIF):
 
 ```bash
 cd harness
-PYTHONPATH=. python3 -m reg_harness.cli --profile-env ../.env.gb39901_v4 chat
+PYTHONPATH=. python3 -m reg_harness.cli --profile-env .env.gb39901_v4 chat
 ```
 
 v4 knowledge graph (Neo4j workspace `aeb_gb39901_v4_relation_guard`):
@@ -342,11 +342,11 @@ Needs: Docker, Python 3.10+, chat + embedding APIs.
 git clone https://github.com/qianyi0206/evidence-trail.git
 cd evidence-trail
 
-pip install -r requirements.txt
-cd harness && pip install -e . && cd ..
+pip install --require-hashes -r requirements.lock
+pip install --no-build-isolation --no-deps -e ./harness
 
 cp .env.example .env
-# set NEO4J_PASSWORD, LLM_*, EMBEDDING_*; optional RERANK_*
+# set NEO4J_PASSWORD, LLM_*, EMBEDDING_*; v4 also needs its own RERANK_BINDING_API_KEY
 ```
 
 Secret-free overlay: `.env.gb39901_v4`.
@@ -359,7 +359,7 @@ Secret-free overlay: `.env.gb39901_v4`.
 3. make v4-up
 4. if graph empty: make v4-prepare && make v4-ingest …
 5. cd harness && PYTHONPATH=. python3 -m reg_harness.cli \
-     --profile-env ../.env.gb39901_v4 chat
+     --profile-env .env.gb39901_v4 chat
 6. (optional) benchmark/scripts/ …
 ```
 
@@ -367,11 +367,11 @@ One-shot ask (default: live process log; planning may stream model tokens; `--no
 
 ```bash
 cd harness
-PYTHONPATH=. python3 -m reg_harness.cli --profile-env ../.env.gb39901_v4 \
+PYTHONPATH=. python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
   ask "What is the link between the no false-response requirement and section 6.11 tests? How many 6.11 sub-scenarios are there, and what is the shared pass behavior?" \
   --max-steps 8
 
-PYTHONPATH=. python3 -m reg_harness.cli --profile-env ../.env.gb39901_v4 \
+PYTHONPATH=. python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
   ask "Which two vehicle categories does GB 39901—2025 apply to?" --max-steps 6
 ```
 

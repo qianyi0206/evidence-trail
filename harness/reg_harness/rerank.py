@@ -17,6 +17,23 @@ except ModuleNotFoundError:  # pragma: no cover
 logger = logging.getLogger(__name__)
 
 
+def shared_rerank_client(owner: Any, *, timeout: float):
+    if httpx is None:
+        raise RuntimeError("httpx is required for bag rerank")
+    client = getattr(owner, "_rerank_http_client", None)
+    if client is None:
+        client = httpx.Client(timeout=timeout, trust_env=False)
+        setattr(owner, "_rerank_http_client", client)
+    return client
+
+
+def close_shared_rerank_client(owner: Any) -> None:
+    client = getattr(owner, "_rerank_http_client", None)
+    if client is not None:
+        client.close()
+        delattr(owner, "_rerank_http_client")
+
+
 def is_aliyun_endpoint(base_url: str) -> bool:
     host = (base_url or "").lower()
     return "dashscope" in host or "text-rerank" in host
@@ -31,6 +48,7 @@ def rerank_documents(
     api_key: str,
     top_n: int | None = None,
     timeout: float = 60.0,
+    client: Any = None,
 ) -> list[dict[str, Any]]:
     """Return [{"index": int, "relevance_score": float}, ...] sorted by score desc.
 
@@ -65,10 +83,19 @@ def rerank_documents(
             "top_n": n,
         }
 
-    with httpx.Client(timeout=timeout, trust_env=False) as client:
-        response = client.post(base_url.rstrip("/"), headers=headers, json=payload)
+    owns_client = client is None
+    active_client = client or httpx.Client(timeout=timeout, trust_env=False)
+    try:
+        response = active_client.post(
+            base_url.rstrip("/"),
+            headers=headers,
+            json=payload,
+        )
         response.raise_for_status()
         body = response.json()
+    finally:
+        if owns_client:
+            active_client.close()
 
     if is_aliyun_endpoint(base_url):
         results = (body.get("output") or {}).get("results") or []
@@ -80,8 +107,12 @@ def rerank_documents(
         if not isinstance(row, dict):
             continue
         try:
-            index = int(row.get("index"))
-            score = float(row.get("relevance_score", row.get("score", 0.0)))
+            raw_index = row.get("index")
+            raw_score = row.get("relevance_score", row.get("score", 0.0))
+            if raw_index is None or raw_score is None:
+                continue
+            index = int(raw_index)
+            score = float(raw_score)
         except (TypeError, ValueError):
             continue
         if 0 <= index < len(docs):

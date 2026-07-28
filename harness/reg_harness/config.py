@@ -89,6 +89,23 @@ def _parse_env_file(path: Path) -> dict[str, str]:
     return values
 
 
+def _profile_path(root: Path, profile: str) -> Path:
+    candidate = Path(profile)
+    if not candidate.is_absolute():
+        candidate = root / candidate
+    candidate = candidate.resolve()
+    resolved_root = root.resolve()
+    try:
+        candidate.relative_to(resolved_root)
+    except ValueError as error:
+        raise RuntimeError(
+            f"Profile env file must stay inside {resolved_root}: {profile}"
+        ) from error
+    if not candidate.is_file():
+        raise RuntimeError(f"Profile env file does not exist: {candidate}")
+    return candidate
+
+
 def load_settings(
     profile_env: str | None = None,
     aeb_root: Path | None = None,
@@ -101,10 +118,7 @@ def load_settings(
 
     profile = profile_env or os.environ.get("AEB_PROFILE_ENV") or ""
     if profile:
-        profile_path = Path(profile)
-        if not profile_path.is_absolute():
-            profile_path = root / profile_path
-        env.update(_parse_env_file(profile_path))
+        env.update(_parse_env_file(_profile_path(root, profile)))
 
     extra_body = None
     raw_extra = env.get("OPENAI_LLM_EXTRA_BODY", "").strip()
@@ -130,12 +144,12 @@ def load_settings(
         rerank_binding = ""
     rerank_model = (env.get("RERANK_MODEL") or "").strip()
     rerank_host = (env.get("RERANK_BINDING_HOST") or "").strip()
-    rerank_api_key = (
-        env.get("RERANK_BINDING_API_KEY")
-        or env.get("LLM_BINDING_API_KEY")
-        or env.get("DASHSCOPE_API_KEY")
-        or ""
-    ).strip()
+    rerank_api_key = (env.get("RERANK_BINDING_API_KEY") or "").strip()
+    if not rerank_api_key and (
+        rerank_binding.lower() == "aliyun"
+        or "dashscope.aliyuncs.com" in rerank_host.lower()
+    ):
+        rerank_api_key = (env.get("DASHSCOPE_API_KEY") or "").strip()
     # Default on when remote rerank is configured; HARNESS_BAG_RERANK can force off/on.
     bag_rerank_default = bool(rerank_binding and rerank_model and rerank_host and rerank_api_key)
     bag_rerank_enabled = _env_flag(env, "HARNESS_BAG_RERANK", default=bag_rerank_default)

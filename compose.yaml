@@ -2,7 +2,7 @@ name: aeb-graphrag-demo
 
 services:
   neo4j:
-    image: ${NEO4J_IMAGE:-neo4j:5.26}
+    image: ${NEO4J_IMAGE:-neo4j:5.26@sha256:362542416de6c09a971484d1893878016cc3b5cdec166e54b1c824a220ecd6b9}
     environment:
       NEO4J_AUTH: ${NEO4J_USERNAME:-neo4j}/${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env}
       NEO4J_server_memory_heap_initial__size: 512m
@@ -16,7 +16,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - cypher-shell -u neo4j -p "$${NEO4J_AUTH#*/}" 'RETURN 1' >/dev/null 2>&1
+        - cypher-shell -u "$${NEO4J_AUTH%%/*}" -p "$${NEO4J_AUTH#*/}" 'RETURN 1' >/dev/null 2>&1
       interval: 10s
       timeout: 10s
       retries: 20
@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
 
   lightrag:
-    image: ${LIGHTRAG_IMAGE:-ghcr.io/hkuds/lightrag:v1.4.16}
+    image: ${LIGHTRAG_IMAGE:-ghcr.io/hkuds/lightrag:v1.4.16@sha256:67ccf8d9f74eb29da872bf8b3e6513605f5ac601fb0509c5b0ca16d98d2d307d}
     env_file:
       - .env
     environment:
@@ -41,6 +41,8 @@ services:
       CHUNK_OVERLAP_SIZE: ${CHUNK_OVERLAP_SIZE:-100}
       EMBEDDING_TIMEOUT: ${EMBEDDING_TIMEOUT:-30}
       LLM_TIMEOUT: ${LLM_TIMEOUT:-180}
+      HOME: /tmp
+      LOG_DIR: /app/data/rag_storage/logs
       WORKING_DIR: /app/data/rag_storage
       INPUT_DIR: /app/data/inputs
       LIGHTRAG_KV_STORAGE: JsonKVStorage
@@ -51,11 +53,11 @@ services:
       NEO4J_DATABASE: ${NEO4J_DATABASE:-neo4j}
       NEO4J_USERNAME: ${NEO4J_USERNAME:-neo4j}
       NEO4J_PASSWORD: ${NEO4J_PASSWORD:?Set NEO4J_PASSWORD in .env}
-      # Optional rerank (Aliyun/Bailian). Key falls back to LLM_BINDING_API_KEY when unset.
+      # Optional rerank (Aliyun/Bailian). Never reuse a key from another provider.
       RERANK_BINDING: ${RERANK_BINDING:-null}
       RERANK_MODEL: ${RERANK_MODEL:-}
       RERANK_BINDING_HOST: ${RERANK_BINDING_HOST:-}
-      RERANK_BINDING_API_KEY: ${RERANK_BINDING_API_KEY:-${LLM_BINDING_API_KEY:-}}
+      RERANK_BINDING_API_KEY: ${RERANK_BINDING_API_KEY:-${DASHSCOPE_API_KEY:-}}
       RERANK_BY_DEFAULT: ${RERANK_BY_DEFAULT:-true}
       MIN_RERANK_SCORE: ${MIN_RERANK_SCORE:-0.0}
     ports:
@@ -67,6 +69,14 @@ services:
     depends_on:
       neo4j:
         condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=64m
     healthcheck:
       test:
         - CMD
@@ -82,13 +92,26 @@ services:
   tools:
     build:
       context: ./tools
+      args:
+        TOOLS_UID: ${TOOLS_UID:-1000}
+        TOOLS_GID: ${TOOLS_GID:-1000}
     profiles:
       - tools
     working_dir: /workspace
+    user: "${TOOLS_UID:-1000}:${TOOLS_GID:-1000}"
     volumes:
       - ./:/workspace
     environment:
       PYTHONUNBUFFERED: "1"
       AEB_PROFILE_ENV: ${AEB_PROFILE_ENV:-}
+      HOME: /tmp
     networks:
       - default
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,nodev,size=256m

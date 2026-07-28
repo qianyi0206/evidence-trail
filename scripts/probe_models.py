@@ -17,10 +17,32 @@ REQUIRED = [
     "EMBEDDING_DIM",
     "EMBEDDING_TOKEN_LIMIT",
 ]
+DISABLED_RERANK_BINDINGS = {"", "null", "none", "off", "0"}
 
 
 def openai_headers(key: str) -> dict[str, str]:
     return {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+
+
+def validate_rerank_config(env: dict[str, str]) -> None:
+    binding = env.get("RERANK_BINDING", "").strip().lower()
+    if binding in DISABLED_RERANK_BINDINGS:
+        return
+
+    required = ["RERANK_MODEL", "RERANK_BINDING_HOST"]
+    require_env(env, required)
+    host = env["RERANK_BINDING_HOST"].strip().lower()
+    key = env.get("RERANK_BINDING_API_KEY", "").strip()
+    if not key and (binding == "aliyun" or "dashscope.aliyuncs.com" in host):
+        key = env.get("DASHSCOPE_API_KEY", "").strip()
+    if not key:
+        raise RuntimeError(
+            "Rerank is enabled but no independent RERANK_BINDING_API_KEY is configured"
+        )
+    if is_placeholder(key):
+        raise RuntimeError(
+            "Rerank is enabled but RERANK_BINDING_API_KEY is still a placeholder"
+        )
 
 
 def main() -> None:
@@ -32,6 +54,7 @@ def main() -> None:
             "Model credentials are not configured. Replace placeholders for: "
             + ", ".join(placeholders)
         )
+    validate_rerank_config(env)
 
     dimension = int(env["EMBEDDING_DIM"])
     token_limit = int(env["EMBEDDING_TOKEN_LIMIT"])

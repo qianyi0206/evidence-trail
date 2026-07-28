@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from gb39901_profile import (
     CONTINUE_PROMPT as BASE_CONTINUE_PROMPT,
-    EXAMPLES,
     SYSTEM_PROMPT as BASE_SYSTEM_PROMPT,
     USER_PROMPT as BASE_USER_PROMPT,
 )

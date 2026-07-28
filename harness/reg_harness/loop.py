@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from typing import Any
@@ -27,14 +28,39 @@ _FORCE_COMPOSE_DUPLICATES = 2
 
 def _bag_signature(
     evidence: list[EvidenceItem],
-) -> tuple[int, frozenset[str], frozenset[str]]:
-    """Cheap fingerprint: size + clause-like markers + kinds present in the bag."""
+) -> tuple[
+    int,
+    frozenset[str],
+    frozenset[str],
+    frozenset[str],
+    frozenset[str],
+]:
+    """Fingerprint bag identity and content, not merely its item count."""
     blob = "\n".join(item.text or "" for item in evidence)
     markers = frozenset(re.findall(r"\d+(?:\.\d+)+", blob))
     # Keep short markers only (clause-like), drop pure integers noise somewhat
     markers = frozenset(m for m in markers if "." in m)
     kinds = frozenset(item.kind for item in evidence)
-    return (len(evidence), markers, kinds)
+    evidence_ids = frozenset(
+        evidence_id
+        for item in evidence
+        for evidence_id in item.evidence_ids
+        if evidence_id
+    )
+    content_hashes = frozenset(
+        hashlib.sha256(
+            "\x1f".join(
+                (
+                    item.kind,
+                    item.file_path,
+                    "\x1e".join(item.evidence_ids),
+                    item.text or "",
+                )
+            ).encode("utf-8")
+        ).hexdigest()[:20]
+        for item in evidence
+    )
+    return (len(evidence), markers, kinds, evidence_ids, content_hashes)
 
 
 def _suggest_compose_message(
@@ -284,7 +310,7 @@ class RegulationHarness:
                     duplicate_streak = 0
 
                 sig = _bag_signature(state.evidence)
-                if last_sig is not None and sig[0] <= last_sig[0] and sig[1] <= last_sig[1]:
+                if last_sig is not None and sig == last_sig:
                     stagnant_rounds += 1
                 else:
                     stagnant_rounds = 0
@@ -417,6 +443,12 @@ class RegulationHarness:
 
 
 def state_to_dict(state: AgentState) -> dict[str, Any]:
+    compose_evidence_map = (state.meta or {}).get("compose_evidence_map")
+    omitted_count = (state.meta or {}).get("compose_evidence_omitted_count")
+    if not isinstance(compose_evidence_map, list):
+        rendered = state.render_evidence(for_compose=True)
+        compose_evidence_map = state.rendered_evidence_payload(rendered)
+        omitted_count = rendered.omitted_count
     return {
         "question": state.question,
         "policy": state.policy,
@@ -427,6 +459,8 @@ def state_to_dict(state: AgentState) -> dict[str, Any]:
         "evidence_ids": sorted(
             {eid for item in state.evidence for eid in item.evidence_ids}
         ),
+        "compose_evidence_map": compose_evidence_map,
+        "compose_evidence_omitted_count": int(omitted_count or 0),
         "slots": [slot.to_dict() for slot in state.slots],
         "intent": (state.meta or {}).get("intent"),
         "final_answer": state.final_answer,

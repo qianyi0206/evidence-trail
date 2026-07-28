@@ -1,16 +1,25 @@
 #!/usr/bin/env python3
-"""Generate the six-question pilot comparison and provisional semantic audit."""
+"""Regenerate the archived six-question v1 pilot report.
+
+This script intentionally preserves historical scores.  It must not be used to
+produce a current v2 benchmark report because its inputs predate run manifests,
+true graph-path scoring, and strict refusal/error handling.
+"""
 
 from __future__ import annotations
 
 import json
 from collections import Counter
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any
 
-from benchmark_common import QUESTIONS_PATH, RESULTS_DIR, load_jsonl, write_json, write_jsonl
-
+from benchmark_common import (
+    QUESTIONS_PATH,
+    RESULTS_DIR,
+    load_jsonl,
+    write_json,
+    write_jsonl,
+)
 
 QUESTION_IDS = [
     "gb_direct_001",
@@ -23,6 +32,7 @@ QUESTION_IDS = [
 VARIANTS = ("a0", "v2", "v3", "v4")
 MODES = ("naive", "hybrid", "mix")
 OUTCOME_SCORE = {"pass": 1.0, "partial": 0.5, "fail": 0.0}
+LEGACY_CLAIM_THRESHOLD = 0.45
 
 # Order follows QUESTION_IDS. This is a provisional Codex semantic audit, not
 # the user's frozen human label. P=complete, R=partially correct, F=incorrect.
@@ -211,6 +221,7 @@ def main() -> None:
 
     payload = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
+        "scoring_contract_version": "legacy_v1_archival",
         "benchmark_status": "self_checked_candidate_not_frozen",
         "scope": {
             "question_ids": QUESTION_IDS,
@@ -233,7 +244,9 @@ def main() -> None:
     lines = [
         "# GB 39901 GraphRAG 六题 Pilot 报告",
         "",
-        "> 状态：候选 benchmark（self_checked，尚未 user_reviewed/frozen）。本报告只用于验证评测链路和发现问题，不能替代完整 50 题结论。",
+        "> **归档警告：本报告使用旧版 v1 评分契约，路径指标实际是证据支持率，且运行结果没有 v2 run_manifest。数值仅用于历史排障，不得与当前评分或正式结论比较。**",
+        "",
+        "> 状态：候选 benchmark（self_checked，尚未 user_reviewed/frozen）。本报告只用于验证历史评测链路和发现问题，不能替代完整 50 题结论。",
         "",
         "## 运行范围",
         "",
@@ -262,9 +275,9 @@ def main() -> None:
             "",
             "## 检索与回答结果",
             "",
-            "回答代理分使用确定性结构/词面评分；原子声明相似度阈值为 0.45。oracle 代理分仍未达到 100%，因此只作方向性参考。人工语义列是 Codex 初审，等待用户确认。",
+            f"回答代理分使用旧版确定性结构/词面评分；历史原子声明相似度阈值为 {LEGACY_CLAIM_THRESHOLD:g}。oracle 代理分仍未达到 100%，因此只作方向性参考。人工语义列是 Codex 初审，等待用户确认。",
             "",
-            "| 版本 | 模式 | 证据召回 | 证据精确 | 证据 F1 | 路径完整 | nDCG@10 | 证据ID噪声 | 不可追溯项 | 回答代理分 | 语义完整通过 | 含部分分 | 检索延迟 | 回答延迟 |",
+            "| 版本 | 模式 | 证据召回 | 证据精确 | 证据 F1 | 旧版证据支持路径完整 | nDCG@10 | 证据ID噪声 | 不可追溯项 | 回答代理分 | 语义完整通过 | 含部分分 | 检索延迟 | 回答延迟 |",
             "|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
         ]
     )

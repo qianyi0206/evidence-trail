@@ -14,10 +14,14 @@ services:
       context: .
       dockerfile: docker/lightrag/Dockerfile
       args:
-        BASE_IMAGE: ${LIGHTRAG_BASE_IMAGE:-ghcr.io/hkuds/lightrag:v1.4.16}
+        BASE_IMAGE: ${LIGHTRAG_BASE_IMAGE:-ghcr.io/hkuds/lightrag:v1.4.16@sha256:67ccf8d9f74eb29da872bf8b3e6513605f5ac601fb0509c5b0ca16d98d2d307d}
+        APP_UID: ${LIGHTRAG_UID:-1000}
+        APP_GID: ${LIGHTRAG_GID:-1000}
+    user: "${LIGHTRAG_UID:-1000}:${LIGHTRAG_GID:-1000}"
     environment:
       # Ensure profile imports resolve even if host env leaves PYTHONPATH empty.
       PYTHONPATH: ${GB39901_PYTHONPATH:-/app/custom}
+      HOME: /tmp
     volumes:
       - ./data/rag_storage:/app/data/rag_storage
       - ./data/inputs:/app/data/inputs

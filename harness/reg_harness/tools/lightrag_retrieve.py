@@ -28,9 +28,15 @@ def _headers(settings: Settings) -> dict[str, str]:
 
 
 def _items_from_payload(payload: dict[str, Any]) -> list[EvidenceItem]:
-    data = payload.get("data") or {}
+    data = payload.get("data")
+    if not isinstance(data, dict):
+        return []
     items: list[EvidenceItem] = []
-    for rel in data.get("relationships") or []:
+    relationships = data.get("relationships")
+    relationships = relationships if isinstance(relationships, list) else []
+    for rel in relationships:
+        if not isinstance(rel, dict):
+            continue
         text = (
             f"{rel.get('src_id', '')} --{rel.get('keywords', '')}--> {rel.get('tgt_id', '')}\n"
             f"{rel.get('description', '')}"
@@ -43,7 +49,11 @@ def _items_from_payload(payload: dict[str, Any]) -> list[EvidenceItem]:
                 raw=rel,
             )
         )
-    for ent in data.get("entities") or []:
+    entities = data.get("entities")
+    entities = entities if isinstance(entities, list) else []
+    for ent in entities:
+        if not isinstance(ent, dict):
+            continue
         text = (
             f"{ent.get('entity_name', '')} [{ent.get('entity_type', '')}]\n"
             f"{ent.get('description', '')}"
@@ -56,7 +66,11 @@ def _items_from_payload(payload: dict[str, Any]) -> list[EvidenceItem]:
                 raw=ent,
             )
         )
-    for chunk in data.get("chunks") or []:
+    chunks = data.get("chunks")
+    chunks = chunks if isinstance(chunks, list) else []
+    for chunk in chunks:
+        if not isinstance(chunk, dict):
+            continue
         text = str(chunk.get("content") or "").strip()
         items.append(
             EvidenceItem(
@@ -123,20 +137,28 @@ def _chunk_store_path(settings: Settings) -> Path | None:
 
 
 def _load_chunk_record(settings: Settings, chunk_id: str) -> dict[str, Any] | None:
-    store = getattr(settings, "_chunk_store_cache", None)
-    if store is None:
-        path = _chunk_store_path(settings)
-        if path is None:
-            settings._chunk_store_cache = {}  # type: ignore[attr-defined]
-            return None
+    path = _chunk_store_path(settings)
+    signature: tuple[str, int, int] | None = None
+    if path is not None:
         try:
-            settings._chunk_store_cache = json.loads(  # type: ignore[attr-defined]
-                path.read_text(encoding="utf-8")
-            )
-        except (OSError, json.JSONDecodeError):
-            settings._chunk_store_cache = {}  # type: ignore[attr-defined]
-            return None
-        store = settings._chunk_store_cache  # type: ignore[attr-defined]
+            stat = path.stat()
+            signature = (str(path), stat.st_mtime_ns, stat.st_size)
+        except OSError:
+            path = None
+
+    cached_signature = getattr(settings, "_chunk_store_cache_signature", object())
+    if cached_signature != signature:
+        store: Any = {}
+        if path is not None and signature is not None:
+            try:
+                loaded = json.loads(path.read_text(encoding="utf-8"))
+                store = loaded if isinstance(loaded, dict) else {}
+            except (OSError, json.JSONDecodeError):
+                store = {}
+        settings._chunk_store_cache = store  # type: ignore[attr-defined]
+        settings._chunk_store_cache_signature = signature  # type: ignore[attr-defined]
+    else:
+        store = getattr(settings, "_chunk_store_cache", {})
     if not isinstance(store, dict):
         return None
     rec = store.get(chunk_id)
@@ -241,9 +263,23 @@ def backfill_chunks_from_graph_hits(
 class LightRAGRetrieveTool(Tool):
     parameters = {
         "type": "object",
+        "additionalProperties": False,
         "properties": {
-            "query": {"type": "string", "description": "focused sub-question"},
-            "mode": {"type": "string", "description": "naive|hybrid|mix"},
+            "query": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000,
+                "description": "focused sub-question",
+            },
+            "mode": {
+                "type": "string",
+                "enum": ["naive", "hybrid", "mix", "local", "global"],
+                "description": "naive|hybrid|mix",
+            },
+            "top_k": {"type": "integer", "minimum": 1, "maximum": 100},
+            "max_tokens": {"type": "integer", "minimum": 256, "maximum": 200000},
+            "bag_limit": {"type": "integer", "minimum": 1, "maximum": 100},
+            "enable_rerank": {"type": "boolean"},
         },
         "required": ["query"],
     }
@@ -261,6 +297,24 @@ class LightRAGRetrieveTool(Tool):
         self.default_mode = default_mode
         self.description = description
         self.catalog = catalog
+        self._client: Any = None
+
+    def _http_client(self):
+        if httpx is None:
+            raise RuntimeError("httpx is required for LightRAG retrieval")
+        if self._client is None:
+            # One client per registered tool keeps connections warm across agent steps.
+            self._client = httpx.Client(
+                timeout=self.settings.request_timeout,
+                trust_env=False,
+            )
+        return self._client
+
+    def close(self) -> None:
+        client = self._client
+        self._client = None
+        if client is not None:
+            client.close()
 
     def run(self, state: AgentState, args: dict[str, Any]) -> ToolResult:
         query = str(args.get("query") or "").strip()
@@ -327,18 +381,29 @@ class LightRAGRetrieveTool(Tool):
             )
         try:
             # trust_env=False: system HTTP(S)_PROXY must not intercept localhost LightRAG
-            with httpx.Client(
-                timeout=self.settings.request_timeout, trust_env=False
-            ) as client:
-                response = client.post(url, headers=_headers(self.settings), json=body)
-                response.raise_for_status()
-                payload = response.json()
+            response = self._http_client().post(
+                url,
+                headers=_headers(self.settings),
+                json=body,
+            )
+            response.raise_for_status()
+            payload = response.json()
         except Exception as error:  # noqa: BLE001
             return ToolResult(
                 name=self.name,
                 ok=False,
                 content=f"LightRAG 检索失败: {error}",
                 error=str(error),
+                continue_loop=True,
+            )
+
+        if not isinstance(payload, dict):
+            return ToolResult(
+                name=self.name,
+                ok=False,
+                content="LightRAG 返回了非对象 JSON，无法解析检索结果。",
+                data={"payload_type": type(payload).__name__},
+                error="invalid_lightrag_response",
                 continue_loop=True,
             )
 
@@ -350,6 +415,27 @@ class LightRAGRetrieveTool(Tool):
                 content=f"LightRAG 返回非 success: {message}",
                 data={"payload": payload},
                 error=message,
+                continue_loop=True,
+            )
+
+        data = payload.get("data")
+        malformed_fields = [
+            field
+            for field in ("relationships", "entities", "chunks")
+            if isinstance(data, dict)
+            and field in data
+            and not isinstance(data.get(field), list)
+        ]
+        if not isinstance(data, dict) or malformed_fields:
+            return ToolResult(
+                name=self.name,
+                ok=False,
+                content="LightRAG 检索结果结构不合法，已拒绝写入证据袋。",
+                data={
+                    "data_type": type(data).__name__,
+                    "malformed_fields": malformed_fields,
+                },
+                error="invalid_lightrag_response",
                 continue_loop=True,
             )
 
@@ -432,7 +518,8 @@ class LightRAGRetrieveTool(Tool):
             "evidence_check 查看袋；足够则 compose_answer，不足可 finalize 拒答。"
         )
 
-        meta = payload.get("metadata") or {}
+        meta = payload.get("metadata")
+        meta = meta if isinstance(meta, dict) else {}
         return ToolResult(
             name=self.name,
             ok=True,

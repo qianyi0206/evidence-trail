@@ -22,9 +22,15 @@ class ClauseLookupTool(Tool):
     description = "Precise clause/appendix lookup from the evidence catalog (auditable IDs)."
     parameters = {
         "type": "object",
+        "additionalProperties": False,
         "properties": {
-            "clause": {"type": "string", "description": "e.g. 6.11 or 5.4"},
-            "kb": {"type": "string", "description": "optional kb id"},
+            "clause": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "e.g. 6.11 or 5.4",
+            },
+            "kb": {"type": "string", "maxLength": 128, "description": "optional kb id"},
         },
         "required": ["clause"],
     }
@@ -110,14 +116,20 @@ class TableLookupTool(Tool):
     description = "Precise table-row lookup by table number and conditions (vehicle/speed/load)."
     parameters = {
         "type": "object",
+        "additionalProperties": False,
         "properties": {
-            "table": {"type": "string", "description": "table number"},
-            "vehicle": {"type": "string"},
-            "ego_kmh": {"type": "number"},
-            "target_kmh": {"type": "number"},
-            "load_state": {"type": "string"},
-            "scenario": {"type": "string"},
-            "kb": {"type": "string"},
+            "table": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "table number",
+            },
+            "vehicle": {"type": "string", "maxLength": 128},
+            "ego_kmh": {"type": "number", "minimum": 0, "maximum": 500},
+            "target_kmh": {"type": "number", "minimum": 0, "maximum": 500},
+            "load_state": {"type": "string", "maxLength": 256},
+            "scenario": {"type": "string", "maxLength": 512},
+            "kb": {"type": "string", "maxLength": 128},
         },
         "required": ["table"],
     }

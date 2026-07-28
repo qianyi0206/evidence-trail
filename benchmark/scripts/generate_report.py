@@ -8,7 +8,16 @@ import json
 from pathlib import Path
 from typing import Any
 
-from benchmark_common import AUDIT_PATH, QUESTIONS_PATH, load_jsonl
+from benchmark_common import (
+    AUDIT_PATH,
+    EVIDENCE_PATH,
+    QUESTIONS_PATH,
+    benchmark_data_manifest,
+    canonical_json_sha256,
+    load_jsonl,
+)
+
+RUN_FORMAT_VERSION = 2
 
 
 def load_json(path: Path | None) -> dict[str, Any] | list[Any] | None:
@@ -33,6 +42,51 @@ def overall_summaries(payload: dict[str, Any] | None) -> dict[str, dict[str, Any
     }
 
 
+def require_current_score(payload: Any, label: str) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        raise SystemExit(f"{label} is not a score object")
+    manifest = payload.get("run_manifest")
+    if not isinstance(manifest, dict) or manifest.get("format_version") != RUN_FORMAT_VERSION:
+        raise SystemExit(
+            f"{label} uses a legacy or missing run_manifest; rerun the v2 scorer "
+            "instead of mixing archived metrics into a current report"
+        )
+    fingerprint = manifest.get("fingerprint")
+    calculated = canonical_json_sha256(
+        {key: value for key, value in manifest.items() if key != "fingerprint"}
+    )
+    if fingerprint != calculated:
+        raise SystemExit(f"{label} contains a tampered run_manifest")
+    if manifest.get("benchmark") != benchmark_data_manifest():
+        raise SystemExit(
+            f"{label} was scored against different benchmark data; rerun it"
+        )
+    return payload
+
+
+def require_current_kg_score(payload: Any, label: str) -> dict[str, Any]:
+    if not isinstance(payload, dict) or not payload.get("runs"):
+        raise SystemExit(f"{label} is not a KG score object")
+    manifest = payload.get("benchmark_manifest")
+    if not isinstance(manifest, dict) or manifest != benchmark_data_manifest():
+        raise SystemExit(
+            f"{label} uses a legacy or different benchmark; rerun score_kg.py"
+        )
+    return payload
+
+
+def scoring_note(label: str, payload: dict[str, Any]) -> str:
+    config = payload.get("scoring_config") or {}
+    parts = []
+    if config.get("claim_threshold") is not None:
+        parts.append(f"原子声明阈值={float(config['claim_threshold']):g}")
+    if config.get("bootstrap_samples") is not None:
+        parts.append(f"配对 bootstrap={int(config['bootstrap_samples'])} 次")
+    if config.get("paired_baseline"):
+        parts.append(f"基线={config['paired_baseline']}")
+    return f"> {label} 评分配置：" + ("；".join(parts) if parts else "未记录")
+
+
 def parse_labeled_paths(items: list[str]) -> list[tuple[str, Path]]:
     labeled: list[tuple[str, Path]] = []
     for item in items:
@@ -48,16 +102,22 @@ def append_retrieval_table(
     rows: list[tuple[str, str, dict[str, Any]]],
     *,
     question_count: int | None = None,
+    formal_question_count: int | None = None,
 ) -> None:
     if question_count is not None:
         lines.append(
             f"本节结果覆盖 {question_count} 道唯一问题。"
-            + (" 这是链路冒烟/pilot，不是正式总体结论。" if question_count < 50 else "")
+            + (
+                " 这是链路冒烟/pilot，不是正式总体结论。"
+                if formal_question_count is not None
+                and question_count < formal_question_count
+                else ""
+            )
         )
         lines.append("")
     lines.extend(
         [
-            "| 方案 | 模式 | Evidence P | Evidence R | Evidence F1 | nDCG@10 | 路径完整率 | 有效证据/1000 token | 无关证据比 | 不可追溯比 | 延迟(s) |",
+            "| 方案 | 模式 | Evidence P | Evidence R | Evidence F1 | nDCG@10 | 可评估KG真路径完整率 | 有效证据/1000 token | 无关证据比 | 不可追溯比 | 延迟(s) |",
             "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
         ]
     )
@@ -78,11 +138,17 @@ def append_answer_table(
     rows: list[tuple[str, str, dict[str, Any], dict[str, Any] | None]],
     *,
     question_count: int | None = None,
+    formal_question_count: int | None = None,
 ) -> None:
     if question_count is not None:
         lines.append(
             f"本节结果覆盖 {question_count} 道唯一问题。"
-            + (" 少于50题时只视为链路验证/pilot。" if question_count < 50 else "")
+            + (
+                " 未覆盖当前正式问题范围，只视为链路验证/pilot。"
+                if formal_question_count is not None
+                and question_count < formal_question_count
+                else ""
+            )
         )
         lines.append("")
     lines.extend(
@@ -135,17 +201,44 @@ def main() -> None:
     args = parser.parse_args()
 
     kg_inputs: list[tuple[str, dict[str, Any]]] = []
+    kg_payloads: list[tuple[str, dict[str, Any]]] = []
     for label, path in parse_labeled_paths(args.kg_score):
         payload = load_json(path)
-        if payload and isinstance(payload, dict) and payload.get("runs"):
-            kg_inputs.append((label, payload["runs"][0]))
+        if payload is not None:
+            current = require_current_kg_score(payload, str(path))
+            kg_payloads.append((label, current))
+            runs = current["runs"]
+            for index, run in enumerate(runs, 1):
+                run_label = label if len(runs) == 1 else f"{label}#{index}"
+                kg_inputs.append((run_label, run))
 
     retrieval = load_json(args.retrieval_score)
     answers = load_json(args.answer_score)
     labeled_retrieval = parse_labeled_paths(args.retrieval_score_labeled)
     labeled_answers = parse_labeled_paths(args.answer_score_labeled)
     pilot = load_json(args.pilot_comparison)
+    if retrieval is not None:
+        retrieval = require_current_score(retrieval, str(args.retrieval_score))
+    if answers is not None:
+        answers = require_current_score(answers, str(args.answer_score))
+    pilot_is_current = (
+        isinstance(pilot, dict)
+        and pilot.get("scoring_contract_version") == "v2"
+        and bool(pilot.get("automatic_metrics"))
+    )
     questions = load_jsonl(QUESTIONS_PATH)
+    evidence = load_jsonl(EVIDENCE_PATH)
+    audit_units = load_jsonl(AUDIT_PATH)
+    split_counts: dict[str, int] = {}
+    source_counts = {
+        "gb": sum(item["id"].startswith("gb_") for item in questions),
+        "cross": sum(item["id"].startswith("cross_") for item in questions),
+    }
+    for question in questions:
+        split_counts[question["split"]] = split_counts.get(question["split"], 0) + 1
+    audit_kinds: dict[str, int] = {}
+    for unit in audit_units:
+        audit_kinds[unit["kind"]] = audit_kinds.get(unit["kind"], 0) + 1
     task_counts: dict[str, int] = {}
     for question in questions:
         task_counts[question["task_type"]] = task_counts.get(question["task_type"], 0) + 1
@@ -155,8 +248,9 @@ def main() -> None:
         "",
         "## Benchmark 状态",
         "",
-        f"- 问题数：{len(questions)}（dev 12 / test 48）",
-        f"- 抽取审计单元：{len(load_jsonl(AUDIT_PATH))}（5个叙述、5个表格）",
+        f"- 问题数：{len(questions)}（dev {split_counts.get('dev', 0)} / test {split_counts.get('test', 0)}；GB {source_counts['gb']} / cross {source_counts['cross']}）",
+        f"- 证据记录：{len(evidence)}；来源文档：{len({item['source_file'] for item in evidence})}",
+        f"- 抽取审计单元：{len(audit_units)}（叙述 {audit_kinds.get('narrative', 0)} / 表格 {audit_kinds.get('table', 0)}）",
         "- 题型配额：" + "；".join(f"{name}={count}" for name, count in task_counts.items()),
         "- 当前问题状态：self_checked；只有审核表全部标记“通过”后才能冻结v1。",
         "",
@@ -184,16 +278,46 @@ def main() -> None:
         lines.extend(
             [
                 "",
-                "> 实体/关系 Precision 以10个相对完整审计单元为主；任务金图只覆盖问题所需知识，不能把任务金图之外的所有节点直接判为幻觉。",
+                f"> 实体/关系 Precision 以{len(audit_units)}个相对完整审计单元为主；任务金图只覆盖问题所需知识，不能把任务金图之外的所有节点直接判为幻觉。",
                 (
                     "> 当前表格来自 Neo4j 在线只读导出，包含后处理后的类型与 schema-valid 标记。"
                     if all_live
                     else "> 当前表格来自本地 LightRAG 向量文件的离线导出。离线文件缺少 Neo4j 后处理后的最终实体类型，因此“类型准确率”为缺失值。"
                 ),
-                "> A0 中9/10审计单元没有证据绑定，只能退化为全图匹配，其低分不应与v2-v4直接作严格显著性比较。",
-                "> 当前每个方案只有一个历史图快照，尚不能报告三次独立建图稳定性、建图耗时和成本。正式结论需在人工冻结v1后补跑。",
             ]
         )
+        for label, report in kg_inputs:
+            unscoped = sum(
+                row.get("scope_method") == "no_evidence_binding"
+                for row in report.get("audit_units", [])
+            )
+            if unscoped:
+                lines.append(
+                    f"> {label} 有 {unscoped}/{len(report.get('audit_units', []))} "
+                    "个审计单元没有可归属预测，按空预测计分。"
+                )
+        for label, payload in kg_payloads:
+            stability = payload.get("stability") or {}
+            if stability.get("available"):
+                lines.append(
+                    f"> {label} 独立建图 {stability.get('run_count')} 次："
+                    f"实体 Jaccard={fmt(stability.get('mean_entity_jaccard'))}，"
+                    f"边 Jaccard={fmt(stability.get('mean_edge_jaccard'))}，"
+                    f"实体 F1 标准差={fmt(stability.get('audit_entity_f1_stddev'))}，"
+                    f"关系 F1 标准差={fmt(stability.get('audit_relation_f1_stddev'))}。"
+                )
+            else:
+                lines.append(
+                    f"> {label} 只有 {stability.get('run_count', len(payload.get('runs', [])))} "
+                    "个图快照，尚不能报告独立建图稳定性。"
+                )
+            efficiency = payload.get("build_efficiency") or {}
+            if efficiency.get("available"):
+                lines.append(
+                    f"> {label} 建图耗时均值={fmt(efficiency.get('mean_elapsed_seconds'))} s，"
+                    f"成本均值={fmt(efficiency.get('mean_cost_usd'))} USD，"
+                    f"成本合计={fmt(efficiency.get('total_cost_usd'))} USD。"
+                )
     else:
         lines.append("尚未提供KG评分文件。")
 
@@ -201,7 +325,7 @@ def main() -> None:
     retrieval_rows: list[tuple[str, str, dict[str, Any]]] = []
     retrieval_question_ids: set[str] = set()
 
-    if isinstance(pilot, dict) and pilot.get("automatic_metrics"):
+    if pilot_is_current and isinstance(pilot, dict):
         for item in pilot["automatic_metrics"]:
             retrieval_rows.append(
                 (
@@ -210,20 +334,26 @@ def main() -> None:
                     dict(item.get("retrieval") or {}),
                 )
             )
-        retrieval_question_count = 6
-        append_retrieval_table(lines, retrieval_rows, question_count=retrieval_question_count)
+        retrieval_question_count = (
+            len(pilot.get("scope", {}).get("question_ids", [])) or None
+        )
+        append_retrieval_table(
+            lines,
+            retrieval_rows,
+            question_count=retrieval_question_count,
+            formal_question_count=source_counts["gb"],
+        )
         lines.extend(
             [
                 "",
-                "> 上表来自 6 题 pilot 汇总（`pilot_6q_comparison.json`）。A0 的 hybrid/mix 不可追溯比接近 1，"
+                f"> 上表来自 {retrieval_question_count or '未知数量'} 题 pilot 汇总（`pilot_6q_comparison.json`）。A0 的 hybrid/mix 不可追溯比接近 1，"
                 "说明图检索结果几乎无法映射到法规证据 ID，不能把低噪声误读为高质量检索。",
+                "> 若该 pilot 文件没有 v2 run_manifest，它属于旧评分契约归档，只能用于历史排障，必须重跑后才能与新版真图路径/拒答指标比较。",
             ]
         )
     elif labeled_retrieval:
         for label, path in labeled_retrieval:
-            payload = load_json(path)
-            if not isinstance(payload, dict):
-                continue
+            payload = require_current_score(load_json(path), str(path))
             for question_id in {row["question_id"] for row in payload.get("per_question", [])}:
                 retrieval_question_ids.add(question_id)
             for mode, summary in overall_summaries(payload).items():
@@ -242,7 +372,12 @@ def main() -> None:
                     )
                 }
                 retrieval_rows.append((label, mode, metrics))
-        append_retrieval_table(lines, retrieval_rows, question_count=len(retrieval_question_ids) or None)
+        append_retrieval_table(
+            lines,
+            retrieval_rows,
+            question_count=len(retrieval_question_ids) or None,
+            formal_question_count=source_counts["gb"],
+        )
     else:
         retrieval_overall = overall_summaries(retrieval if isinstance(retrieval, dict) else None)
         if retrieval_overall and isinstance(retrieval, dict):
@@ -263,15 +398,32 @@ def main() -> None:
                     )
                 }
                 retrieval_rows.append(("run", mode, metrics))
-            append_retrieval_table(lines, retrieval_rows, question_count=retrieval_question_count)
+            append_retrieval_table(
+                lines,
+                retrieval_rows,
+                question_count=retrieval_question_count,
+                formal_question_count=source_counts["gb"],
+            )
         else:
             lines.append("尚未运行/query/data对照实验；服务启动后运行benchmark-run-*目标。")
+    if isinstance(pilot, dict) and pilot.get("automatic_metrics") and not pilot_is_current:
+        lines.extend(
+            [
+                "",
+                "> 已提供的 pilot 汇总属于旧评分契约归档，未载入当前指标表；请用 v2 runner/scorer 重跑后再生成报告。",
+            ]
+        )
+    if isinstance(retrieval, dict):
+        lines.append(scoring_note("检索", retrieval))
+    for label, path in labeled_retrieval:
+        payload = require_current_score(load_json(path), str(path))
+        lines.append(scoring_note(f"检索 {label}", payload))
 
     lines.extend(["", "## 回答质量", ""])
     answer_rows: list[tuple[str, str, dict[str, Any], dict[str, Any] | None]] = []
     answer_question_ids: set[str] = set()
 
-    if isinstance(pilot, dict) and pilot.get("automatic_metrics"):
+    if pilot_is_current and isinstance(pilot, dict):
         for item in pilot["automatic_metrics"]:
             answer_rows.append(
                 (
@@ -281,7 +433,15 @@ def main() -> None:
                     dict(item.get("manual_semantic") or {}) or None,
                 )
             )
-        append_answer_table(lines, answer_rows, question_count=6)
+        pilot_question_count = len(
+            pilot.get("scope", {}).get("question_ids", [])
+        ) or None
+        append_answer_table(
+            lines,
+            answer_rows,
+            question_count=pilot_question_count,
+            formal_question_count=source_counts["gb"],
+        )
         lines.extend(
             [
                 "",
@@ -290,9 +450,7 @@ def main() -> None:
         )
     elif labeled_answers:
         for label, path in labeled_answers:
-            payload = load_json(path)
-            if not isinstance(payload, dict):
-                continue
+            payload = require_current_score(load_json(path), str(path))
             for question_id in {row["question_id"] for row in payload.get("per_question", [])}:
                 answer_question_ids.add(question_id)
             for mode, summary in overall_summaries(payload).items():
@@ -308,7 +466,12 @@ def main() -> None:
                     )
                 }
                 answer_rows.append((label, mode, metrics, None))
-        append_answer_table(lines, answer_rows, question_count=len(answer_question_ids) or None)
+        append_answer_table(
+            lines,
+            answer_rows,
+            question_count=len(answer_question_ids) or None,
+            formal_question_count=source_counts["gb"],
+        )
     else:
         answer_overall = overall_summaries(answers if isinstance(answers, dict) else None)
         if answer_overall and isinstance(answers, dict):
@@ -326,9 +489,19 @@ def main() -> None:
                     )
                 }
                 answer_rows.append(("run", mode, metrics, None))
-            append_answer_table(lines, answer_rows, question_count=answer_question_count)
+            append_answer_table(
+                lines,
+                answer_rows,
+                question_count=answer_question_count,
+                formal_question_count=source_counts["gb"],
+            )
         else:
             lines.append("尚未运行统一回答模型实验。")
+    if isinstance(answers, dict):
+        lines.append(scoring_note("回答", answers))
+    for label, path in labeled_answers:
+        payload = require_current_score(load_json(path), str(path))
+        lines.append(scoring_note(f"回答 {label}", payload))
 
     lines.extend(["", "## 失败案例", ""])
     failures: list[tuple[float, str, str, str, list[str]]] = []
@@ -336,9 +509,8 @@ def main() -> None:
     if isinstance(retrieval, dict):
         sources.append(("run", retrieval))
     for label, path in labeled_retrieval:
-        payload = load_json(path)
-        if isinstance(payload, dict):
-            sources.append((label, payload))
+        payload = require_current_score(load_json(path), str(path))
+        sources.append((label, payload))
     for label, payload in sources:
         failures.extend(
             (
@@ -356,7 +528,7 @@ def main() -> None:
             lines.append(
                 f"- {label} / {question_id} / {mode}：证据召回={recall:.3f}，缺失={', '.join(missing)}"
             )
-    elif isinstance(pilot, dict):
+    elif pilot_is_current and isinstance(pilot, dict):
         lines.extend(
             [
                 "- A0 hybrid/mix：证据几乎不可追溯，图模式不能作为可审计依据。",
@@ -371,12 +543,12 @@ def main() -> None:
     lines.extend(
         [
             "",
-            "## 当前结论（pilot）",
+            "## 当前可报告结论",
             "",
-            "- 图检索能提高复杂题的证据覆盖与路径完整率，尤其是跨章节枚举。",
-            "- 在 6 题 pilot 中，图模式尚未稳定提高最终回答质量；不能声称 GraphRAG 整体优于向量 RAG。",
-            "- v3 hybrid 检索折中较好；v4 KG 结构质量最好（关系 F1 / 类型准确率），但 QA 未同步领先。",
-            "- 正式总体结论需：人工冻结 v1 + 完整 50 题 GB 主集 +（可选）三次建图稳定性。",
+            "- 只根据本报告实际加载的当前 scorer 输出作结论；缺少结果时不沿用历史 pilot 数值。",
+            "- `gold_path_complete` 现在只统计 Schema 合法且来源匹配的真实图边连通路径；旧版按 evidence ID 交集计算的结果不可直接比较。",
+            "- 模式差异应优先读取评分 JSON 的 paired bootstrap delta 与置信区间，而不是比较两条独立均值区间。",
+            f"- 正式总体结论需：人工冻结 v1 + 完整 {source_counts['gb']} 题 GB 主集 + 至少三次独立建图稳定性。",
             "",
             "## 结论解释规则",
             "",
@@ -387,11 +559,11 @@ def main() -> None:
             "",
             "## 未完成与建议下一步",
             "",
-            "1. 用户复核 `benchmark/review/`（60 题）并冻结 benchmark v1。",
-            "2. 运行完整 50 题 GB 主集：`make benchmark-run-a0|v2|v3|v4` 与对应 score。",
+            f"1. 用户复核 `benchmark/review/`（{len(questions)} 题）并冻结 benchmark v1。",
+            f"2. 运行完整 {source_counts['gb']} 题 GB 主集：`make benchmark-run-a0|v2|v3|v4` 与对应 score。",
             "3. 针对 hybrid/mix 高噪声：加 reranker 或按问题字段压缩上下文。",
             "4. 长条款拆成原子证据子段，减少“命中父条款却漏关键句”。",
-            "5. 跨文档 10 题需单独的多文档 workspace，勿在 GB-only 图上解释失败。",
+            f"5. 跨文档 {source_counts['cross']} 题需单独的多文档 workspace，勿在 GB-only 图上解释失败。",
             "",
         ]
     )
