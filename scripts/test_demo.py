@@ -14,7 +14,6 @@ import yaml
 from common import (
     MANIFEST_PATH,
     ROOT,
-    STATE_DIR,
     active_documents,
     api_headers,
     ingest_path_for_record,

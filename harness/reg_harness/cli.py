@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from contextlib import closing
 from pathlib import Path
 
 # Allow `python -m reg_harness.cli` from harness/ without install
@@ -13,6 +14,7 @@ if str(_HARNESS_ROOT) not in sys.path:
 from reg_harness.config import load_settings
 from reg_harness.live import format_final_answer, make_live_printer
 from reg_harness.loop import pretty_print_result, state_to_dict
+from reg_harness.rerank import close_shared_rerank_client
 from reg_harness.runtime import build_stack
 from reg_harness.tools.registry import default_registry
 from reg_harness.types import AgentState
@@ -68,110 +70,132 @@ def _run_ask(
     return 0
 
 
+def _close_registry_resources(registry, settings) -> None:
+    """Close registry-owned clients and the settings-scoped rerank client."""
+    first_error: Exception | None = None
+    for close in (
+        registry.close,
+        lambda: close_shared_rerank_client(settings),
+    ):
+        try:
+            close()
+        except Exception as error:  # noqa: BLE001 - finish all cleanup first
+            if first_error is None:
+                first_error = error
+    if first_error is not None:
+        raise first_error
+
+
 def _cmd_ask(args: argparse.Namespace) -> int:
-    stack = build_stack(profile_env=args.profile_env)
-    return _run_ask(
-        stack,
-        args.question,
-        policy=args.policy,
-        max_steps=args.max_steps,
-        bootstrap=bool(args.bootstrap),
-        live=bool(args.live),
-        dump_trace=args.dump_trace,
-        quiet_json=bool(args.live),
-    )
+    with closing(build_stack(profile_env=args.profile_env)) as stack:
+        return _run_ask(
+            stack,
+            args.question,
+            policy=args.policy,
+            max_steps=args.max_steps,
+            bootstrap=bool(args.bootstrap),
+            live=bool(args.live),
+            dump_trace=args.dump_trace,
+            quiet_json=bool(args.live),
+        )
 
 
 def _cmd_chat(args: argparse.Namespace) -> int:
     """Interactive REPL: type questions, watch the evidence chain live."""
-    stack = build_stack(profile_env=args.profile_env)
-    desc = stack.describe()
-    print(
-        "\nEvidenceTrail 交互取证  (输入问题回车；quit / exit / 空行退出)\n"
-        f"  profile={args.profile_env or 'default'}  "
-        f"tools={desc.get('tools')}  "
-        f"lightrag={desc.get('lightrag_url')}\n"
-        f"  max_steps={args.max_steps or 'default'}  "
-        f"catalog={desc.get('catalog_mode')}  "
-        f"pilot={desc.get('pilot_heuristics')}\n",
-        flush=True,
-    )
-    turn = 0
-    while True:
-        try:
-            line = input("你> ").strip()
-        except (EOFError, KeyboardInterrupt):
-            print("\n再见。", flush=True)
-            break
-        if not line or line.lower() in {"quit", "exit", "q"}:
-            print("再见。", flush=True)
-            break
-        if line.lower() in {"help", "?"}:
-            print(
-                "命令: 直接输入问题 | quit 退出 | help 帮助\n"
-                "过程会实时打印: 规划 → 工具 → 充分性 → 收网 → 答案",
-                flush=True,
-            )
-            continue
-        turn += 1
-        dump = None
-        if args.dump_dir:
-            Path(args.dump_dir).mkdir(parents=True, exist_ok=True)
-            dump = str(Path(args.dump_dir) / f"turn_{turn:03d}.json")
-        try:
-            _run_ask(
-                stack,
-                line,
-                policy=args.policy,
-                max_steps=args.max_steps,
-                bootstrap=bool(args.bootstrap),
-                live=True,
-                dump_trace=dump,
-                quiet_json=True,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"\n错误: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
-            print(
-                "请确认 make v4-up 已启动，且 .env 中 LLM/向量密钥有效。",
-                file=sys.stderr,
-                flush=True,
-            )
-    return 0
+    with closing(build_stack(profile_env=args.profile_env)) as stack:
+        desc = stack.describe()
+        print(
+            "\nEvidenceTrail 交互取证  (输入问题回车；quit / exit / 空行退出)\n"
+            f"  profile={args.profile_env or 'default'}  "
+            f"tools={desc.get('tools')}  "
+            f"lightrag={desc.get('lightrag_url')}\n"
+            f"  max_steps={args.max_steps or 'default'}  "
+            f"catalog={desc.get('catalog_mode')}  "
+            f"pilot={desc.get('pilot_heuristics')}\n",
+            flush=True,
+        )
+        turn = 0
+        while True:
+            try:
+                line = input("你> ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print("\n再见。", flush=True)
+                break
+            if not line or line.lower() in {"quit", "exit", "q"}:
+                print("再见。", flush=True)
+                break
+            if line.lower() in {"help", "?"}:
+                print(
+                    "命令: 直接输入问题 | quit 退出 | help 帮助\n"
+                    "过程会实时打印: 规划 → 工具 → 充分性 → 收网 → 答案",
+                    flush=True,
+                )
+                continue
+            turn += 1
+            dump = None
+            if args.dump_dir:
+                Path(args.dump_dir).mkdir(parents=True, exist_ok=True)
+                dump = str(Path(args.dump_dir) / f"turn_{turn:03d}.json")
+            try:
+                _run_ask(
+                    stack,
+                    line,
+                    policy=args.policy,
+                    max_steps=args.max_steps,
+                    bootstrap=bool(args.bootstrap),
+                    live=True,
+                    dump_trace=dump,
+                    quiet_json=True,
+                )
+            except Exception as exc:  # noqa: BLE001
+                print(f"\n错误: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
+                print(
+                    "请确认 make v4-up 已启动，且 .env 中 LLM/向量密钥有效。",
+                    file=sys.stderr,
+                    flush=True,
+                )
+        return 0
 
 
 def _cmd_retrieve(args: argparse.Namespace) -> int:
     settings = load_settings(profile_env=args.profile_env)
     registry = default_registry(settings)
-    state = AgentState(question=args.question)
-    tool = "vector_search" if args.mode == "naive" else "graph_search"
-    result = registry.run(tool, state, {"query": args.question, "mode": args.mode})
-    print(result.content)
-    print(f"\nbag_size={len(state.evidence)} ok={result.ok}")
-    return 0 if result.ok else 1
+    try:
+        state = AgentState(question=args.question)
+        tool = "vector_search" if args.mode == "naive" else "graph_search"
+        result = registry.run(tool, state, {"query": args.question, "mode": args.mode})
+        print(result.content)
+        print(f"\nbag_size={len(state.evidence)} ok={result.ok}")
+        return 0 if result.ok else 1
+    finally:
+        _close_registry_resources(registry, settings)
 
 
 def _cmd_lookup(args: argparse.Namespace) -> int:
     settings = load_settings(profile_env=args.profile_env)
     registry = default_registry(settings)
-    state = AgentState(question=args.question or "lookup")
-    state.meta["intent"] = {"kb": [settings.active_kb]}
-    if args.kind == "clause":
-        result = registry.run("clause_lookup", state, {"clause": args.target})
-    else:
-        payload: dict = {"table": args.target}
-        if args.vehicle:
-            payload["vehicle"] = args.vehicle
-        if args.ego_kmh is not None:
-            payload["ego_kmh"] = args.ego_kmh
-        if args.load_state:
-            payload["load_state"] = args.load_state
-        if args.scenario:
-            payload["scenario"] = args.scenario
-        result = registry.run("table_lookup", state, payload)
-    print(result.content)
-    ids = sorted({eid for item in state.evidence for eid in item.evidence_ids})
-    print(f"\nok={result.ok} bag={len(state.evidence)} evidence_ids={ids}")
-    return 0 if result.ok else 1
+    try:
+        state = AgentState(question=args.question or "lookup")
+        state.meta["intent"] = {"kb": [settings.active_kb]}
+        if args.kind == "clause":
+            result = registry.run("clause_lookup", state, {"clause": args.target})
+        else:
+            payload: dict = {"table": args.target}
+            if args.vehicle:
+                payload["vehicle"] = args.vehicle
+            if args.ego_kmh is not None:
+                payload["ego_kmh"] = args.ego_kmh
+            if args.load_state:
+                payload["load_state"] = args.load_state
+            if args.scenario:
+                payload["scenario"] = args.scenario
+            result = registry.run("table_lookup", state, payload)
+        print(result.content)
+        ids = sorted({eid for item in state.evidence for eid in item.evidence_ids})
+        print(f"\nok={result.ok} bag={len(state.evidence)} evidence_ids={ids}")
+        return 0 if result.ok else 1
+    finally:
+        _close_registry_resources(registry, settings)
 
 
 def _cmd_intent(args: argparse.Namespace) -> int:
@@ -188,28 +212,28 @@ def _cmd_intent(args: argparse.Namespace) -> int:
 
 
 def _cmd_describe(args: argparse.Namespace) -> int:
-    stack = build_stack(profile_env=args.profile_env)
-    print(json.dumps(stack.describe(), ensure_ascii=False, indent=2))
-    return 0
+    with closing(build_stack(profile_env=args.profile_env)) as stack:
+        print(json.dumps(stack.describe(), ensure_ascii=False, indent=2))
+        return 0
 
 
 def _cmd_librarian(args: argparse.Namespace) -> int:
-    stack = build_stack(profile_env=args.profile_env)
-    if args.action == "propose-ingest":
-        plan = stack.librarian.propose_ingest(
-            args.source_file,
-            preferred_profile=args.profile,
-            preferred_kb=args.kb,
-        )
-        print(json.dumps(plan.to_dict(), ensure_ascii=False, indent=2))
-        return 0
-    if args.action == "propose-merge":
-        sources = [item.strip() for item in args.sources.split(",") if item.strip()]
-        plan = stack.librarian.propose_merge(sources, args.target)
-        print(json.dumps(plan.to_dict(), ensure_ascii=False, indent=2))
-        return 0
-    print("unknown librarian action", file=sys.stderr)
-    return 2
+    with closing(build_stack(profile_env=args.profile_env)) as stack:
+        if args.action == "propose-ingest":
+            plan = stack.librarian.propose_ingest(
+                args.source_file,
+                preferred_profile=args.profile,
+                preferred_kb=args.kb,
+            )
+            print(json.dumps(plan.to_dict(), ensure_ascii=False, indent=2))
+            return 0
+        if args.action == "propose-merge":
+            sources = [item.strip() for item in args.sources.split(",") if item.strip()]
+            plan = stack.librarian.propose_merge(sources, args.target)
+            print(json.dumps(plan.to_dict(), ensure_ascii=False, indent=2))
+            return 0
+        print("unknown librarian action", file=sys.stderr)
+        return 2
 
 
 def main(argv: list[str] | None = None) -> int:

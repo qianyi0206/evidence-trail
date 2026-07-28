@@ -1,4 +1,5 @@
 {
+  "schema_version": 2,
   "sha256": "0b695323b45201034a6431c29457549e1eb7b3853a88c8f9d5ef80ee500a0cb2",
   "config": {
     "binding": "openai",
@@ -7,7 +8,20 @@
     "dimension": 2560,
     "token_limit": 128000
   },
+  "corpus": {
+    "sha256": "81c2a10a25a67a08a7029a29a905f6a1997c0ce24b9f4380630e498f885e3f4a",
+    "inputs": {
+      "mode": "structural_bundle",
+      "bundle_file": "corpus/index_ready_v3/units.json",
+      "bundle_sha256": "9a440cf5a5f6faae684e4ec02b47a27e27a914c06e24166048336b4fc7b310b2",
+      "source_id": "gb_39901_2025",
+      "source_file": "corpus/prepared/GB+39901-2025.pdf_by_PaddleOCR-VL-1.6.md",
+      "source_sha256": "9a46c6edf352d7c00ef62b6e645f5a72a40948d628d63d3eddd81d85084ec7fb",
+      "unit_count": 46
+    }
+  },
   "recorded_at": "2026-07-18T10:53:10.788277+00:00",
+  "status": "ready",
   "workspace": "aeb_gb39901_v4_relation_guard",
   "note": "Host redacted for open source. Re-record after ingest with scripts that write state/embedding_fingerprint.*.json. Vectors in data/rag_storage/aeb_gb39901_v4_relation_guard require the same embedding model and dimension."
 }

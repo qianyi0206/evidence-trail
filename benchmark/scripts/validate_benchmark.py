@@ -16,12 +16,21 @@ from benchmark_common import (
     GRAPH_PATH,
     QUESTIONS_PATH,
     REVIEW_DIR,
+    SCHEMA_PATH,
     index_by_id,
     load_jsonl,
     normalize_text,
+    review_content_sha256,
     sha256_file,
 )
-
+from benchmark_contract import (
+    KG_RELATION_ENDPOINTS,
+    KG_SCHEMA_TYPES,
+    evidence_source_ids,
+    graph_edge_is_schema_legal,
+    question_source_ids,
+)
+from json_schema_validator import load_schema, validate_definition
 
 EXPECTED_TASK_COUNTS = {
     "direct_fact": 8,
@@ -45,33 +54,14 @@ GRAPH_REQUIRED_TASKS = {
     "cross_document_synthesis",
 }
 
-AUDIT_SCHEMA_TYPES = {
-    "Standard", "Clause", "Term", "Organization", "VehicleCategory", "System",
-    "SystemFunction", "SystemState", "SystemComponent", "Signal", "DriverAction",
-    "Requirement", "ImplementationRule", "TypeEquivalenceCriterion", "TestScenario",
-    "TestTarget", "LoadState", "Condition", "Parameter", "Metric", "Threshold",
-    "AcceptanceCriterion", "DocumentationArtifact", "FailureMode", "Hazard", "ASILLevel",
-    "SafetyGoal", "SafetyMeasure", "SafetyAnalysis", "VerificationActivity",
-    "SimulationToolchain", "SimulationModel", "ValidityDomain", "CredibilityCriterion",
+PUBLISHED_PILOT_IDS = {
+    "gb_direct_001",
+    "gb_table_002",
+    "gb_multi_hop_009",
+    "gb_compare_002",
+    "gb_synthesis_001",
+    "gb_unanswerable_002",
 }
-
-AUDIT_RELATION_ENDPOINTS = {
-    "DEFINES": ({"Standard", "Clause"}, {"Term", "System", "SystemFunction", "SystemState", "TestScenario", "Metric", "Parameter", "TestTarget"}),
-    "HAS_FUNCTION": ({"System"}, {"SystemFunction"}),
-    "SPECIFIES": ({"Clause"}, {"Requirement", "TestScenario", "Condition", "VerificationActivity", "AcceptanceCriterion", "Hazard", "SimulationToolchain"}),
-    "VERIFIED_BY": ({"Requirement", "SafetyGoal", "SafetyMeasure", "CredibilityCriterion"}, {"TestScenario", "VerificationActivity"}),
-    "MEASURED_BY": ({"Requirement", "TestScenario", "AcceptanceCriterion", "Hazard", "CredibilityCriterion", "Threshold", "Condition"}, {"Metric"}),
-    "HAS_THRESHOLD": ({"Requirement", "Metric", "AcceptanceCriterion", "CredibilityCriterion", "Condition", "TestScenario"}, {"Threshold"}),
-    "HAS_CONDITION": ({"SystemFunction", "SystemState", "Requirement", "TestScenario", "ImplementationRule", "TypeEquivalenceCriterion", "SimulationToolchain", "VerificationActivity"}, {"Condition"}),
-    "HAS_ACCEPTANCE_CRITERION": ({"TestScenario", "VerificationActivity", "CredibilityCriterion", "Requirement"}, {"AcceptanceCriterion"}),
-    "ASSIGNED_ASIL": ({"Hazard"}, {"ASILLevel"}),
-    "HAS_SAFETY_GOAL": ({"Hazard"}, {"SafetyGoal"}),
-    "USES_TOOLCHAIN": ({"TestScenario", "VerificationActivity"}, {"SimulationToolchain"}),
-    "VALIDATES": ({"VerificationActivity"}, {"SystemFunction", "SafetyGoal", "SafetyMeasure", "SimulationToolchain", "SimulationModel"}),
-    "APPLIES_TO": ({"Standard", "Clause", "Requirement", "TestScenario", "ImplementationRule", "Threshold", "AcceptanceCriterion"}, {"VehicleCategory", "System", "SystemFunction", "SimulationToolchain", "LoadState"}),
-    "HAS_LOAD_STATE": ({"Requirement", "TestScenario", "VerificationActivity", "Threshold", "AcceptanceCriterion", "ImplementationRule"}, {"LoadState"}),
-}
-
 
 def fail(message: str, errors: list[str]) -> None:
     errors.append(message)
@@ -123,7 +113,7 @@ def validate_graph(
         for evidence_id in node.get("evidence_ids", []):
             if evidence_id not in evidence:
                 fail(f"Node {node_id} references missing evidence {evidence_id}", errors)
-        if node.get("properties", {}).get("audit_unit") and node.get("type") not in AUDIT_SCHEMA_TYPES:
+        if node.get("properties", {}).get("graph_role") == "extractable_kg" and node.get("type") not in KG_SCHEMA_TYPES:
             fail(f"Audit node {node_id} has non-schema type {node.get('type')}", errors)
     for edge_id, edge in edges.items():
         if edge.get("source") not in nodes or edge.get("target") not in nodes:
@@ -135,12 +125,12 @@ def validate_graph(
         for evidence_id in edge.get("evidence_ids", []):
             if evidence_id not in evidence:
                 fail(f"Edge {edge_id} references missing evidence {evidence_id}", errors)
-        if edge.get("properties", {}).get("audit_unit"):
+        if edge.get("properties", {}).get("graph_role") == "extractable_kg":
             relation = edge.get("relation")
-            if relation not in AUDIT_RELATION_ENDPOINTS:
+            if relation not in KG_RELATION_ENDPOINTS:
                 fail(f"Audit edge {edge_id} has unsupported schema relation {relation}", errors)
             elif edge.get("source") in nodes and edge.get("target") in nodes:
-                allowed_source, allowed_target = AUDIT_RELATION_ENDPOINTS[relation]
+                allowed_source, allowed_target = KG_RELATION_ENDPOINTS[relation]
                 source_type = nodes[edge["source"]].get("type")
                 target_type = nodes[edge["target"]].get("type")
                 if source_type not in allowed_source or target_type not in allowed_target:
@@ -179,7 +169,11 @@ def validate_questions(
             "gold_nodes",
             "gold_edges",
             "gold_path",
+            "gold_reasoning_path",
+            "gold_kg_path",
+            "gold_kg_schema",
             "expected_hops",
+            "expected_kg_hops",
             "graph_dependency_reason",
             "scoring_method",
             "review_status",
@@ -193,6 +187,11 @@ def validate_questions(
             fail(f"Question {question_id} has invalid review status", errors)
         if question.get("split") not in {"dev", "test"}:
             fail(f"Question {question_id} has invalid split", errors)
+        if question_id in PUBLISHED_PILOT_IDS and question.get("split") != "dev":
+            fail(
+                f"Published pilot question {question_id} must remain in dev",
+                errors,
+            )
         if not question.get("graph_dependency_reason"):
             fail(f"Question {question_id} lacks graph-dependency analysis", errors)
 
@@ -207,7 +206,12 @@ def validate_questions(
             if edge_id not in edges:
                 fail(f"Question {question_id} references missing edge {edge_id}", errors)
 
-        path = question.get("gold_path", [])
+        path = question.get("gold_reasoning_path", [])
+        if question.get("gold_path") != path:
+            fail(
+                f"Question {question_id} compatibility gold_path differs from gold_reasoning_path",
+                errors,
+            )
         if question.get("expected_hops") != len(path):
             fail(f"Question {question_id} expected_hops does not match path length", errors)
         if not set(path).issubset(set(question.get("gold_edges", []))):
@@ -219,6 +223,46 @@ def validate_questions(
             right = edges.get(right_id, {})
             if left.get("target") != right.get("source"):
                 fail(f"Question {question_id} has disconnected path {left_id} -> {right_id}", errors)
+
+        kg_path = question.get("gold_kg_path", [])
+        if question.get("expected_kg_hops") != len(kg_path):
+            fail(
+                f"Question {question_id} expected_kg_hops does not match gold_kg_path",
+                errors,
+            )
+        if not set(kg_path).issubset(set(question.get("gold_edges", []))):
+            fail(
+                f"Question {question_id} gold_kg_path is not a subset of gold_edges",
+                errors,
+            )
+        if kg_path and question.get("gold_kg_schema") != "gb39901_v4":
+            fail(
+                f"Question {question_id} has gold_kg_path without gb39901_v4 schema",
+                errors,
+            )
+        if not kg_path and question.get("gold_kg_schema") is not None:
+            fail(
+                f"Question {question_id} has gold_kg_schema but no gold_kg_path",
+                errors,
+            )
+        question_sources = question_source_ids(question)
+        expected_kg_path = []
+        if question_sources == {"gb39901"} and all(
+            edge_id in edges
+            and graph_edge_is_schema_legal(edges[edge_id], nodes)
+            and evidence_source_ids(
+                list(edges[edge_id].get("evidence_ids", [])),
+                evidence,
+            ).issubset(question_sources)
+            for edge_id in path
+        ):
+            expected_kg_path = path
+        if kg_path != expected_kg_path:
+            fail(
+                f"Question {question_id} gold_kg_path must be the complete "
+                "schema-legal, source-matched reasoning path or empty",
+                errors,
+            )
 
         claim_ids: set[str] = set()
         for claim in question.get("atomic_claims", []):
@@ -304,6 +348,8 @@ def validate_audit(
 def write_review_csv(
     questions: dict[str, dict[str, Any]],
     evidence: dict[str, dict[str, Any]],
+    nodes: dict[str, dict[str, Any]],
+    edges: dict[str, dict[str, Any]],
 ) -> Path:
     REVIEW_DIR.mkdir(parents=True, exist_ok=True)
     output = REVIEW_DIR / "benchmark_review.csv"
@@ -315,6 +361,27 @@ def write_review_csv(
             or str(row.get("review_notes", "")).strip()
             for row in existing_rows
         ):
+            current_hashes = {
+                question_id: review_content_sha256(
+                    question,
+                    evidence,
+                    nodes,
+                    edges,
+                )
+                for question_id, question in questions.items()
+            }
+            stale = [
+                str(row.get("id", ""))
+                for row in existing_rows
+                if row.get("id") not in current_hashes
+                or row.get("content_sha256") != current_hashes[row["id"]]
+            ]
+            if stale:
+                raise RuntimeError(
+                    "Existing review decisions are stale for question content: "
+                    f"{stale}. Preserve the old file for audit, then regenerate "
+                    "and review those rows again."
+                )
             print(f"review   preserved existing user decisions in {output}")
             return output
     with output.open("w", encoding="utf-8-sig", newline="") as handle:
@@ -322,6 +389,7 @@ def write_review_csv(
             handle,
             fieldnames=[
                 "id",
+                "content_sha256",
                 "split",
                 "task_type",
                 "question",
@@ -348,6 +416,12 @@ def write_review_csv(
             writer.writerow(
                 {
                     "id": question["id"],
+                    "content_sha256": review_content_sha256(
+                        question,
+                        evidence,
+                        nodes,
+                        edges,
+                    ),
                     "split": question["split"],
                     "task_type": question["task_type"],
                     "question": question["question"],
@@ -370,19 +444,80 @@ def main() -> None:
     args = parser.parse_args()
 
     errors: list[str] = []
-    evidence = validate_evidence(load_jsonl(EVIDENCE_PATH), errors)
-    nodes, edges = validate_graph(load_jsonl(GRAPH_PATH), evidence, errors)
-    questions = validate_questions(
-        load_jsonl(QUESTIONS_PATH), evidence, nodes, edges, errors, args.allow_partial
+    evidence_records = load_jsonl(EVIDENCE_PATH)
+    graph_records = load_jsonl(GRAPH_PATH)
+    question_records = load_jsonl(QUESTIONS_PATH)
+    audit_records = load_jsonl(AUDIT_PATH)
+    schema = load_schema(SCHEMA_PATH)
+    errors.extend(
+        validate_definition(
+            evidence_records,
+            schema=schema,
+            definition="evidence",
+            label="evidence",
+        )
     )
-    validate_audit(load_jsonl(AUDIT_PATH), evidence, nodes, edges, errors, args.allow_partial)
+    errors.extend(
+        validate_definition(
+            [item for item in graph_records if item.get("kind") == "node"],
+            schema=schema,
+            definition="node",
+            label="graph node",
+        )
+    )
+    errors.extend(
+        validate_definition(
+            [item for item in graph_records if item.get("kind") == "edge"],
+            schema=schema,
+            definition="edge",
+            label="graph edge",
+        )
+    )
+    errors.extend(
+        validate_definition(
+            question_records,
+            schema=schema,
+            definition="question",
+            label="question",
+        )
+    )
+    errors.extend(
+        validate_definition(
+            audit_records,
+            schema=schema,
+            definition="audit_unit",
+            label="audit unit",
+        )
+    )
+    evidence = validate_evidence(evidence_records, errors)
+    nodes, edges = validate_graph(graph_records, evidence, errors)
+    questions = validate_questions(
+        question_records,
+        evidence,
+        nodes,
+        edges,
+        errors,
+        args.allow_partial,
+    )
+    validate_audit(
+        audit_records,
+        evidence,
+        nodes,
+        edges,
+        errors,
+        args.allow_partial,
+    )
 
     if errors:
         for error in errors:
             print(f"ERROR {error}")
         raise SystemExit(f"Benchmark validation failed with {len(errors)} error(s)")
 
-    review_path = write_review_csv(questions, evidence) if args.write_review else None
+    review_path = (
+        write_review_csv(questions, evidence, nodes, edges)
+        if args.write_review
+        else None
+    )
     print(
         f"benchmark OK evidence={len(evidence)} nodes={len(nodes)} edges={len(edges)} "
         f"questions={len(questions)}"

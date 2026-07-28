@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import sys
-from pathlib import Path
 
 import yaml
 
@@ -10,7 +9,11 @@ from common import ROOT
 
 
 sys.path.insert(0, str(ROOT / "lightrag_custom"))
-from schema_guard import RELATION_ENDPOINTS, filter_extraction_result, reset_type_cache
+from schema_guard import (  # noqa: E402
+    RELATION_ENDPOINTS,
+    filter_extraction_result,
+    reset_type_cache,
+)
 
 
 def entity(entity_type: str) -> list[dict]:

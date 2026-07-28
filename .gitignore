@@ -1,9 +1,14 @@
 # --- Secrets & local env (never commit real keys) ---
 .env
-.env.local
-.env.*.local
+.env.*
 *.pem
 *.key
+*.p12
+*.pfx
+.netrc
+credentials*.json
+secrets*.json
+service-account*.json
 
 # Keep templates and non-secret workspace overlays
 !.env.example

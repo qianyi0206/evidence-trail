@@ -30,7 +30,7 @@
     },
     "question": {
       "type": "object",
-      "required": ["id", "question", "task_type", "answerable", "gold_answer", "atomic_claims", "gold_evidence_ids", "gold_nodes", "gold_edges", "gold_path", "expected_hops", "graph_dependency_reason", "scoring_method", "review_status", "split", "self_review"],
+      "required": ["id", "question", "task_type", "answerable", "gold_answer", "atomic_claims", "gold_evidence_ids", "gold_nodes", "gold_edges", "gold_path", "gold_reasoning_path", "gold_kg_path", "gold_kg_schema", "expected_hops", "expected_kg_hops", "graph_dependency_reason", "scoring_method", "review_status", "split", "self_review"],
       "properties": {
         "id": {"type": "string", "pattern": "^(gb|cross)_[a-z0-9_]+$"},
         "question": {"type": "string", "minLength": 8},
@@ -42,7 +42,11 @@
         "gold_nodes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "gold_edges": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "gold_path": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "gold_reasoning_path": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "gold_kg_path": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "gold_kg_schema": {"type": ["string", "null"]},
         "expected_hops": {"type": "integer", "minimum": 0},
+        "expected_kg_hops": {"type": "integer", "minimum": 0},
         "graph_dependency_reason": {"type": "string", "minLength": 4},
         "scoring_method": {"enum": ["structured_exact_match", "set_f1", "claim_f1", "unanswerable"]},
         "review_status": {"enum": ["self_checked", "user_reviewed", "frozen"]},
@@ -65,28 +69,38 @@
     },
     "node": {
       "type": "object",
-      "required": ["kind", "id", "type", "name", "evidence_ids"],
+      "required": ["kind", "id", "type", "name", "properties", "evidence_ids"],
       "properties": {
         "kind": {"const": "node"},
         "id": {"type": "string", "minLength": 1},
         "type": {"type": "string", "minLength": 1},
         "name": {"type": "string", "minLength": 1},
         "aliases": {"type": "array", "items": {"type": "string"}},
-        "properties": {"type": "object"},
+        "properties": {
+          "type": "object",
+          "required": ["graph_role"],
+          "properties": {"graph_role": {"enum": ["reasoning", "extractable_kg"]}},
+          "additionalProperties": true
+        },
         "evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true}
       },
       "additionalProperties": true
     },
     "edge": {
       "type": "object",
-      "required": ["kind", "id", "source", "target", "relation", "evidence_ids"],
+      "required": ["kind", "id", "source", "target", "relation", "properties", "evidence_ids"],
       "properties": {
         "kind": {"const": "edge"},
         "id": {"type": "string", "minLength": 1},
         "source": {"type": "string", "minLength": 1},
         "target": {"type": "string", "minLength": 1},
         "relation": {"type": "string", "minLength": 1},
-        "properties": {"type": "object"},
+        "properties": {
+          "type": "object",
+          "required": ["graph_role"],
+          "properties": {"graph_role": {"enum": ["reasoning", "extractable_kg"]}},
+          "additionalProperties": true
+        },
         "evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true}
       },
       "additionalProperties": true

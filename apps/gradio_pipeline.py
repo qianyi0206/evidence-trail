@@ -2,8 +2,8 @@
 """EvidenceTrail Gradio demo — ask → pipeline timeline → bag → answer + KG shots.
 
 From demo/aeb:
-  pip install -r requirements-ui.txt
-  cd harness && pip install -e . && cd ..
+  pip install --require-hashes -r requirements-ui.lock
+  cd harness && pip install --no-deps -e . && cd ..
   make v4-up
   python apps/gradio_pipeline.py
 """
@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -33,6 +34,9 @@ SHOT_ALTS = (
     "neo4j-v4-focus.jpg",
     "neo4j-browser.png",
 )
+MAX_QUESTION_CHARS = 2000
+QUEUE_MAX_SIZE = 16
+QUEUE_CONCURRENCY = 2
 
 
 def _resolve_profile(profile: str | None) -> str | None:
@@ -179,25 +183,26 @@ def _format_evidence(full_state: Any) -> str:
         "事实与数值以 **chunk（原文）** 为准；entity / relationship 为图摘要辅证。",
         "",
     ]
-    # Prefer chunks first in display
-    ordered = sorted(
-        enumerate(items, 1),
-        key=lambda pair: (0 if pair[1].kind == "chunk" else 1, pair[0]),
-    )
-    for orig_i, it in ordered[:14]:
+    # Use the exact compose renderer so UI labels cannot drift from model citations.
+    rendered = full_state.render_evidence(for_compose=True)
+    for entry in rendered.items:
+        it = entry.item
         preview = (it.text or "").replace("\n", " ").strip()
         if len(preview) > 240:
             preview = preview[:240] + "…"
         src = it.source_tool or ""
         lines.append(
-            f"**[{orig_i}]** `{it.kind}`"
+            f"**[{entry.label}]** `{it.kind}`"
             + (f" · {src}" if src else "")
             + (f" · score={it.score:.3f}" if it.score is not None else "")
         )
         lines.append(f"> {preview}")
         lines.append("")
-    if len(items) > 14:
-        lines.append(f"_… 另有 {len(items) - 14} 条未展开_")
+    if rendered.omitted_count:
+        lines.append(
+            f"_… 另有 {rendered.omitted_count} 条因 Compose 长度上限未提供给模型，"
+            "因此不能被引用_"
+        )
     return "\n".join(lines)
 
 
@@ -254,41 +259,65 @@ def _kg_caption() -> str:
 
 
 class DemoApp:
-    def __init__(self, profile_env: str | None):
+    def __init__(self, profile_env: str | None, *, expose_errors: bool = True):
         self.profile_env = _resolve_profile(profile_env)
+        self.expose_errors = expose_errors
         self._stack = None
         self._last_profile: str | None = None
 
-    def stack(self, profile_env: str | None = None):
-        resolved = _resolve_profile(profile_env) if profile_env is not None else self.profile_env
+    def stack(self):
+        resolved = self.profile_env
         if self._stack is None or resolved != self._last_profile:
             self.profile_env = resolved
             self._last_profile = resolved
             self._stack = build_stack(profile_env=resolved)
         return self._stack
 
-    def run(
-        self, question: str, max_steps: int, profile_env: str | None
-    ) -> tuple[str, str, str, str, str]:
+    def close(self) -> None:
+        stack, self._stack = self._stack, None
+        self._last_profile = None
+        if stack is not None:
+            stack.close()
+
+    def run(self, question: str, max_steps: int) -> tuple[str, str, str, str, str]:
         question = (question or "").strip()
         if not question:
             empty = "请输入问题，或点下方示例。"
             return empty, "", "", "", "{}"
+        if len(question) > MAX_QUESTION_CHARS:
+            message = f"问题过长：最多允许 {MAX_QUESTION_CHARS} 个字符。"
+            return message, "", "", "", json.dumps(
+                {"error": "question_too_long"}, ensure_ascii=False
+            )
+        if (
+            not isinstance(max_steps, int)
+            or isinstance(max_steps, bool)
+            or not 4 <= max_steps <= 12
+        ):
+            message = "max_steps 必须是 4 到 12 之间的整数。"
+            return message, "", "", "", json.dumps(
+                {"error": "invalid_max_steps"}, ensure_ascii=False
+            )
 
         try:
-            state = self.stack(profile_env).ask(
+            state = self.stack().ask(
                 question,
-                max_steps=int(max_steps) if max_steps else None,
+                max_steps=max_steps,
             )
         except Exception as exc:  # noqa: BLE001
-            err = (
-                f"### 运行失败\n\n`{type(exc).__name__}: {exc}`\n\n"
-                "请确认：\n"
-                "1. 已在 `demo/aeb` 执行 `make v4-up`\n"
-                "2. `.env` 中 LLM / Embedding / Neo4j 配置有效\n"
-                "3. LightRAG 健康检查：http://127.0.0.1:9621/health\n"
-            )
-            return err, "", "", "", json.dumps({"error": str(exc)}, ensure_ascii=False)
+            if self.expose_errors:
+                err = (
+                    f"### 运行失败\n\n`{type(exc).__name__}: {exc}`\n\n"
+                    "请确认：\n"
+                    "1. 已在 `demo/aeb` 执行 `make v4-up`\n"
+                    "2. `.env` 中 LLM / Embedding / Neo4j 配置有效\n"
+                    "3. LightRAG 健康检查：http://127.0.0.1:9621/health\n"
+                )
+                raw_error = {"error": str(exc), "error_type": type(exc).__name__}
+            else:
+                err = "### 运行失败\n\n服务暂时不可用，请稍后重试。"
+                raw_error = {"error": "request_failed"}
+            return err, "", "", "", json.dumps(raw_error, ensure_ascii=False)
 
         readable = _readable_answer(state.final_answer, state.refuse_reason)
         overview = (
@@ -299,12 +328,17 @@ class DemoApp:
         )
         pipeline = _format_pipeline(list(state.trace or []))
         evidence = _format_evidence(state)
+        compact_state = state_to_dict(state)
         raw = json.dumps(
             {
                 "question": state.question,
                 "steps": state.step,
                 "evidence_count": len(state.evidence),
                 "trace_events": [t.get("event") for t in state.trace],
+                "compose_evidence_map": compact_state["compose_evidence_map"],
+                "compose_evidence_omitted_count": compact_state[
+                    "compose_evidence_omitted_count"
+                ],
                 "final_answer": state.final_answer,
                 "refuse_reason": state.refuse_reason,
             },
@@ -314,15 +348,53 @@ class DemoApp:
         return readable, overview, pipeline, evidence, raw
 
 
-def build_ui(profile_env: str | None, share: bool, server_port: int) -> None:
+def _launch_auth(
+    *,
+    share: bool,
+    username: str,
+    password_env: str,
+) -> tuple[str, str] | None:
+    user = username.strip()
+    password = os.environ.get(password_env, "").strip()
+    if share and (not user or not password):
+        raise ValueError(
+            "--share requires --auth-user and a non-empty password in "
+            f"the {password_env} environment variable"
+        )
+    if bool(user) != bool(password):
+        raise ValueError("Gradio auth requires both username and password")
+    return (user, password) if user and password else None
+
+
+def _launch_with_cleanup(app: Any, demo: DemoApp, **launch_kwargs: Any) -> None:
+    try:
+        app.launch(**launch_kwargs)
+    finally:
+        demo.close()
+
+
+def build_ui(
+    profile_env: str | None,
+    share: bool,
+    server_port: int,
+    *,
+    auth: tuple[str, str] | None = None,
+) -> None:
+    if share and (
+        auth is None
+        or len(auth) != 2
+        or not all(isinstance(value, str) and value.strip() for value in auth)
+    ):
+        raise ValueError("Public Gradio sharing requires non-empty authentication")
     try:
         import gradio as gr
     except ImportError as exc:
         raise SystemExit(
-            "需要 Gradio：pip install -r requirements-ui.txt\n" + str(exc)
+            "需要 Gradio：pip install --require-hashes -r requirements-ui.lock\n"
+            + str(exc)
         ) from exc
 
-    demo = DemoApp(profile_env)
+    demo = DemoApp(profile_env, expose_errors=not share)
     default_profile = profile_env or str(ROOT / ".env.gb39901_v4")
     examples = [
         ["GB 39901—2025 适用于哪两类汽车？"],
@@ -361,13 +433,7 @@ profile: `{Path(default_profile).name if default_profile else "—"}`
                         lines=4,
                         placeholder="输入法规相关问题，或点选示例…",
                     )
-                    with gr.Row():
-                        steps = gr.Slider(4, 12, value=6, step=1, label="max_steps")
-                        profile = gr.Textbox(
-                            label="profile_env",
-                            value=default_profile,
-                            scale=2,
-                        )
+                    steps = gr.Slider(4, 12, value=6, step=1, label="max_steps")
                     btn = gr.Button("开始取证", variant="primary")
                     gr.Examples(examples=examples, inputs=[q], label="示例题")
                 with gr.Column(scale=5):
@@ -405,16 +471,20 @@ profile: `{Path(default_profile).name if default_profile else "—"}`
                 "说明：[apps/README.md](README.md)"
             )
 
-        def _on_run(question: str, max_steps: float, profile_path: str):
-            return demo.run(question, int(max_steps), profile_path)
+        def _on_run(question: str, max_steps: float):
+            return demo.run(question, int(max_steps))
 
         btn.click(
             _on_run,
-            inputs=[q, steps, profile],
+            inputs=[q, steps],
             outputs=[answer_md, overview, pipeline, evidence, raw],
         )
 
-    app.queue()
+    app.queue(
+        max_size=QUEUE_MAX_SIZE,
+        default_concurrency_limit=QUEUE_CONCURRENCY,
+        api_open=False,
+    )
     # Some agent/sandbox environments fail Gradio's post-bind localhost probe.
     # Treat probe as OK so local URL still works for the host browser.
     try:
@@ -424,11 +494,14 @@ profile: `{Path(default_profile).name if default_profile else "—"}`
     except Exception:
         pass
     print(f"Gradio UI → http://127.0.0.1:{server_port}", flush=True)
-    app.launch(
+    _launch_with_cleanup(
+        app,
+        demo,
         server_name="127.0.0.1",
         server_port=server_port,
         share=share,
-        show_error=True,
+        auth=auth,
+        show_error=not share,
     )
 
 
@@ -441,11 +514,30 @@ def main() -> None:
     )
     parser.add_argument("--port", type=int, default=7860)
     parser.add_argument("--share", action="store_true")
+    parser.add_argument(
+        "--auth-user",
+        default=os.environ.get("GRADIO_AUTH_USER", ""),
+        help="Gradio username; mandatory with --share",
+    )
+    parser.add_argument(
+        "--auth-password-env",
+        default="GRADIO_AUTH_PASSWORD",
+        help="Environment variable containing the Gradio password",
+    )
     args = parser.parse_args()
+    try:
+        auth = _launch_auth(
+            share=bool(args.share),
+            username=args.auth_user,
+            password_env=args.auth_password_env,
+        )
+    except ValueError as error:
+        parser.error(str(error))
     build_ui(
         profile_env=args.profile_env,
         share=bool(args.share),
         server_port=args.port,
+        auth=auth,
     )
 
 

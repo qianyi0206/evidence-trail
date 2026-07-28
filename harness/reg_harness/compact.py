@@ -75,7 +75,11 @@ def _rank_with_rerank(
     *,
     max_items: int,
 ) -> list[EvidenceItem] | None:
-    from reg_harness.rerank import rerank_documents, truncate_for_rerank
+    from reg_harness.rerank import (
+        rerank_documents,
+        shared_rerank_client,
+        truncate_for_rerank,
+    )
 
     docs = [truncate_for_rerank(item.text or "") for item in items]
     # Skip empty docs but keep indices aligned via filter
@@ -86,6 +90,7 @@ def _rank_with_rerank(
     documents = [doc for _, doc in valid_pairs]
     try:
         timeout = float(getattr(settings, "request_timeout", 60) or 60)
+        request_timeout = min(timeout, 90.0)
         results = rerank_documents(
             query,
             documents,
@@ -93,7 +98,8 @@ def _rank_with_rerank(
             base_url=str(settings.rerank_host),
             api_key=str(settings.rerank_api_key),
             top_n=min(max_items, len(documents)),
-            timeout=min(timeout, 90.0),
+            timeout=request_timeout,
+            client=shared_rerank_client(settings, timeout=request_timeout),
         )
     except Exception as error:  # noqa: BLE001
         logger.warning("bag rerank failed, fallback to heuristic: %s", error)

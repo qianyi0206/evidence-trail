@@ -5,7 +5,6 @@ import html
 import json
 import re
 import sys
-from pathlib import Path
 
 from common import ROOT, load_env
 

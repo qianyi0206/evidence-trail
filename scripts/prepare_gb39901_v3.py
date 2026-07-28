@@ -7,7 +7,6 @@ import html
 import json
 import re
 import sys
-from pathlib import Path
 from typing import Any
 
 from common import ROOT, load_env, safe_workspace, workspace_state_path, write_json_atomic

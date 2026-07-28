@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from typing import Any
 
 from reg_harness.guards import validate_final_answer
@@ -44,6 +43,9 @@ COMPOSE_SYSTEM = """你是法规答题器。只能依据下方「证据袋」中
 
 ## 作答纪律
 - 数字、阈值必须在证据原文中有同形支撑。
+- answerable=true 时，answer、非空 claims、非空 citations 三者缺一不可；每条 claim
+  都必须能由 citations 指向的 Text unit 原文逐项支撑，数字、单位、条件需来自同一事实行。
+- answerable=false 时，必须给出非空 reason，且 claims=[]、citations=[]。
 - 禁止编造证据中未出现的场景名、条款号、速度档。
 - 若证据中已能列出题干要求的各项（名称/条款均已出现），必须作答，不得以「感觉不全」拒答。
 - 若场景/主事实已齐、但附属判据偏弱：可对主问题作答，并在 reason 中注明判据原文不足的部分。
@@ -59,6 +61,7 @@ class ComposeAnswerTool(Tool):
     )
     parameters = {
         "type": "object",
+        "additionalProperties": False,
         "properties": {
             "force": {
                 "type": "boolean",
@@ -100,21 +103,33 @@ class ComposeAnswerTool(Tool):
 
         from reg_harness.bag_gaps import analyze_bag_gaps, format_gap_hints
 
-        bag = state.evidence_text(for_compose=True)
+        rendered = state.render_evidence(for_compose=True)
+        bag = rendered.text
+        evidence_mapping = state.rendered_evidence_payload(rendered)
+        state.meta["compose_evidence_map"] = evidence_mapping
+        state.meta["compose_evidence_omitted_count"] = rendered.omitted_count
+        state.add_trace(
+            "compose_evidence",
+            labels=[entry.label for entry in rendered.items],
+            omitted_count=rendered.omitted_count,
+            mapping=evidence_mapping,
+        )
         gaps = analyze_bag_gaps(state.evidence, state.question)
         gap_note = format_gap_hints(
             state.evidence, state.question, prefix="【袋内缺口提示（作答时勿编造补全）】"
         )
         user = (
             f"问题：{state.question}\n\n"
-            f"证据条数：{len(state.evidence)}\n"
+            f"证据袋总条数：{len(state.evidence)}；"
+            f"本轮实际渲染：{len(rendered.items)}；"
+            f"因长度上限省略：{rendered.omitted_count}\n"
         )
         if gap_note:
             user += f"{gap_note}\n\n"
         elif gaps.get("long_items"):
             user += "注意：部分长证据可能含 …[truncated]，勿补全截断后不可见内容。\n\n"
         user += (
-            f"请基于下列全部证据作答（共 {len(state.evidence)} 条）：\n\n"
+            f"请只基于下列已渲染证据作答（共 {len(rendered.items)} 条）：\n\n"
             f"{bag}\n"
         )
         try:
@@ -130,14 +145,16 @@ class ComposeAnswerTool(Tool):
                 continue_loop=True,
             )
 
-        state.draft_answer = draft
+        state.draft_answer = draft if isinstance(draft, dict) else None
         checked = validate_final_answer(state, draft)
         flags = checked.get("validation_flags") or []
 
         continue_gather_flags = {
             "forced_refusal_empty_evidence",
             "forced_refusal_ungrounded_numeric",
+            "forced_refusal_ungrounded_claims",
             "forced_refusal_invalid_citations",
+            "forced_refusal_invalid_contract",
         }
         should_continue_gathering = checked.get("answerable") is False and any(
             flag in continue_gather_flags or flag.startswith("numeric_not_in_context")

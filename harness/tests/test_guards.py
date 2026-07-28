@@ -32,8 +32,8 @@ class GuardTests(unittest.TestCase):
             {
                 "answerable": True,
                 "answer": {"max_relative_collision_speed": 50, "unit": "km/h"},
-                "claims": [],
-                "citations": [],
+                "claims": ["最大相对碰撞速度为 50 km/h"],
+                "citations": ["E1"],
             },
         )
         self.assertFalse(out["answerable"])

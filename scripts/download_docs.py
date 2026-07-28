@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import tempfile
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from common import MANIFEST_PATH, ROOT, write_json_atomic
-
 
 ALLOWED_HOSTS = {
     "unece.org",
@@ -18,6 +18,7 @@ ALLOWED_HOSTS = {
     "documents.un.org",
     "cdn.euroncap.com",
 }
+MAX_DOWNLOAD_BYTES = 50 * 1024 * 1024
 
 
 @dataclass(frozen=True)
@@ -30,6 +31,7 @@ class Source:
     landing_page: str
     source_url: str
     filename: str
+    sha256: str
 
 
 SOURCES = [
@@ -45,6 +47,7 @@ SOURCES = [
             "s=E/ECE/TRANS/505/REV.3/ADD.151/REV.2&l=en&t=pdf"
         ),
         filename="UNECE_UN_R152_Rev2.pdf",
+        sha256="dc9cc84498dcae8f0888067ad3967fb5a346e814bc2f19128987a654c8a193de",
     ),
     Source(
         source_id="euroncap_aeb_c2c_v431",
@@ -55,6 +58,7 @@ SOURCES = [
         landing_page="https://www.euroncap.com/safety-assist/",
         source_url="https://cdn.euroncap.com/cars/assets/euro_ncap_aeb_c2c_test_protocol_v431_532926aad1.pdf",
         filename="EuroNCAP_AEB_C2C_v4.3.1.pdf",
+        sha256="71683795b98d60f6478be26c131f3f392d355a599020fd1e77577ac67fce3f1a",
     ),
     Source(
         source_id="euroncap_collision_avoidance_v1041",
@@ -65,6 +69,7 @@ SOURCES = [
         landing_page="https://www.euroncap.com/safety-assist/",
         source_url="https://cdn.euroncap.com/cars/assets/euro_ncap_assessment_protocol_sa_collision_avoidance_v1041_fafe1dd418.pdf",
         filename="EuroNCAP_Collision_Avoidance_v10.4.1.pdf",
+        sha256="911225776a14d31a830c48f7bcd5472425a0b0a53b44bc47fc42cc7ff899147f",
     ),
 ]
 
@@ -85,12 +90,39 @@ def validate_pdf(path: Path) -> None:
             raise RuntimeError(f"Downloaded content is not a PDF: {path}")
 
 
-def download(source: Source, destination: Path) -> str:
-    host = (urlsplit(source.source_url).hostname or "").lower()
+def validate_download_url(url: str) -> None:
+    parsed = urlsplit(url)
+    host = (parsed.hostname or "").lower()
+    if parsed.scheme.lower() != "https":
+        raise RuntimeError(f"Refusing non-HTTPS document URL: {url}")
     if host not in ALLOWED_HOSTS:
         raise RuntimeError(f"Refusing non-official host: {host}")
 
-    temporary = destination.with_suffix(destination.suffix + ".part")
+
+class OfficialRedirectHandler(HTTPRedirectHandler):
+    def redirect_request(self, request, fp, code, msg, headers, newurl):
+        validate_download_url(newurl)
+        return super().redirect_request(request, fp, code, msg, headers, newurl)
+
+
+def validate_source_file(source: Source, path: Path) -> None:
+    validate_pdf(path)
+    digest = sha256_file(path)
+    if digest != source.sha256:
+        raise RuntimeError(
+            f"Checksum mismatch for {source.source_id}: "
+            f"expected {source.sha256}, got {digest}"
+        )
+
+
+def preserve_document_policy(record: dict, previous: dict) -> None:
+    if "enabled" in previous:
+        record["enabled"] = bool(previous["enabled"])
+
+
+def download(source: Source, destination: Path) -> str:
+    validate_download_url(source.source_url)
+
     request = Request(
         source.source_url,
         headers={
@@ -102,19 +134,54 @@ def download(source: Source, destination: Path) -> str:
             "Referer": source.landing_page,
         },
     )
-    with urlopen(request, timeout=120) as response, temporary.open("wb") as output:
-        final_host = (urlsplit(response.geturl()).hostname or "").lower()
-        if final_host not in ALLOWED_HOSTS:
-            raise RuntimeError(f"Redirected to a non-official host: {final_host}")
-        content_type = response.headers.get_content_type()
-        if content_type != "application/pdf":
-            raise RuntimeError(f"Unexpected content type for {source.source_id}: {content_type}")
-        while chunk := response.read(1024 * 1024):
-            output.write(chunk)
+    opener = build_opener(OfficialRedirectHandler())
+    temporary: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="wb",
+            dir=destination.parent,
+            prefix=f".{destination.name}.",
+            suffix=".part",
+            delete=False,
+        ) as output:
+            temporary = Path(output.name)
+            with opener.open(request, timeout=120) as response:
+                validate_download_url(response.geturl())
+                content_type = response.headers.get_content_type()
+                if content_type != "application/pdf":
+                    raise RuntimeError(
+                        f"Unexpected content type for {source.source_id}: {content_type}"
+                    )
+                raw_length = response.headers.get("Content-Length")
+                if raw_length:
+                    try:
+                        content_length = int(raw_length)
+                    except ValueError as error:
+                        raise RuntimeError(
+                            f"Invalid Content-Length for {source.source_id}: {raw_length}"
+                        ) from error
+                    if content_length > MAX_DOWNLOAD_BYTES:
+                        raise RuntimeError(
+                            f"Document exceeds {MAX_DOWNLOAD_BYTES} byte limit: "
+                            f"{source.source_id}"
+                        )
+                downloaded = 0
+                while chunk := response.read(1024 * 1024):
+                    downloaded += len(chunk)
+                    if downloaded > MAX_DOWNLOAD_BYTES:
+                        raise RuntimeError(
+                            f"Document exceeds {MAX_DOWNLOAD_BYTES} byte limit: "
+                            f"{source.source_id}"
+                        )
+                    output.write(chunk)
 
-    validate_pdf(temporary)
-    temporary.replace(destination)
-    return "application/pdf"
+        assert temporary is not None
+        validate_source_file(source, temporary)
+        temporary.replace(destination)
+        return "application/pdf"
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
 
 
 def main() -> None:
@@ -135,7 +202,7 @@ def main() -> None:
     for source in SOURCES:
         destination = raw_dir / source.filename
         if destination.exists():
-            validate_pdf(destination)
+            validate_source_file(source, destination)
             content_type = "application/pdf"
             action = "kept"
         else:
@@ -159,6 +226,7 @@ def main() -> None:
             "local_file": str(destination.relative_to(ROOT)),
             "retrieved_at": retrieved_at or datetime.now(timezone.utc).isoformat(),
         }
+        preserve_document_policy(record, old)
         if old.get("sha256") == digest:
             for field in (
                 "enabled",

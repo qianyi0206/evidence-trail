@@ -10,17 +10,16 @@ import httpx
 
 from common import (
     MANIFEST_PATH,
-    ROOT,
-    STATE_DIR,
     active_documents,
     api_headers,
-    embedding_fingerprint,
+    ensure_index_compatible,
     ingest_path_for_record,
     lightrag_url,
-    load_env,
+    workspace_locked,
     workspace_state_path,
     write_json_atomic,
 )
+
 
 def get_documents(client: httpx.Client, env: dict[str, str]) -> list[dict]:
     response = client.get(lightrag_url(env, "/documents"), headers=api_headers(env))
@@ -29,24 +28,12 @@ def get_documents(client: httpx.Client, env: dict[str, str]) -> list[dict]:
     return [document for documents in statuses.values() for document in documents]
 
 
-def ensure_fingerprint_compatible(env: dict[str, str], fingerprint_path: Path) -> dict:
-    current = embedding_fingerprint(env)
-    if fingerprint_path.exists():
-        stored = json.loads(fingerprint_path.read_text(encoding="utf-8"))
-        if stored.get("sha256") != current["sha256"]:
-            raise RuntimeError(
-                "Embedding configuration changed after indexing. Refusing to mix vector spaces. "
-                "Restore the original settings or explicitly run "
-                "'make reset-index CONFIRM=RESET_AEB_INDEX'."
-            )
-    return current
-
-
-def main() -> None:
-    env = load_env()
+@workspace_locked
+def main(env: dict[str, str]) -> None:
     fingerprint_path = workspace_state_path(env, "embedding_fingerprint")
     report_path = workspace_state_path(env, "ingest_report")
-    current_fingerprint = ensure_fingerprint_compatible(env, fingerprint_path)
+    had_fingerprint = fingerprint_path.exists()
+    current_fingerprint = ensure_index_compatible(env, fingerprint_path)
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     records = active_documents(manifest)
     if any("prepared_file" not in item for item in records):
@@ -57,11 +44,47 @@ def main() -> None:
 
     expected_names = {Path(item["prepared_file"]).name for item in records}
     uploads: list[dict] = []
+    mutation_started = False
+
+    def mark_indexing() -> None:
+        nonlocal mutation_started
+        if mutation_started:
+            return
+        write_json_atomic(
+            fingerprint_path,
+            {
+                **current_fingerprint,
+                "recorded_at": datetime.now(timezone.utc).isoformat(),
+                "status": "indexing",
+            },
+        )
+        mutation_started = True
+
+    def mark_unverified(unexpected_documents: list[str]) -> None:
+        write_json_atomic(
+            fingerprint_path,
+            {
+                **current_fingerprint,
+                "recorded_at": datetime.now(timezone.utc).isoformat(),
+                "status": "unverified",
+                "reason": "workspace_contains_unexpected_documents",
+                "unexpected_documents": unexpected_documents,
+            },
+        )
+
     with httpx.Client(timeout=120) as client:
         health = client.get(lightrag_url(env, "/health"), headers=api_headers(env))
         health.raise_for_status()
 
         existing_documents = get_documents(client, env)
+        if not had_fingerprint and any(
+            item.get("status") in {"pending", "processing", "processed", "failed"}
+            for item in existing_documents
+        ):
+            raise RuntimeError(
+                "The workspace contains documents but has no verified index fingerprint. "
+                "Reset the index before ingesting so corpus provenance can be established."
+            )
         unexpected = sorted(
             Path(item.get("file_path", "")).name
             for item in existing_documents
@@ -69,6 +92,7 @@ def main() -> None:
             and Path(item.get("file_path", "")).name not in expected_names
         )
         if unexpected:
+            mark_unverified(unexpected)
             raise RuntimeError(
                 "The workspace already contains non-enabled documents: "
                 f"{unexpected}. Reset the AEB index before single-document ingestion."
@@ -77,6 +101,13 @@ def main() -> None:
             Path(item.get("file_path", "")).name: item
             for item in existing_documents
         }
+        if any(
+            existing.get(name, {}).get("status") in {"pending", "processing"}
+            for name in expected_names
+        ):
+            # An active queue means the index is already being mutated, even if
+            # this invocation did not submit the work.
+            mark_indexing()
         reprocess_failed = False
         for record in records:
             path = ingest_path_for_record(env, record)
@@ -98,6 +129,9 @@ def main() -> None:
                     continue
 
             with path.open("rb") as handle:
+                # A failed health/read-only preflight must not invalidate a healthy
+                # index. Fail closed only once this invocation can mutate it.
+                mark_indexing()
                 response = client.post(
                     lightrag_url(env, "/documents/upload"),
                     headers=api_headers(env),
@@ -109,6 +143,7 @@ def main() -> None:
             print(f"ingest     queued {upload_name}: {payload.get('status')}")
 
         if reprocess_failed:
+            mark_indexing()
             response = client.post(
                 lightrag_url(env, "/documents/reprocess_failed"),
                 headers=api_headers(env),
@@ -153,12 +188,14 @@ def main() -> None:
     fingerprint_record = {
         **current_fingerprint,
         "recorded_at": datetime.now(timezone.utc).isoformat(),
+        "status": "ready",
     }
     write_json_atomic(fingerprint_path, fingerprint_record)
     write_json_atomic(
         report_path,
         {
             "completed_at": datetime.now(timezone.utc).isoformat(),
+            "corpus": current_fingerprint["corpus"],
             "uploads": uploads,
             "documents": list(final_documents.values()),
         },

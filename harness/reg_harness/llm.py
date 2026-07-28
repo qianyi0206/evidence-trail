@@ -3,7 +3,8 @@ from __future__ import annotations
 import json
 import re
 import sys
-from typing import Any, Callable, TextIO
+from collections.abc import Callable
+from typing import Any, TextIO
 
 try:
     import httpx
@@ -13,6 +14,10 @@ except ModuleNotFoundError:  # pragma: no cover - allow pure unit tests without 
 from reg_harness.config import Settings
 
 TokenHook = Callable[[str], None]
+
+
+class StreamUnsupportedError(RuntimeError):
+    """The provider explicitly rejected the OpenAI stream option."""
 
 
 def _extract_json_object(text: str) -> dict[str, Any]:
@@ -70,6 +75,23 @@ class ChatClient:
         # Instance-level hook used by interactive CLI (live mode).
         self.on_token: TokenHook | None = None
         self.stream_enabled: bool = True
+        self._client: Any = None
+
+    def _http_client(self):
+        if httpx is None:
+            raise RuntimeError("httpx is required for live LLM calls")
+        if self._client is None:
+            self._client = httpx.Client(
+                timeout=self.settings.request_timeout,
+                trust_env=False,
+            )
+        return self._client
+
+    def close(self) -> None:
+        client = self._client
+        self._client = None
+        if client is not None:
+            client.close()
 
     def complete_json(
         self,
@@ -84,8 +106,10 @@ class ChatClient:
         if use_stream:
             try:
                 return self._complete_json_stream(system, user, on_token=hook)
-            except Exception:
-                # Provider may reject stream; fall back once without hook noise.
+            except StreamUnsupportedError:
+                # A pre-generation protocol rejection is safe to retry without
+                # streaming. Timeouts, malformed output, and interrupted streams
+                # must propagate to avoid a duplicate billable generation.
                 return self._complete_json_blocking(system, user)
         return self._complete_json_blocking(system, user)
 
@@ -114,22 +138,17 @@ class ChatClient:
         return payload
 
     def _complete_json_blocking(self, system: str, user: str) -> dict[str, Any]:
-        if httpx is None:
-            raise RuntimeError("httpx is required for live LLM calls")
         payload = self._base_payload(system, user)
-        with httpx.Client(
-            timeout=self.settings.request_timeout, trust_env=False
-        ) as client:
-            response = client.post(
-                self.settings.chat_completions_url,
-                headers=self._headers(),
-                json=payload,
-            )
-            response.raise_for_status()
-            body = response.json()
-            content = body["choices"][0]["message"]["content"]
-            if not isinstance(content, str):
-                content = json.dumps(content, ensure_ascii=False)
+        response = self._http_client().post(
+            self.settings.chat_completions_url,
+            headers=self._headers(),
+            json=payload,
+        )
+        response.raise_for_status()
+        body = response.json()
+        content = body["choices"][0]["message"]["content"]
+        if not isinstance(content, str):
+            content = json.dumps(content, ensure_ascii=False)
         return _extract_json_object(content)
 
     def _complete_json_stream(
@@ -151,61 +170,70 @@ class ChatClient:
             pool=30.0,
         )
         pieces: list[str] = []
-        with httpx.Client(timeout=timeout, trust_env=False) as client:
-            with client.stream(
-                "POST",
-                self.settings.chat_completions_url,
-                headers=self._headers(),
-                json=payload,
-            ) as response:
-                response.raise_for_status()
-                for line in response.iter_lines():
-                    if not line:
-                        continue
-                    if isinstance(line, bytes):
-                        line = line.decode("utf-8", errors="replace")
-                    line = line.strip()
-                    if not line.startswith("data:"):
-                        # Some proxies send bare JSON lines
-                        if line.startswith("{") and "choices" in line:
-                            try:
-                                chunk = json.loads(line)
-                            except json.JSONDecodeError:
-                                continue
-                        else:
-                            continue
-                    else:
-                        data = line[5:].strip()
-                        if not data or data == "[DONE]":
-                            if data == "[DONE]":
-                                break
-                            continue
+        with self._http_client().stream(
+            "POST",
+            self.settings.chat_completions_url,
+            headers=self._headers(),
+            json=payload,
+            timeout=timeout,
+        ) as response:
+            if response.status_code >= 400:
+                response.read()
+                error_text = response.text.lower()
+                if response.status_code == 501 or (
+                    response.status_code in {400, 422}
+                    and "stream" in error_text
+                ):
+                    raise StreamUnsupportedError(
+                        "LLM provider does not support streaming"
+                    )
+            response.raise_for_status()
+            for line in response.iter_lines():
+                if not line:
+                    continue
+                if isinstance(line, bytes):
+                    line = line.decode("utf-8", errors="replace")
+                line = line.strip()
+                if not line.startswith("data:"):
+                    # Some proxies send bare JSON lines
+                    if line.startswith("{") and "choices" in line:
                         try:
-                            chunk = json.loads(data)
+                            chunk = json.loads(line)
                         except json.JSONDecodeError:
                             continue
-                    choices = chunk.get("choices") or []
-                    if not choices:
+                    else:
                         continue
-                    choice0 = choices[0] or {}
-                    delta = choice0.get("delta") or {}
-                    # Non-stream-shaped fallback mid-stream
-                    if not delta and isinstance(choice0.get("message"), dict):
-                        msg_c = choice0["message"].get("content")
-                        if isinstance(msg_c, str) and msg_c:
-                            pieces.append(msg_c)
-                            if on_token:
-                                on_token(msg_c)
+                else:
+                    data = line[5:].strip()
+                    if not data or data == "[DONE]":
+                        if data == "[DONE]":
+                            break
                         continue
-                    text = _delta_text(delta)
-                    if text:
-                        pieces.append(text)
+                    try:
+                        chunk = json.loads(data)
+                    except json.JSONDecodeError:
+                        continue
+                choices = chunk.get("choices") or []
+                if not choices:
+                    continue
+                choice0 = choices[0] or {}
+                delta = choice0.get("delta") or {}
+                # Non-stream-shaped fallback mid-stream
+                if not delta and isinstance(choice0.get("message"), dict):
+                    msg_c = choice0["message"].get("content")
+                    if isinstance(msg_c, str) and msg_c:
+                        pieces.append(msg_c)
                         if on_token:
-                            on_token(text)
+                            on_token(msg_c)
+                    continue
+                text = _delta_text(delta)
+                if text:
+                    pieces.append(text)
+                    if on_token:
+                        on_token(text)
         content = "".join(pieces)
         if not content.strip():
-            # Empty stream → try non-stream once
-            return self._complete_json_blocking(system, user)
+            raise RuntimeError("LLM stream completed without JSON content")
         return _extract_json_object(content)
 
 

@@ -44,7 +44,7 @@ CLI 交互录屏：
 
 ```bash
 cd harness
-PYTHONPATH=. python3 -m reg_harness.cli --profile-env ../.env.gb39901_v4 chat
+PYTHONPATH=. python3 -m reg_harness.cli --profile-env .env.gb39901_v4 chat
 ```
 
 v4 知识图谱（Neo4j，`aeb_gb39901_v4_relation_guard`）：
@@ -341,11 +341,11 @@ Python: reg_harness ──HTTP──► LightRAG
 git clone https://github.com/qianyi0206/evidence-trail.git
 cd evidence-trail
 
-pip install -r requirements.txt
-cd harness && pip install -e . && cd ..
+pip install --require-hashes -r requirements.lock
+pip install --no-build-isolation --no-deps -e ./harness
 
 cp .env.example .env
-# NEO4J_PASSWORD、LLM_*、EMBEDDING_*；可选 RERANK_*
+# NEO4J_PASSWORD、LLM_*、EMBEDDING_*；v4 还需独立的 RERANK_BINDING_API_KEY
 ```
 
 无密钥叠加配置：`.env.gb39901_v4`。
@@ -358,7 +358,7 @@ cp .env.example .env
 3. make v4-up
 4. 图为空：make v4-prepare && make v4-ingest …
 5. cd harness && PYTHONPATH=. python3 -m reg_harness.cli \
-     --profile-env ../.env.gb39901_v4 chat
+     --profile-env .env.gb39901_v4 chat
 6. （可选）benchmark/scripts/ …
 ```
 
@@ -366,11 +366,11 @@ cp .env.example .env
 
 ```bash
 cd harness
-PYTHONPATH=. python3 -m reg_harness.cli --profile-env ../.env.gb39901_v4 \
+PYTHONPATH=. python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
   ask "系统无误响应要求与6.11试验是什么关系？6.11包含多少类子场景，共同通过行为是什么？" \
   --max-steps 8
 
-PYTHONPATH=. python3 -m reg_harness.cli --profile-env ../.env.gb39901_v4 \
+PYTHONPATH=. python3 -m reg_harness.cli --profile-env .env.gb39901_v4 \
   ask "GB 39901—2025 适用于哪两类汽车？" --max-steps 6
 ```
 

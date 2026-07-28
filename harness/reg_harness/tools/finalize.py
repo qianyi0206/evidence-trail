@@ -15,26 +15,51 @@ class FinalizeTool(Tool):
     )
     parameters = {
         "type": "object",
+        "additionalProperties": False,
         "properties": {
             "answerable": {"type": "boolean"},
-            "reason": {"type": "string"},
+            "reason": {"type": "string", "minLength": 1, "maxLength": 4000},
             "accept_draft": {"type": "boolean"},
             "answer": {"type": "object"},
-            "claims": {"type": "array"},
-            "citations": {"type": "array"},
+            "claims": {"type": "array", "items": {"type": "string"}},
+            "citations": {
+                "type": "array",
+                "items": {"type": "string", "pattern": r"^E[1-9]\d*$"},
+            },
         },
     }
 
     def run(self, state: AgentState, args: dict[str, Any]) -> ToolResult:
-        # Allow accepting last draft
-        if args.get("accept_draft") and state.draft_answer:
-            prediction = dict(state.draft_answer)
+        accept_draft = args.get("accept_draft") is True
+        draft_answer = state.draft_answer
+        if accept_draft and not draft_answer:
+            return ToolResult(
+                name=self.name,
+                ok=False,
+                content="没有可接受的 draft；请先 compose_answer 或明确拒答。",
+                error="missing_draft",
+                continue_loop=True,
+            )
+        if not accept_draft and type(args.get("answerable")) is not bool:
+            return ToolResult(
+                name=self.name,
+                ok=False,
+                content="finalize 必须显式提供布尔 answerable。",
+                error="invalid_final_contract",
+                continue_loop=True,
+            )
+
+        # Allow accepting a prior draft only after running the same final guards.
+        if accept_draft:
+            assert draft_answer is not None
+            prediction = dict(draft_answer)
         else:
             prediction = {
-                "answerable": args.get("answerable"),
+                "answerable": args["answerable"],
                 "answer": args.get("answer") if args.get("answer") is not None else {},
-                "claims": args.get("claims") or [],
-                "citations": args.get("citations") or [],
+                "claims": args.get("claims", []),
+                "citations": args.get("citations", []),
+                "reason": args.get("reason"),
             }
         if args.get("reason") and prediction.get("answerable") is False:
             if not prediction.get("answer"):
@@ -43,7 +68,7 @@ class FinalizeTool(Tool):
                 prediction["answer"].setdefault("reason", args.get("reason"))
 
         # Positive answers should go through compose_answer (evidence-grounded generation)
-        if prediction.get("answerable") is True and not args.get("accept_draft"):
+        if prediction.get("answerable") is True and not accept_draft:
             return ToolResult(
                 name=self.name,
                 ok=False,
@@ -58,19 +83,16 @@ class FinalizeTool(Tool):
         checked = validate_final_answer(state, prediction)
         flags = checked.get("validation_flags") or []
 
-        # If model tries to answer via finalize with ungrounded numbers, bounce back
-        if checked.get("answerable") is True or (
-            "forced_refusal_ungrounded_numeric" in flags and args.get("answerable") is True
-        ):
-            if "forced_refusal_ungrounded_numeric" in flags:
-                return ToolResult(
-                    name=self.name,
-                    ok=False,
-                    content=f"finalize 未通过门控 flags={flags}，请继续取证或明确拒答。",
-                    data=checked,
-                    error="guard_failed",
-                    continue_loop=True,
-                )
+        guard_failed = any(str(flag).startswith("forced_refusal_") for flag in flags)
+        if guard_failed:
+            return ToolResult(
+                name=self.name,
+                ok=False,
+                content=f"finalize 未通过门控 flags={flags}，请修正输出、继续取证或明确拒答。",
+                data=checked,
+                error="guard_failed",
+                continue_loop=True,
+            )
 
         state.final_answer = checked
         state.done = True

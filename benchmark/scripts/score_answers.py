@@ -21,7 +21,9 @@ from benchmark_common import (
     precision_recall_f1,
     recursive_normalized_equal,
     safe_float,
+    semantic_conflict,
     set_scores,
+    validate_result_records,
     write_json,
 )
 
@@ -63,7 +65,7 @@ def claim_scores(predicted_claims: list[str], gold_claims: list[str], threshold:
     for predicted_index, predicted in enumerate(predicted_claims):
         for gold_index, gold in enumerate(gold_claims):
             similarity = claim_similarity(predicted, gold)
-            if similarity >= threshold:
+            if similarity >= threshold and not semantic_conflict(predicted, gold):
                 candidates.append((similarity, predicted_index, gold_index))
     candidates.sort(reverse=True)
     used_predicted: set[int] = set()
@@ -75,7 +77,11 @@ def claim_scores(predicted_claims: list[str], gold_claims: list[str], threshold:
         used_predicted.add(predicted_index)
         used_gold.add(gold_index)
         pairs.append({"predicted_index": predicted_index, "gold_index": gold_index, "similarity": similarity})
-    scores = precision_recall_f1(len(pairs), len(predicted_claims), len(gold_claims))
+    scores: dict[str, Any] = precision_recall_f1(
+        len(pairs),
+        len(predicted_claims),
+        len(gold_claims),
+    )
     scores["matches"] = pairs
     return scores
 
@@ -109,6 +115,11 @@ def expand_citation_ids(citations: list[str], result: dict[str, Any]) -> set[str
             expanded.add(mapped)
             continue
         match = _BAG_REF_RE.fullmatch(citation)
+        if match and ref_map:
+            # An explicit render map is authoritative. Missing labels were not
+            # shown to the model and must not fall back to bag position.
+            expanded.add(citation)
+            continue
         if match and items:
             index = int(match.group(1)) - 1
             if 0 <= index < len(items):
@@ -156,6 +167,8 @@ def claim_supported_by_context(claim: str, context_blob: str) -> bool:
         if segment.strip()
     ]
     for segment in segments:
+        if semantic_conflict(claim, segment):
+            continue
         if len(claim_norm) >= 6 and claim_norm in normalize_text(segment):
             return True
         if claim_numbers:
@@ -192,6 +205,9 @@ def extract_set_items(answer: Any) -> list[Any]:
 
 
 def score_row(result: dict[str, Any], question: dict[str, Any], claim_threshold: float) -> dict[str, Any]:
+    execution_error = bool(str(result.get("error") or "").strip()) or (
+        result.get("result_status") != "completed"
+    )
     prediction = parse_json_object(result.get("prediction", result.get("answer", {})))
     answer = prediction.get("answer", prediction)
     predicted_claims = prediction.get("claims", result.get("claims", []))
@@ -254,14 +270,71 @@ def score_row(result: dict[str, Any], question: dict[str, Any], claim_threshold:
         primary = atomic["f1"]
     elif method == "unanswerable":
         answer_object = answer if isinstance(answer, dict) else {}
-        predicted_unanswerable = prediction.get("answerable") is False or answer_object.get("answerable") is False
-        primary = float(predicted_unanswerable)
+        predicted_unanswerable = (
+            prediction.get("answerable") is False
+            or answer_object.get("answerable") is False
+        )
+        reason = str(
+            prediction.get("reason")
+            or answer_object.get("reason")
+            or ""
+        ).strip()
+        reason_supported = bool(
+            re.search(
+                r"证据.{0,12}(?:不足|不充分|缺少|缺失|不存在|未提供|不支持|冲突)|"
+                r"(?:不足|缺少|缺失|不存在|无法|未提供|不支持|冲突).{0,12}"
+                r"(?:证据|依据|信息|前提|条件|推出|判断|回答|结论)|"
+                r"(?:前提|条件).{0,8}(?:不足|缺少|缺失|不存在|不成立|未提供|不支持)|"
+                r"insufficient|missing|unsupported|not\s+provided|cannot\s+"
+                r"(?:determine|answer|infer)|(?:premise|evidence|condition).{0,20}"
+                r"(?:missing|insufficient|unsupported|conflict)",
+                reason,
+                flags=re.IGNORECASE,
+            )
+        )
+        raw_answer = prediction.get("answer")
+        substantive_answer = False
+        if isinstance(raw_answer, dict):
+            substantive_answer = any(
+                key not in {"answerable", "reason"}
+                and value is not None
+                and value != ""
+                and value != []
+                and value != {}
+                for key, value in raw_answer.items()
+            )
+        elif raw_answer is not None and raw_answer != "":
+            substantive_answer = True
+        valid_refusal = (
+            predicted_unanswerable
+            and not execution_error
+            and reason_supported
+            and not predicted_claims
+            and not citations
+            and not citation_set
+            and not substantive_answer
+        )
+        primary = float(valid_refusal)
         detail = {
-            "correct_refusal": bool(predicted_unanswerable),
-            "reason": prediction.get("reason", answer_object.get("reason", "")),
+            "correct_refusal": bool(valid_refusal),
+            "predicted_refusal": bool(predicted_unanswerable),
+            "reason": reason,
+            "reason_supported": reason_supported,
+            "execution_error": execution_error,
+            "has_claims": bool(predicted_claims),
+            "has_citations": bool(citations or citation_set),
+            "has_substantive_answer": substantive_answer,
         }
     else:
         raise RuntimeError(f"Unsupported method: {method}")
+
+    if execution_error:
+        primary = 0.0
+        detail = {
+            **detail,
+            "invalid_result": True,
+            "error": str(result.get("error") or result.get("result_status")),
+        }
 
     return {
         "question_id": question["id"], "mode": result["mode"], "task_type": question["task_type"],
@@ -281,6 +354,8 @@ def score_row(result: dict[str, Any], question: dict[str, Any], claim_threshold:
             if result.get("answer_cost_usd") not in {None, ""}
             else None
         ),
+        "valid_result": not execution_error,
+        "execution_error": str(result.get("error") or "") or None,
         "prediction": prediction,
     }
 
@@ -328,6 +403,66 @@ def summaries(rows: list[dict[str, Any]], samples: int, seed: int) -> list[dict[
     return output
 
 
+def paired_comparisons(
+    rows: list[dict[str, Any]],
+    *,
+    baseline_mode: str,
+    samples: int,
+    seed: int,
+) -> list[dict[str, Any]]:
+    by_key = {
+        (row["question_id"], row["mode"]): row
+        for row in rows
+    }
+    modes = sorted({row["mode"] for row in rows} - {baseline_mode})
+    task_types = ["__all__", *sorted({row["task_type"] for row in rows})]
+    output: list[dict[str, Any]] = []
+    metrics = {
+        "primary_score": lambda row: row["primary_score"],
+        "citation_completeness": lambda row: row["citation_completeness"],
+        "faithfulness": lambda row: row["faithfulness_to_retrieved_context"],
+    }
+    for task_index, task_type in enumerate(task_types):
+        question_ids = {
+            row["question_id"]
+            for row in rows
+            if task_type == "__all__" or row["task_type"] == task_type
+        }
+        for mode_index, mode in enumerate(modes):
+            paired_ids = sorted(
+                question_id
+                for question_id in question_ids
+                if (question_id, baseline_mode) in by_key
+                and (question_id, mode) in by_key
+            )
+            if not paired_ids:
+                continue
+            metric_payload: dict[str, Any] = {}
+            for metric_index, (name, getter) in enumerate(metrics.items()):
+                deltas = [
+                    float(getter(by_key[(question_id, mode)]))
+                    - float(getter(by_key[(question_id, baseline_mode)]))
+                    for question_id in paired_ids
+                ]
+                metric_payload[name] = bootstrap(
+                    deltas,
+                    samples,
+                    random.Random(
+                        seed + task_index * 1009 + mode_index * 101 + metric_index
+                    ),
+                )
+            output.append(
+                {
+                    "baseline_mode": baseline_mode,
+                    "mode": mode,
+                    "task_type": task_type,
+                    "paired_question_count": len(paired_ids),
+                    "metrics_delta": metric_payload,
+                }
+            )
+    return output
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--results", type=Path, required=True)
@@ -335,10 +470,13 @@ def main() -> None:
     parser.add_argument("--claim-threshold", type=float, default=0.72)
     parser.add_argument("--bootstrap-samples", type=int, default=2000)
     parser.add_argument("--seed", type=int, default=39901)
+    parser.add_argument("--paired-baseline", default="naive")
     args = parser.parse_args()
     questions = index_by_id(load_jsonl(QUESTIONS_PATH), "question")
+    results = load_jsonl(args.results)
+    validate_result_records(results)
     rows = []
-    for result in load_jsonl(args.results):
+    for result in results:
         question_id = result.get("question_id")
         if question_id not in questions:
             raise RuntimeError(f"Unknown question_id in results: {question_id}")
@@ -348,7 +486,23 @@ def main() -> None:
                 "Do not run answer scoring on --retrieval-only output."
             )
         rows.append(score_row(result, questions[question_id], args.claim_threshold))
-    payload = {"per_question": rows, "summaries": summaries(rows, args.bootstrap_samples, args.seed)}
+    payload = {
+        "run_manifest": results[0]["run_manifest"] if results else None,
+        "scoring_config": {
+            "claim_threshold": args.claim_threshold,
+            "bootstrap_samples": args.bootstrap_samples,
+            "seed": args.seed,
+            "paired_baseline": args.paired_baseline,
+        },
+        "per_question": rows,
+        "summaries": summaries(rows, args.bootstrap_samples, args.seed),
+        "paired_comparisons": paired_comparisons(
+            rows,
+            baseline_mode=args.paired_baseline,
+            samples=args.bootstrap_samples,
+            seed=args.seed,
+        ),
+    }
     write_json(args.output, payload)
     print(f"answer score rows={len(rows)} report={args.output}")
 

@@ -127,8 +127,6 @@ def _build_slots_generic(question: str, policy: str) -> list[Slot]:
 
 def _build_slots_pilot(question: str, policy: str) -> list[Slot]:
     """Legacy P2 checklist with document-oriented keywords. Opt-in only."""
-    import re
-
     text = question or ""
     slots: list[Slot] = []
 

@@ -11,11 +11,10 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from benchmark_common import AEB_ROOT, EVIDENCE_PATH, load_jsonl, normalize_text, write_jsonl
-
+from benchmark_common import AEB_ROOT, EVIDENCE_PATH, load_jsonl, write_jsonl
+from run_graphrag_benchmark import evidence_for_text
 
 RELATION_RE = re.compile(r"relation_type\s*=\s*([A-Z_]+)", re.IGNORECASE)
-CLAUSE_RE = re.compile(r"(?:来源条款|source_clause)\s*[=:]\s*([^；;\n<]+)", re.IGNORECASE)
 VALUE_RE = re.compile(
     r"operator\s*=\s*([A-Z_<>≤≥]+).*?value\s*=\s*(-?\d+(?:\.\d+)?).*?unit\s*=\s*([^；;。\n]+)",
     re.IGNORECASE,
@@ -27,37 +26,7 @@ def evidence_index() -> list[dict[str, Any]]:
 
 
 def map_evidence_ids(text: str, file_path: str, evidence: list[dict[str, Any]]) -> list[str]:
-    matched: list[str] = []
-    normalized_text = normalize_text(text)
-    table_match = re.search(r"(?:__table_|table[_-]?)(a_)?(\d+)", file_path, re.IGNORECASE)
-    clauses = {match.group(1).strip() for match in CLAUSE_RE.finditer(text or "")}
-    for record in evidence:
-        locator = record.get("locator", {})
-        record_table = str(locator.get("table", "")).lower().replace(".", "_")
-        if table_match and record_table:
-            prefix = "a_" if table_match.group(1) else ""
-            if record_table.replace(" ", "_") == f"{prefix}{table_match.group(2)}":
-                matched.append(record["id"])
-                continue
-        clause_values = []
-        if locator.get("clause"):
-            clause_values.append(str(locator["clause"]))
-        clause_values.extend(str(item) for item in locator.get("clauses", []))
-        if any(
-            clause == candidate
-            or clause.startswith(candidate + ".")
-            or candidate.startswith(clause + ".")
-            for clause in clauses
-            for candidate in clause_values
-        ):
-            matched.append(record["id"])
-            continue
-        excerpt = normalize_text(record.get("source_excerpt", ""))
-        if excerpt and len(excerpt) >= 20 and (
-            excerpt in normalized_text or normalized_text in excerpt
-        ):
-            matched.append(record["id"])
-    return sorted(set(matched))
+    return evidence_for_text(text, file_path, evidence)
 
 
 def numeric_tuples(text: str) -> list[dict[str, Any]]:

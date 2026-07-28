@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Callable
 
 from reg_harness.config import Settings, load_settings
 from reg_harness.intent import IntentResult, resolve_intent
@@ -84,6 +84,31 @@ class HarnessStack:
             bootstrap=bootstrap,
             event_hook=event_hook,
         )
+
+    def close(self) -> None:
+        """Release reusable HTTP clients owned by the stack."""
+        first_error: Exception | None = None
+        rerank_closer: Callable[[Settings], None] | None
+        try:
+            from reg_harness.rerank import (
+                close_shared_rerank_client as imported_rerank_closer,
+            )
+
+            rerank_closer = imported_rerank_closer
+        except ImportError:
+            rerank_closer = None
+
+        closers: list[Callable[[], None]] = [self.registry.close, self.chat.close]
+        if rerank_closer is not None:
+            closers.append(lambda: rerank_closer(self.settings))
+        for close in closers:
+            try:
+                close()
+            except Exception as error:  # noqa: BLE001 - finish all cleanup first
+                if first_error is None:
+                    first_error = error
+        if first_error is not None:
+            raise first_error
 
 
 def build_stack(

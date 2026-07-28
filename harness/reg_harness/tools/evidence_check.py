@@ -13,7 +13,10 @@ class EvidenceCheckTool(Tool):
     description = "Report evidence bag size/kinds and optional slot gaps; no new legal facts."
     parameters = {
         "type": "object",
-        "properties": {"focus": {"type": "string"}},
+        "additionalProperties": False,
+        "properties": {
+            "focus": {"type": "string", "minLength": 1, "maxLength": 2000}
+        },
     }
 
     def run(self, state: AgentState, args: dict[str, Any]) -> ToolResult:
