@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -13,7 +14,59 @@ def _env_flag(env: dict[str, str], name: str, default: bool = False) -> bool:
     raw = (env.get(name) or "").strip().lower()
     if not raw:
         return default
-    return raw in {"1", "true", "yes", "on"}
+    if raw in {"1", "true", "yes", "on"}:
+        return True
+    if raw in {"0", "false", "no", "off"}:
+        return False
+    raise RuntimeError(
+        f"{name} must be one of: 1, true, yes, on, 0, false, no, off"
+    )
+
+
+def _env_int(
+    env: dict[str, str],
+    name: str,
+    default: int,
+    *,
+    minimum: int | None = None,
+    maximum: int | None = None,
+) -> int:
+    raw = (env.get(name) or "").strip()
+    try:
+        value = int(raw) if raw else default
+    except ValueError as error:
+        raise RuntimeError(f"{name} must be an integer") from error
+    if minimum is not None and value < minimum:
+        raise RuntimeError(f"{name} must be >= {minimum}")
+    if maximum is not None and value > maximum:
+        raise RuntimeError(f"{name} must be <= {maximum}")
+    return value
+
+
+def _env_float(
+    env: dict[str, str],
+    name: str,
+    default: float,
+    *,
+    minimum: float | None = None,
+    maximum: float | None = None,
+    minimum_exclusive: bool = False,
+) -> float:
+    raw = (env.get(name) or "").strip()
+    try:
+        value = float(raw) if raw else default
+    except ValueError as error:
+        raise RuntimeError(f"{name} must be a number") from error
+    if not math.isfinite(value):
+        raise RuntimeError(f"{name} must be finite")
+    if minimum is not None:
+        if minimum_exclusive and value <= minimum:
+            raise RuntimeError(f"{name} must be > {minimum:g}")
+        if not minimum_exclusive and value < minimum:
+            raise RuntimeError(f"{name} must be >= {minimum:g}")
+    if maximum is not None and value > maximum:
+        raise RuntimeError(f"{name} must be <= {maximum:g}")
+    return value
 
 
 @dataclass
@@ -127,8 +180,10 @@ def load_settings(
 
         try:
             extra_body = json.loads(raw_extra)
-        except json.JSONDecodeError:
-            extra_body = None
+        except json.JSONDecodeError as error:
+            raise RuntimeError("OPENAI_LLM_EXTRA_BODY must be valid JSON") from error
+        if not isinstance(extra_body, dict):
+            raise RuntimeError("OPENAI_LLM_EXTRA_BODY must be a JSON object")
 
     # In-docker service name vs host
     host_url = env.get("LIGHTRAG_PUBLIC_URL") or env.get("LIGHTRAG_URL") or "http://127.0.0.1:9621"
@@ -153,19 +208,118 @@ def load_settings(
     # Default on when remote rerank is configured; HARNESS_BAG_RERANK can force off/on.
     bag_rerank_default = bool(rerank_binding and rerank_model and rerank_host and rerank_api_key)
     bag_rerank_enabled = _env_flag(env, "HARNESS_BAG_RERANK", default=bag_rerank_default)
-    min_rerank_score = float(env.get("MIN_RERANK_SCORE", "0") or 0)
+    min_rerank_score = _env_float(
+        env,
+        "MIN_RERANK_SCORE",
+        0.0,
+        minimum=0.0,
+        maximum=1.0,
+    )
     chunk_backfill_enabled = _env_flag(env, "HARNESS_CHUNK_BACKFILL", default=True)
     catalog_mode = (env.get("HARNESS_CATALOG_MODE") or "none").strip().lower()
     if catalog_mode not in {"none", "gold", "index"}:
-        catalog_mode = "none"
+        raise RuntimeError(
+            "HARNESS_CATALOG_MODE must be one of: none, gold, index"
+        )
     if catalog_mode == "index":
         raise RuntimeError(
             "HARNESS_CATALOG_MODE=index is not implemented yet; use none or gold"
         )
     graph_default_mode = (env.get("HARNESS_GRAPH_DEFAULT_MODE") or "mix").strip().lower()
     if graph_default_mode not in {"naive", "hybrid", "mix"}:
-        graph_default_mode = "mix"
+        raise RuntimeError(
+            "HARNESS_GRAPH_DEFAULT_MODE must be one of: naive, hybrid, mix"
+        )
     workspace = (env.get("WORKSPACE") or "aeb_demo").strip()
+    temperature = _env_float(
+        env,
+        "HARNESS_TEMPERATURE",
+        0.0,
+        minimum=0.0,
+        maximum=2.0,
+    )
+    request_timeout = _env_float(
+        env,
+        "HARNESS_TIMEOUT",
+        120.0,
+        minimum=0.0,
+        minimum_exclusive=True,
+    )
+    default_max_steps = _env_int(
+        env,
+        "HARNESS_MAX_STEPS",
+        6,
+        minimum=1,
+        maximum=100,
+    )
+    retrieve_top_k = _env_int(
+        env,
+        "HARNESS_TOP_K",
+        20,
+        minimum=1,
+        maximum=100,
+    )
+    context_tokens = _env_int(
+        env,
+        "HARNESS_CONTEXT_TOKENS",
+        12000,
+        minimum=256,
+        maximum=200000,
+    )
+    chunk_backfill_max = _env_int(
+        env,
+        "HARNESS_CHUNK_BACKFILL_MAX",
+        8,
+        minimum=1,
+        maximum=100,
+    )
+    chunk_backfill_min_cooccur = _env_int(
+        env,
+        "HARNESS_CHUNK_BACKFILL_MIN_COOCCUR",
+        1,
+        minimum=1,
+        maximum=100,
+    )
+    bag_limit = _env_int(
+        env,
+        "HARNESS_BAG_LIMIT",
+        20,
+        minimum=1,
+        maximum=100,
+    )
+    bag_max_entities = _env_int(
+        env,
+        "HARNESS_BAG_MAX_ENTITIES",
+        5,
+        minimum=1,
+        maximum=100,
+    )
+    bag_max_relations = _env_int(
+        env,
+        "HARNESS_BAG_MAX_RELATIONS",
+        5,
+        minimum=1,
+        maximum=100,
+    )
+    entity_token_fraction = _env_float(
+        env,
+        "HARNESS_ENTITY_TOKEN_FRACTION",
+        0.15,
+        minimum=0.1,
+        maximum=0.4,
+    )
+    relation_token_fraction = _env_float(
+        env,
+        "HARNESS_RELATION_TOKEN_FRACTION",
+        0.15,
+        minimum=0.1,
+        maximum=0.4,
+    )
+    if entity_token_fraction + relation_token_fraction > 0.7:
+        raise RuntimeError(
+            "HARNESS_ENTITY_TOKEN_FRACTION + "
+            "HARNESS_RELATION_TOKEN_FRACTION must be <= 0.7"
+        )
 
     evidence_path = env.get("HARNESS_EVIDENCE_JSONL", "").strip()
     evidence_jsonl: Path | None = None
@@ -195,11 +349,11 @@ def load_settings(
         llm_api_key=env.get("LLM_BINDING_API_KEY", ""),
         llm_model=env.get("LLM_MODEL", "gpt-4o-mini"),
         llm_extra_body=extra_body,
-        temperature=float(env.get("HARNESS_TEMPERATURE", "0") or 0),
-        request_timeout=float(env.get("HARNESS_TIMEOUT", "120") or 120),
-        default_max_steps=int(env.get("HARNESS_MAX_STEPS", "6") or 6),
-        retrieve_top_k=int(env.get("HARNESS_TOP_K", "20") or 20),
-        context_tokens=int(env.get("HARNESS_CONTEXT_TOKENS", "12000") or 12000),
+        temperature=temperature,
+        request_timeout=request_timeout,
+        default_max_steps=default_max_steps,
+        retrieve_top_k=retrieve_top_k,
+        context_tokens=context_tokens,
         api_key_header=env.get("LIGHTRAG_API_KEY", ""),
         active_kb=env.get("HARNESS_ACTIVE_KB", "gb39901"),
         evidence_jsonl=evidence_jsonl,
@@ -216,17 +370,11 @@ def load_settings(
         rerank_api_key=rerank_api_key,
         min_rerank_score=min_rerank_score,
         chunk_backfill_enabled=chunk_backfill_enabled,
-        chunk_backfill_max=int(env.get("HARNESS_CHUNK_BACKFILL_MAX", "8") or 8),
-        chunk_backfill_min_cooccur=int(
-            env.get("HARNESS_CHUNK_BACKFILL_MIN_COOCCUR", "1") or 1
-        ),
-        bag_limit=int(env.get("HARNESS_BAG_LIMIT", "20") or 20),
-        bag_max_entities=int(env.get("HARNESS_BAG_MAX_ENTITIES", "5") or 5),
-        bag_max_relations=int(env.get("HARNESS_BAG_MAX_RELATIONS", "5") or 5),
-        entity_token_fraction=float(
-            env.get("HARNESS_ENTITY_TOKEN_FRACTION", "0.15") or 0.15
-        ),
-        relation_token_fraction=float(
-            env.get("HARNESS_RELATION_TOKEN_FRACTION", "0.15") or 0.15
-        ),
+        chunk_backfill_max=chunk_backfill_max,
+        chunk_backfill_min_cooccur=chunk_backfill_min_cooccur,
+        bag_limit=bag_limit,
+        bag_max_entities=bag_max_entities,
+        bag_max_relations=bag_max_relations,
+        entity_token_fraction=entity_token_fraction,
+        relation_token_fraction=relation_token_fraction,
     )
