@@ -13,11 +13,12 @@ if str(_HARNESS_ROOT) not in sys.path:
 
 from reg_harness.config import load_settings
 from reg_harness.live import format_final_answer, make_live_printer
-from reg_harness.loop import pretty_print_result, state_to_dict
+from reg_harness.loop import state_to_dict
 from reg_harness.rerank import close_shared_rerank_client
 from reg_harness.runtime import build_stack
 from reg_harness.tools.registry import default_registry
 from reg_harness.types import AgentState
+from reg_harness._version import __version__
 
 
 def _run_ask(
@@ -51,15 +52,16 @@ def _run_ask(
     finally:
         stack.chat.on_token = prev_hook
 
-    # Blank line then final answer on stdout — easy to find after process log.
-    print(format_final_answer(state.final_answer, state.refuse_reason), flush=True)
-    if not quiet_json and not live:
-        print(pretty_print_result(state))
-    elif live:
+    if live:
+        # Human-facing mode keeps the existing terminal output.
+        print(format_final_answer(state.final_answer, state.refuse_reason), flush=True)
         print(
             f"（过程: steps={state.step}, 证据={len(state.evidence)}）",
             flush=True,
         )
+    else:
+        # Machine-facing mode must emit exactly one complete JSON document on stdout.
+        print(json.dumps(state_to_dict(state), ensure_ascii=False), flush=True)
     if dump_trace:
         path = Path(dump_trace)
         path.write_text(
@@ -220,24 +222,29 @@ def _cmd_describe(args: argparse.Namespace) -> int:
 def _cmd_librarian(args: argparse.Namespace) -> int:
     with closing(build_stack(profile_env=args.profile_env)) as stack:
         if args.action == "propose-ingest":
-            plan = stack.librarian.propose_ingest(
+            ingest_plan = stack.librarian.propose_ingest(
                 args.source_file,
                 preferred_profile=args.profile,
                 preferred_kb=args.kb,
             )
-            print(json.dumps(plan.to_dict(), ensure_ascii=False, indent=2))
+            print(json.dumps(ingest_plan.to_dict(), ensure_ascii=False, indent=2))
             return 0
         if args.action == "propose-merge":
             sources = [item.strip() for item in args.sources.split(",") if item.strip()]
-            plan = stack.librarian.propose_merge(sources, args.target)
-            print(json.dumps(plan.to_dict(), ensure_ascii=False, indent=2))
+            merge_plan = stack.librarian.propose_merge(sources, args.target)
+            print(json.dumps(merge_plan.to_dict(), ensure_ascii=False, indent=2))
             return 0
         print("unknown librarian action", file=sys.stderr)
         return 2
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Regulation Evidence Harness CLI")
+    parser = argparse.ArgumentParser(description="EvidenceTrail regulation evidence CLI")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
+    )
     parser.add_argument(
         "--profile-env",
         default=None,

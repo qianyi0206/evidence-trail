@@ -97,6 +97,84 @@ def parse_labeled_paths(items: list[str]) -> list[tuple[str, Path]]:
     return labeled
 
 
+def available_labeled_paths(
+    labeled: list[tuple[str, Path]],
+) -> tuple[list[tuple[str, Path]], list[tuple[str, Path]]]:
+    available = [(label, path) for label, path in labeled if path.is_file()]
+    missing = [(label, path) for label, path in labeled if not path.is_file()]
+    return available, missing
+
+
+_VARIANT_RUN_CONFIG_KEYS = {
+    "profile_env",
+    "profile_sha256",
+    "resolved_workspace",
+    "index_identity",
+}
+
+
+def score_comparison_signature(payload: dict[str, Any]) -> dict[str, Any]:
+    """Return run/scorer fields that must match for a horizontal comparison."""
+    manifest = payload["run_manifest"]
+    configuration = manifest.get("configuration")
+    comparable_configuration = (
+        {
+            key: value
+            for key, value in configuration.items()
+            if key not in _VARIANT_RUN_CONFIG_KEYS
+        }
+        if isinstance(configuration, dict)
+        else configuration
+    )
+    return {
+        "runner": manifest.get("runner"),
+        "selected_question_ids": sorted(manifest.get("selected_question_ids") or []),
+        "modes": sorted(manifest.get("modes") or []),
+        "configuration": comparable_configuration,
+        "code": manifest.get("code"),
+        "scoring_config": payload.get("scoring_config"),
+    }
+
+
+def require_comparable_labeled_scores(
+    labeled_payloads: list[tuple[str, dict[str, Any]]],
+    *,
+    score_kind: str,
+) -> None:
+    if len(labeled_payloads) < 2:
+        return
+    baseline_label, baseline_payload = labeled_payloads[0]
+    baseline = score_comparison_signature(baseline_payload)
+    for label, payload in labeled_payloads[1:]:
+        candidate = score_comparison_signature(payload)
+        differences = [
+            field for field, expected in baseline.items() if candidate.get(field) != expected
+        ]
+        if differences:
+            raise SystemExit(
+                f"{score_kind} scores {baseline_label!r} and {label!r} are not "
+                "comparable; mismatched fields: "
+                + ", ".join(differences)
+            )
+
+
+def require_matching_labeled_runs(
+    retrieval_payloads: list[tuple[str, dict[str, Any]]],
+    answer_payloads: list[tuple[str, dict[str, Any]]],
+) -> None:
+    retrieval_by_label = dict(retrieval_payloads)
+    answer_by_label = dict(answer_payloads)
+    for label in sorted(retrieval_by_label.keys() & answer_by_label.keys()):
+        retrieval_fingerprint = retrieval_by_label[label]["run_manifest"].get(
+            "fingerprint"
+        )
+        answer_fingerprint = answer_by_label[label]["run_manifest"].get("fingerprint")
+        if retrieval_fingerprint != answer_fingerprint:
+            raise SystemExit(
+                f"retrieval and answer scores for {label!r} come from different runs"
+            )
+
+
 def append_retrieval_table(
     lines: list[str],
     rows: list[tuple[str, str, dict[str, Any]]],
@@ -214,8 +292,29 @@ def main() -> None:
 
     retrieval = load_json(args.retrieval_score)
     answers = load_json(args.answer_score)
-    labeled_retrieval = parse_labeled_paths(args.retrieval_score_labeled)
-    labeled_answers = parse_labeled_paths(args.answer_score_labeled)
+    labeled_retrieval_paths, missing_retrieval = available_labeled_paths(
+        parse_labeled_paths(args.retrieval_score_labeled)
+    )
+    labeled_answer_paths, missing_answers = available_labeled_paths(
+        parse_labeled_paths(args.answer_score_labeled)
+    )
+    labeled_retrieval = [
+        (label, require_current_score(load_json(path), str(path)))
+        for label, path in labeled_retrieval_paths
+    ]
+    labeled_answers = [
+        (label, require_current_score(load_json(path), str(path)))
+        for label, path in labeled_answer_paths
+    ]
+    require_comparable_labeled_scores(
+        labeled_retrieval,
+        score_kind="retrieval",
+    )
+    require_comparable_labeled_scores(
+        labeled_answers,
+        score_kind="answer",
+    )
+    require_matching_labeled_runs(labeled_retrieval, labeled_answers)
     pilot = load_json(args.pilot_comparison)
     if retrieval is not None:
         retrieval = require_current_score(retrieval, str(args.retrieval_score))
@@ -352,8 +451,7 @@ def main() -> None:
             ]
         )
     elif labeled_retrieval:
-        for label, path in labeled_retrieval:
-            payload = require_current_score(load_json(path), str(path))
+        for label, payload in labeled_retrieval:
             for question_id in {row["question_id"] for row in payload.get("per_question", [])}:
                 retrieval_question_ids.add(question_id)
             for mode, summary in overall_summaries(payload).items():
@@ -406,6 +504,12 @@ def main() -> None:
             )
         else:
             lines.append("尚未运行/query/data对照实验；服务启动后运行benchmark-run-*目标。")
+    if missing_retrieval:
+        lines.append(
+            "> 尚未找到当前检索评分："
+            + "、".join(f"{label} (`{path}`)" for label, path in missing_retrieval)
+            + "；完成对应 benchmark-run-* 后运行 benchmark-score-*。"
+        )
     if isinstance(pilot, dict) and pilot.get("automatic_metrics") and not pilot_is_current:
         lines.extend(
             [
@@ -415,8 +519,7 @@ def main() -> None:
         )
     if isinstance(retrieval, dict):
         lines.append(scoring_note("检索", retrieval))
-    for label, path in labeled_retrieval:
-        payload = require_current_score(load_json(path), str(path))
+    for label, payload in labeled_retrieval:
         lines.append(scoring_note(f"检索 {label}", payload))
 
     lines.extend(["", "## 回答质量", ""])
@@ -449,8 +552,7 @@ def main() -> None:
             ]
         )
     elif labeled_answers:
-        for label, path in labeled_answers:
-            payload = require_current_score(load_json(path), str(path))
+        for label, payload in labeled_answers:
             for question_id in {row["question_id"] for row in payload.get("per_question", [])}:
                 answer_question_ids.add(question_id)
             for mode, summary in overall_summaries(payload).items():
@@ -497,10 +599,15 @@ def main() -> None:
             )
         else:
             lines.append("尚未运行统一回答模型实验。")
+    if missing_answers:
+        lines.append(
+            "> 尚未找到当前回答评分："
+            + "、".join(f"{label} (`{path}`)" for label, path in missing_answers)
+            + "；完成对应 benchmark-run-* 后运行 benchmark-score-*。"
+        )
     if isinstance(answers, dict):
         lines.append(scoring_note("回答", answers))
-    for label, path in labeled_answers:
-        payload = require_current_score(load_json(path), str(path))
+    for label, payload in labeled_answers:
         lines.append(scoring_note(f"回答 {label}", payload))
 
     lines.extend(["", "## 失败案例", ""])
@@ -508,8 +615,7 @@ def main() -> None:
     sources: list[tuple[str, dict[str, Any]]] = []
     if isinstance(retrieval, dict):
         sources.append(("run", retrieval))
-    for label, path in labeled_retrieval:
-        payload = require_current_score(load_json(path), str(path))
+    for label, payload in labeled_retrieval:
         sources.append((label, payload))
     for label, payload in sources:
         failures.extend(

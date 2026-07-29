@@ -1,4 +1,5 @@
 SHELL := /bin/sh
+.DEFAULT_GOAL := help
 
 COMPOSE := docker compose --env-file .env -f compose.yaml
 TOOLS := $(COMPOSE) run --rm --build tools
@@ -17,7 +18,7 @@ LIGHTRAG_BASE_IMAGE ?= ghcr.io/hkuds/lightrag:v1.4.16@sha256:67ccf8d9f74eb29da87
 LIGHTRAG_APP_IMAGE ?= evidencetrail-lightrag:v1.4.16-app
 V4_APP_COMPOSE := docker compose --env-file .env --env-file $(V4_PROFILE) -f compose.yaml -f compose.lightrag-app.yaml
 
-.PHONY: configure doctor up download prepare ingest test demo down reset-index \
+.PHONY: help configure doctor up download prepare ingest test demo down reset-index \
 	gb-doctor gb-prepare gb-up gb-ingest gb-postprocess gb-test gb-qa gb-demo gb-down \
 	v3-doctor v3-prepare v3-up v3-ingest v3-postprocess v3-test v3-fact-qa v3-qa v3-demo v3-down \
 	v4-doctor v4-prepare v4-up v4-up-app v4-ingest v4-postprocess v4-test v4-fact-qa v4-qa v4-demo v4-down \
@@ -25,6 +26,20 @@ V4_APP_COMPOSE := docker compose --env-file .env --env-file $(V4_PROFILE) -f com
 	benchmark-build benchmark-validate benchmark-kg-offline benchmark-kg-live benchmark-run-a0 benchmark-run-v2 \
 	benchmark-run-v3 benchmark-run-v4 benchmark-score-a0 benchmark-score-v2 benchmark-score-v3 \
 	benchmark-score-v4 benchmark-test benchmark-report
+
+help:
+	@printf '%s\n' \
+		'EvidenceTrail commands:' \
+		'  make v4-doctor         validate the shipped snapshot, Docker, config, and model APIs' \
+		'  make v4-up             start Neo4j + LightRAG with the shipped v4 snapshot' \
+		'  make v4-prepare        rebuild structural corpus inputs locally' \
+		'  make v4-ingest         ingest/rebuild the configured v4 workspace (uses model APIs)' \
+		'  make benchmark-validate generate/validate the reproducible review CSV offline' \
+		'  make benchmark-test    rebuild, validate, and test benchmark data offline' \
+		'  make benchmark-report  report any available current A0/v2/v3/v4 scores' \
+		'  make v4-down           stop the v4 services' \
+		'' \
+		'Quick start: configure .env, then run make v4-doctor && make v4-up.'
 
 configure:
 	@if [ ! -f .env ]; then cp .env.example .env; echo "Created .env from .env.example; fill in model credentials before indexing."; fi
@@ -149,9 +164,10 @@ v3-down: configure
 	@$(V3_COMPOSE) down
 
 v4-doctor: configure
+	@test -f $(V4_PROFILE) || { echo "Missing $(V4_PROFILE)."; exit 1; }
+	@$(BENCHMARK_PYTHON) scripts/check_snapshot_compat.py --profile-env $(V4_PROFILE)
 	@command -v docker >/dev/null || { echo "Docker CLI is not installed."; exit 1; }
 	@docker info >/dev/null 2>&1 || { echo "Docker daemon is unavailable. Start Docker Desktop first."; exit 1; }
-	@test -f $(V4_PROFILE) || { echo "Missing $(V4_PROFILE)."; exit 1; }
 	@$(V4_COMPOSE) config --quiet
 	@$(V4_TOOLS) scripts/prepare_gb39901_v3.py --check
 	@$(V4_TOOLS) scripts/test_schema_guard.py
@@ -275,7 +291,14 @@ benchmark-report:
 		--kg-score A1-v2=benchmark/results/kg_score_v2_live.json \
 		--kg-score A2-v3=benchmark/results/kg_score_v3_live.json \
 		--kg-score A3-v4=benchmark/results/kg_score_v4_live.json \
-		--pilot-comparison benchmark/results/pilot_6q_comparison.json \
+		--retrieval-score-labeled A0=benchmark/results/retrieval_score_a0.json \
+		--retrieval-score-labeled A1-v2=benchmark/results/retrieval_score_v2.json \
+		--retrieval-score-labeled A2-v3=benchmark/results/retrieval_score_v3.json \
+		--retrieval-score-labeled A3-v4=benchmark/results/retrieval_score_v4.json \
+		--answer-score-labeled A0=benchmark/results/answer_score_a0.json \
+		--answer-score-labeled A1-v2=benchmark/results/answer_score_v2.json \
+		--answer-score-labeled A2-v3=benchmark/results/answer_score_v3.json \
+		--answer-score-labeled A3-v4=benchmark/results/answer_score_v4.json \
 		--output benchmark/results/benchmark_report.md
 
 reset-index: configure

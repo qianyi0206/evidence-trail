@@ -24,6 +24,30 @@ See the [v0.2.0 release notes](https://github.com/qianyi0206/evidence-trail/rele
 
 ---
 
+## Quick start
+
+```bash
+git clone https://github.com/qianyi0206/evidence-trail.git
+cd evidence-trail
+pip install --require-hashes -r requirements.lock
+pip install --no-build-isolation --no-deps -e ./harness
+cp .env.example .env
+make help
+```
+
+For the **shipped v4 vector/KV snapshot**, configure the chat/rerank credentials and
+use the snapshot's embedding identity:
+`EMBEDDING_MODEL=qwen3.7-text-embedding`, `EMBEDDING_DIM=2560`, and
+`EMBEDDING_TOKEN_LIMIT=128000`. Then run `make v4-doctor` before `make v4-up`.
+The doctor compares expected and actual non-secret embedding fields locally before
+checking Docker or calling model APIs.
+
+For a **rebuild with another embedding configuration**, do not mix it with the
+shipped vectors. Use a new/empty workspace and run the prepare, ingest, and
+postprocess flow in §6.3; rebuilding calls embedding and LLM APIs and can incur cost.
+
+---
+
 ## 0. Overview
 
 ```text
@@ -352,7 +376,8 @@ Details: [docker/README.md](docker/README.md). Neo4j Browser: `http://127.0.0.1:
 
 ### 6.2 Config
 
-Needs: Docker, Python 3.10+, chat + embedding APIs.
+Needs: Docker, Python 3.10+, chat + embedding APIs. Run `make help` for the
+short list of supported entry points.
 
 ```bash
 git clone https://github.com/qianyi0206/evidence-trail.git
@@ -373,7 +398,7 @@ Secret-free overlay: `.env.gb39901_v4`.
 1. cd harness && python3 -m unittest discover -s tests -v
 2. (optional) MinerU PDF → Markdown → corpus/prepared/
 3. make v4-up
-4. if graph empty: make v4-prepare && make v4-ingest …
+4. if rebuilding an empty/new workspace: make v4-prepare && make v4-ingest && make v4-postprocess
 5. cd harness && PYTHONPATH=. python3 -m reg_harness.cli \
      --profile-env .env.gb39901_v4 chat
 6. (optional) benchmark/scripts/ …
@@ -399,7 +424,10 @@ state = stack.ask("Which two vehicle categories does GB 39901 apply to?", max_st
 print(state.final_answer)
 ```
 
-When using the shipped vector snapshot, embedding model and dimension must match ingest (`state/embedding_fingerprint*.json`).
+When using the shipped vector snapshot, embedding model, dimension, and token limit
+must match `state/embedding_fingerprint*.json`; `make v4-doctor` checks all three
+before Docker and paid API probes. A different embedding configuration requires a
+new/empty workspace and a full rebuild—never append it to the shipped vector space.
 
 ---
 

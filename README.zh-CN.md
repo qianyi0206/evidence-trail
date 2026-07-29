@@ -24,6 +24,29 @@
 
 ---
 
+## 快速开始
+
+```bash
+git clone https://github.com/qianyi0206/evidence-trail.git
+cd evidence-trail
+pip install --require-hashes -r requirements.lock
+pip install --no-build-isolation --no-deps -e ./harness
+cp .env.example .env
+make help
+```
+
+如果使用仓库随附的 **v4 向量/KV 快照**，请配置对话与 rerank 密钥，并保持入库时的
+嵌入身份：`EMBEDDING_MODEL=qwen3.7-text-embedding`、`EMBEDDING_DIM=2560`、
+`EMBEDDING_TOKEN_LIMIT=128000`。先运行 `make v4-doctor`，通过后再运行
+`make v4-up`。doctor 会先在本地比较预期值与实际值，且只显示非秘密字段，
+之后才检查 Docker 和调用模型 API。
+
+如果要使用 **不同的嵌入配置重建**，不要与随附向量混用。请使用新的空 workspace，
+按 §6.3 执行 prepare、ingest、postprocess；重建会调用 embedding 和 LLM API，
+可能产生费用。
+
+---
+
 ## 0. 系统概览
 
 ```text
@@ -351,7 +374,7 @@ Python: reg_harness ──HTTP──► LightRAG
 
 ### 6.2 配置
 
-依赖：Docker、Python 3.10+、对话与向量 API。
+依赖：Docker、Python 3.10+、对话与向量 API。运行 `make help` 可查看精简入口。
 
 ```bash
 git clone https://github.com/qianyi0206/evidence-trail.git
@@ -372,7 +395,7 @@ cp .env.example .env
 1. cd harness && python3 -m unittest discover -s tests -v
 2. （可选）MinerU 转 Markdown → corpus/prepared/
 3. make v4-up
-4. 图为空：make v4-prepare && make v4-ingest …
+4. 重建新的空 workspace 时：make v4-prepare && make v4-ingest && make v4-postprocess
 5. cd harness && PYTHONPATH=. python3 -m reg_harness.cli \
      --profile-env .env.gb39901_v4 chat
 6. （可选）benchmark/scripts/ …
@@ -398,7 +421,10 @@ state = stack.ask("GB 39901 适用于哪两类汽车？", max_steps=6)
 print(state.final_answer)
 ```
 
-使用仓内向量快照时，嵌入模型与维度须与入库一致（`state/embedding_fingerprint*.json`）。
+使用仓内向量快照时，嵌入模型、维度和 token limit 都必须与
+`state/embedding_fingerprint*.json` 一致；`make v4-doctor` 会在 Docker 与付费
+API 探测前检查这三项。不同嵌入配置必须使用新的空 workspace 完整重建，不能追加到
+随附向量空间。
 
 ---
 

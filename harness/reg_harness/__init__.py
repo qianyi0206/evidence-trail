@@ -9,8 +9,7 @@ Public entry:
 from reg_harness.runtime import HarnessStack, build_stack
 from reg_harness.loop import RegulationHarness
 from reg_harness.intent import IntentResult, resolve_intent
-
-__version__ = "0.2.0"
+from reg_harness._version import __version__
 
 __all__ = [
     "HarnessStack",

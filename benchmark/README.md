@@ -36,7 +36,7 @@ make benchmark-report
 
 `benchmark-kg-offline` 从四个已经存在的 LightRAG 本地工作区导出 A0、v2、v3、v4 图快照并评分。离线向量存储没有 Neo4j 后处理后的最终类型元数据，因此实体类型、关系类型和证据绑定结果应视为诊断值。
 
-Docker/Neo4j 可用时运行 `make benchmark-kg-live`，按 workspace 标签只读导出类型化在线图。`make benchmark-report` 默认使用该在线导出；正式 KG 结论仍应在冻结 v1 后补充三次独立建图稳定性、耗时和成本。
+Docker/Neo4j 可用时运行 `make benchmark-kg-live`，按 workspace 标签只读导出类型化在线图。`make benchmark-report` 会读取现行 scorer 生成的 A0、v2、v3、v4 `retrieval_score_*.json` 与 `answer_score_*.json`，并在存在时合并在线 KG 分数；缺失的当前结果会在报告中明确列出，不再用旧版 pilot 指标补位。正式 KG 结论仍应在冻结 v1 后补充三次独立建图稳定性、耗时和成本。
 
 三次独立建图应使用不同的新 workspace，分别导出后把三个图和三份运行元数据一起交给评分器：
 
@@ -51,7 +51,14 @@ python3 benchmark/scripts/score_kg.py \
 
 ## 人工复核与冻结
 
-优先打开 `review/outputs/019f7557-b5c5-72e2-a64a-17612120443a/GB39901_GraphRAG_Benchmark_Review.xlsx`。工作簿包含审核说明、逐题审核和证据索引三张表，并为审核决定提供下拉选项。`review/benchmark_review.csv` 是冻结脚本的机器入口；完成 XLSX 复核后由 Codex 把决定同步回 CSV。
+从 fresh clone 运行 `make benchmark-validate`，它会稳定生成
+`benchmark/review/benchmark_review.csv`。该 CSV 是人工复核和冻结脚本共同使用的
+规范入口，不依赖本地 UUID 目录或预先存在的 XLSX。可直接用 Excel、Numbers、
+LibreOffice 或文本编辑器打开，填写 `review_decision` 与 `review_notes` 后原地保存；
+若数据内容没有变化，再次校验会保留已有决定。
+
+如需下拉选项、分工作表等体验，可以从该 CSV 自行导出临时 XLSX，但 XLSX 不是冻结
+输入，也不应作为 fresh clone 的前置条件。冻结前应以 CSV 中的内容哈希和决定为准。
 
 逐题阅读问题、答案、原子声明、定位、规范化事实、证据原文和金路径，然后在 `review_decision` 中填写。审核 CSV 同时保存问题及其引用证据/图记录的内容哈希；数据变化后旧审核决定会被判定为过期，不能静默沿用：
 

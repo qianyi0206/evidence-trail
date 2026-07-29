@@ -3,7 +3,7 @@
 控制层「该做什么 / 宏观规范 / 评测纪律」见同目录 [`PROTOCOL.md`](PROTOCOL.md)。  
 本文侧重包结构与扩展挂钩；若与 PROTOCOL 冲突，以 **PROTOCOL 为北极星**，本文中贴题路由等视为现状或债。
 
-## v0.1 release boundary
+## Current v0.2.x release boundary
 
 - **Active KB:** `gb39901` only (GB 39901-2025).
 - English UNECE/Euro NCAP sources may exist under `corpus/` but are **not** active knowledge bases in this release.
