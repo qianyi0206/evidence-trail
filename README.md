@@ -10,17 +10,17 @@ Built for closed-set, checkable knowledge (regulations, test procedures, manuals
 
 ## Latest release
 
-Current stable version: **[v0.2.0](https://github.com/qianyi0206/evidence-trail/releases/tag/v0.2.0)**
+Current stable version: **[v0.2.1](https://github.com/qianyi0206/evidence-trail/releases/tag/v0.2.1)**
 
 Highlights:
 
-- stronger evidence references and claim-level grounding
-- reproducible benchmark scoring, run manifests, and index identities
-- safer ingest state transitions, downloads, configuration, and Gradio sharing
-- pinned dependency locks and hardened container/CI supply chain
-- verified on Python 3.10 and 3.12 with expanded regression coverage
+- single-source package versioning with CLI, installed-metadata, and wheel checks
+- fail-fast validation for security-critical modes, flags, and numeric limits
+- machine-readable `ask --no-live` JSON output for automation
+- snapshot compatibility checks before Docker and paid API probes
+- stricter benchmark run comparability and expanded Python 3.10/3.12 CI coverage
 
-See the [v0.2.0 release notes](https://github.com/qianyi0206/evidence-trail/releases/tag/v0.2.0) for the complete change summary and validation boundaries.
+See the [v0.2.1 release notes](https://github.com/qianyi0206/evidence-trail/releases/tag/v0.2.1) for the complete change summary and validation boundaries.
 
 ---
 

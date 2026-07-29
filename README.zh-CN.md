@@ -10,17 +10,17 @@
 
 ## 版本与发布
 
-当前稳定版本：**[v0.2.0](https://github.com/qianyi0206/evidence-trail/releases/tag/v0.2.0)**
+当前稳定版本：**[v0.2.1](https://github.com/qianyi0206/evidence-trail/releases/tag/v0.2.1)**
 
 主要更新：
 
-- 强化证据引用与声明级 grounding
-- 提升 Benchmark 评分、运行清单和索引身份的可复现性
-- 加固摄取状态机、下载、配置边界与 Gradio 公网分享
-- 固定依赖锁并收紧容器与 CI 供应链
-- 扩展回归测试，并通过 Python 3.10、3.12 验证
+- 统一包版本来源，并校验 CLI、安装元数据与 Wheel 元数据
+- 对安全模式、布尔开关和数值边界实施 fail-fast 校验
+- 为自动化提供机器可读的 `ask --no-live` JSON 输出
+- 在 Docker 和付费 API 探测前检查快照兼容性
+- 收紧 Benchmark 运行可比性，并扩展 Python 3.10、3.12 CI 覆盖
 
-完整变化与验证边界请查看 [v0.2.0 Release Notes](https://github.com/qianyi0206/evidence-trail/releases/tag/v0.2.0)。
+完整变化与验证边界请查看 [v0.2.1 Release Notes](https://github.com/qianyi0206/evidence-trail/releases/tag/v0.2.1)。
 
 ---
 
