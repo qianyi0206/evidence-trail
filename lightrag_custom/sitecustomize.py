@@ -5,7 +5,9 @@ import os
 
 if os.getenv("GB39901_PROMPT_ENABLED", "false").lower() in {"1", "true", "yes"}:
     if os.getenv("GB39901_RELATION_PROMPT_V4", "false").lower() in {"1", "true", "yes"}:
-        from gb39901_profile_v4 import CONTINUE_PROMPT, EXAMPLES, SYSTEM_PROMPT, USER_PROMPT
+        from gb39901_profile_v4 import CONTINUE_PROMPT, SYSTEM_PROMPT, USER_PROMPT
+
+        from gb39901_profile import EXAMPLES
     else:
         from gb39901_profile import CONTINUE_PROMPT, EXAMPLES, SYSTEM_PROMPT, USER_PROMPT
     from lightrag.prompt import PROMPTS
